@@ -7,9 +7,9 @@
  */
 export class SecureLendError extends Error {
   public readonly type: string;
-  public readonly details?: any;
+  public readonly details?: unknown;
 
-  constructor(message: string, type: string, details?: any) {
+  constructor(message: string, type: string, details?: unknown) {
     super(message);
     this.name = "SecureLendError";
     this.type = type;
@@ -47,7 +47,7 @@ export class RateLimitError extends SecureLendError {
  * Validation error (invalid request parameters)
  */
 export class ValidationError extends SecureLendError {
-  constructor(message: string, errors?: any) {
+  constructor(message: string, errors?: unknown) {
     super(message, "validation_error", errors);
     this.name = "ValidationError";
   }

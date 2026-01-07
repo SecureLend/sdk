@@ -28,9 +28,13 @@ export abstract class BaseResource {
     }
 
     try {
-      return jsonContent.type === "text"
-        ? JSON.parse(jsonContent.text)
-        : JSON.parse((jsonContent as any).resource.text);
+      if (jsonContent.type === "text") {
+        return JSON.parse(jsonContent.text);
+      } else if (jsonContent.type === "resource" && jsonContent.resource) {
+        return JSON.parse(jsonContent.resource.text);
+      }
+      // This path should not be reachable if jsonContent is found
+      throw new Error("Invalid content structure");
     } catch (e) {
       throw new SecureLendError(
         "Invalid response from MCP server: failed to parse JSON content",
@@ -42,8 +46,11 @@ export abstract class BaseResource {
 
   protected getWidget(toolResult: ToolResult): string | undefined {
     const widgetContent = toolResult.content.find(
-      (c) => c.type === "resource" && c.resource.mimeType === "text/html",
+      (c) => c.type === "resource" && c.resource?.mimeType === "text/html",
     );
-    return widgetContent ? (widgetContent as any).resource.text : undefined;
+    if (widgetContent?.type === "resource" && widgetContent.resource) {
+      return widgetContent.resource.text;
+    }
+    return undefined;
   }
 }

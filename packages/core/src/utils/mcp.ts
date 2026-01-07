@@ -47,7 +47,7 @@ export class MCPClient {
       if (this.debug) {
         console.log(`[SecureLend SDK] MCP client connected.`);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.isConnected = false;
       // Poor man's error mapping. The MCP SDK should have better error types.
       if (error.message?.includes("401")) {
@@ -73,7 +73,7 @@ export class MCPClient {
         console.log(`[SecureLend SDK] Tool result for ${name}:`, result);
       }
       return result;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof SecureLendError) throw error;
       // Again, poor man's error mapping
       if (error.message?.includes("400")) {

@@ -40,7 +40,7 @@ describe("Banking Resource", () => {
     });
 
     it("should throw an error if account type is invalid", async () => {
-      const request = { accountType: "invalid" } as any;
+      const request = { accountType: "invalid" } as BankingComparisonRequest;
       await expect(securelend.banking.compare(request)).rejects.toThrow(
         "Invalid account type",
       );
