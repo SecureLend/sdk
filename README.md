@@ -9,22 +9,24 @@ The official SDK for SecureLend - Financial services infrastructure for AI assis
 - More coming soon: Python, Ruby, Go
 
 ## Quick Start
+
 ```bash
 npm install @securelend/sdk
 ```
-```typescript
-import { SecureLend } from '@securelend/sdk';
 
-const securelend = new SecureLend('sk_test_...');
+```typescript
+import { SecureLend } from "@securelend/sdk";
+
+const securelend = new SecureLend("sk_test_...");
 
 const loans = await securelend.loans.compare({
   amount: 200000,
-  purpose: 'equipment',
+  purpose: "equipment",
   business: {
     revenue: 1200000,
     creditScore: 720,
-    timeInBusiness: 36
-  }
+    timeInBusiness: 36,
+  },
 });
 
 console.log(`Best rate: ${loans.offers[0].terms.interestRate.rate}%`);
@@ -38,6 +40,7 @@ console.log(`Best rate: ${loans.offers[0].terms.interestRate.rate}%`);
 - [Examples](./examples)
 
 ## Development
+
 ```bash
 # Install dependencies
 npm install

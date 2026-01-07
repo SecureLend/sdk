@@ -1,45 +1,55 @@
-import { SecureLend } from '../../../src/client';
-import { MCPClient } from '../../../src/utils/mcp';
-import { CreditCardComparisonRequest } from '../../../src/types';
+import { SecureLend } from "../../../src/client";
+import { MCPClient } from "../../../src/utils/mcp";
+import { CreditCardComparisonRequest } from "../../../src/types";
 
-jest.mock('../../../src/utils/mcp');
+jest.mock("../../../src/utils/mcp");
 const MCPClientMock = MCPClient as jest.MockedClass<typeof MCPClient>;
 
-describe('CreditCards Resource', () => {
+describe("CreditCards Resource", () => {
   let securelend: SecureLend;
   let mcpClientInstance: jest.Mocked<MCPClient>;
 
   beforeEach(() => {
     MCPClientMock.mockClear();
-    securelend = new SecureLend('sk_test_abcdef123456789012345678901234567890');
-    mcpClientInstance = MCPClientMock.mock.instances[0] as jest.Mocked<MCPClient>;
+    securelend = new SecureLend("sk_test_abcdef123456789012345678901234567890");
+    mcpClientInstance = MCPClientMock.mock
+      .instances[0] as jest.Mocked<MCPClient>;
   });
 
-  describe('compare', () => {
-    it('should call the correct MCP tool with valid arguments', async () => {
+  describe("compare", () => {
+    it("should call the correct MCP tool with valid arguments", async () => {
       const request: CreditCardComparisonRequest = {
         creditScore: 750,
         monthlySpend: 5000,
       };
-      (mcpClientInstance.callTool as jest.Mock).mockResolvedValue({ content: [{ type: 'text', text: JSON.stringify({ cards: [] }) }] });
+      (mcpClientInstance.callTool as jest.Mock).mockResolvedValue({
+        content: [{ type: "text", text: JSON.stringify({ cards: [] }) }],
+      });
       await securelend.creditCards.compare(request);
-      expect(mcpClientInstance.callTool).toHaveBeenCalledWith('find_credit_cards', request);
+      expect(mcpClientInstance.callTool).toHaveBeenCalledWith(
+        "find_credit_cards",
+        request,
+      );
     });
 
-    it('should throw an error if credit score is invalid', async () => {
-        const request: CreditCardComparisonRequest = {
-            creditScore: 100,
-            monthlySpend: 5000,
-        };
-        await expect(securelend.creditCards.compare(request)).rejects.toThrow('Valid credit score (300-850) is required');
+    it("should throw an error if credit score is invalid", async () => {
+      const request: CreditCardComparisonRequest = {
+        creditScore: 100,
+        monthlySpend: 5000,
+      };
+      await expect(securelend.creditCards.compare(request)).rejects.toThrow(
+        "Valid credit score (300-850) is required",
+      );
     });
 
-    it('should throw an error if monthly spend is invalid', async () => {
-        const request: CreditCardComparisonRequest = {
-            creditScore: 750,
-            monthlySpend: -100,
-        };
-        await expect(securelend.creditCards.compare(request)).rejects.toThrow('Monthly spend must be a positive number');
+    it("should throw an error if monthly spend is invalid", async () => {
+      const request: CreditCardComparisonRequest = {
+        creditScore: 750,
+        monthlySpend: -100,
+      };
+      await expect(securelend.creditCards.compare(request)).rejects.toThrow(
+        "Monthly spend must be a positive number",
+      );
     });
   });
 });

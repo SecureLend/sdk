@@ -1,6 +1,6 @@
 /**
  * Type definitions for SecureLend SDK
- * 
+ *
  * @packageDocumentation
  */
 
@@ -19,7 +19,7 @@ export type DateString = string; // ISO 8601
 
 export interface CreditScore {
   score: number; // 300-850
-  bureau?: 'Experian' | 'Equifax' | 'TransUnion' | 'VantageScore';
+  bureau?: "Experian" | "Equifax" | "TransUnion" | "VantageScore";
   date?: DateString;
 }
 
@@ -39,20 +39,26 @@ export interface BusinessProfile {
     legalName?: string;
     dba?: string;
     ein?: string;
-    entityType?: 'sole_proprietorship' | 'partnership' | 'llc' | 's_corp' | 'c_corp' | 'non_profit';
+    entityType?:
+      | "sole_proprietorship"
+      | "partnership"
+      | "llc"
+      | "s_corp"
+      | "c_corp"
+      | "non_profit";
     incorporationDate?: DateString;
     industry?: {
       naicsCode?: string;
       description?: string;
     };
   };
-  
+
   location?: {
     headquarters?: Geography;
     operatingStates?: string[];
     numLocations?: number;
   };
-  
+
   financials?: {
     revenue?: {
       annual?: Money;
@@ -65,7 +71,7 @@ export interface BusinessProfile {
       monthlyDebtService?: Money;
     };
   };
-  
+
   credit?: {
     ownerCreditScore?: CreditScore;
     bankruptcyHistory?: boolean;
@@ -77,15 +83,15 @@ export interface BusinessProfile {
 // ============================================================================
 
 export type LoanPurpose =
-  | 'working_capital'
-  | 'equipment_purchase'
-  | 'real_estate'
-  | 'business_acquisition'
-  | 'inventory'
-  | 'expansion'
-  | 'debt_consolidation'
-  | 'payroll'
-  | 'other';
+  | "working_capital"
+  | "equipment_purchase"
+  | "real_estate"
+  | "business_acquisition"
+  | "inventory"
+  | "expansion"
+  | "debt_consolidation"
+  | "payroll"
+  | "other";
 
 export interface LoanComparisonRequest {
   amount: number;
@@ -121,7 +127,7 @@ export interface LoanOffer {
   terms: {
     amount: Money;
     interestRate: {
-      type: 'fixed' | 'variable';
+      type: "fixed" | "variable";
       rate: Percentage;
       apr: Percentage;
     };
@@ -172,12 +178,12 @@ export interface LoanComparisonResponse {
 // ============================================================================
 
 export interface BankingComparisonRequest {
-  accountType: 'checking' | 'savings' | 'both';
+  accountType: "checking" | "savings" | "both";
   monthlyRevenue?: number;
   monthlyTransactions?: number;
   averageBalance?: number;
   featuresNeeded?: string[];
-  accountingSoftware?: 'quickbooks' | 'xero' | 'freshbooks' | 'none';
+  accountingSoftware?: "quickbooks" | "xero" | "freshbooks" | "none";
   maxResults?: number;
 }
 
@@ -240,7 +246,7 @@ export interface CreditCardComparisonRequest {
     amount: number;
   }>;
   preferences?: {
-    rewardsType?: 'cashback' | 'points' | 'miles';
+    rewardsType?: "cashback" | "points" | "miles";
     annualFeeMax?: number;
     introApr?: boolean;
   };
@@ -253,7 +259,7 @@ export interface CreditCardOffer {
   cardName: string;
   issuer: string;
   rewards: {
-    type: 'cashback' | 'points' | 'miles';
+    type: "cashback" | "points" | "miles";
     baseRate: number;
     bonusCategories?: Array<{
       category: string;
@@ -316,5 +322,5 @@ export interface SecureLendConfig {
   mcpURL?: string;
 
   /** Environment (default: production) */
-  environment?: 'production' | 'development';
+  environment?: "production" | "development";
 }

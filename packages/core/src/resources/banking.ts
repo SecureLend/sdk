@@ -1,31 +1,37 @@
-import { BaseResource } from './base';
+import { BaseResource } from "./base";
 import type {
   BankingComparisonRequest,
   BankingComparisonResponse,
-} from '../types';
+} from "../types";
 
 export class Banking extends BaseResource {
   async compare(
-    request: BankingComparisonRequest
+    request: BankingComparisonRequest,
   ): Promise<BankingComparisonResponse> {
     this.validateBankingRequest(request);
-    const toolResult = await this.client.callTool('find_banking_accounts', request);
-    const data = this.parseJsonResponse<Omit<BankingComparisonResponse, 'widget'>>(toolResult);
+    const toolResult = await this.client.callTool(
+      "find_banking_accounts",
+      request,
+    );
+    const data =
+      this.parseJsonResponse<Omit<BankingComparisonResponse, "widget">>(
+        toolResult,
+      );
     return {
       ...data,
       widget: this.getWidget(toolResult),
     };
   }
-  
+
   private validateBankingRequest(request: BankingComparisonRequest): void {
     if (!request.accountType) {
-      throw new Error('Account type is required');
+      throw new Error("Account type is required");
     }
-    
-    const validTypes = ['checking', 'savings', 'both'];
+
+    const validTypes = ["checking", "savings", "both"];
     if (!validTypes.includes(request.accountType)) {
       throw new Error(
-        `Invalid account type. Must be one of: ${validTypes.join(', ')}`
+        `Invalid account type. Must be one of: ${validTypes.join(", ")}`,
       );
     }
   }

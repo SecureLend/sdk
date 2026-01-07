@@ -14,6 +14,7 @@
 Instead, email: security@securelend.ai
 
 Include:
+
 - Type of issue
 - Full paths of affected source files
 - Location of affected code
@@ -26,6 +27,7 @@ Response time: Within 48 hours
 ## Disclosure Policy
 
 We follow coordinated disclosure and will work with you to:
+
 1. Confirm the issue
 2. Develop a fix
 3. Release a patch

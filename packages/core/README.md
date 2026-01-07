@@ -3,20 +3,22 @@
 Official SecureLend SDK for JavaScript and TypeScript.
 
 ## Installation
+
 ```bash
 npm install @securelend/sdk
 ```
 
 ## Quick Start
-```typescript
-import { SecureLend } from '@securelend/sdk';
 
-const securelend = new SecureLend('sk_test_...');
+```typescript
+import { SecureLend } from "@securelend/sdk";
+
+const securelend = new SecureLend("sk_test_...");
 
 // Compare business loans
 const loans = await securelend.loans.compare({
   amount: 200000,
-  purpose: 'equipment',
+  purpose: "equipment",
   business: {
     revenue: 1200000,
     creditScore: 720,
@@ -29,7 +31,7 @@ console.log(`Best rate: ${loans.offers[0].terms.interestRate.rate}%`);
 
 // Compare business banking
 const banking = await securelend.banking.compare({
-  accountType: 'checking',
+  accountType: "checking",
   monthlyRevenue: 100000,
   monthlyTransactions: 500,
 });
@@ -62,25 +64,27 @@ const cards = await securelend.creditCards.compare({
 ## Usage
 
 ### Initialize Client
-```typescript
-import { SecureLend } from '@securelend/sdk';
 
-const securelend = new SecureLend('sk_test_...', {
-  mcpURL: 'https://mcp.securelend.ai/sse', // Optional
+```typescript
+import { SecureLend } from "@securelend/sdk";
+
+const securelend = new SecureLend("sk_test_...", {
+  mcpURL: "https://mcp.securelend.ai/sse", // Optional
 });
 ```
 
 ### Compare Loans
+
 ```typescript
 const result = await securelend.loans.compare({
   amount: 200000,
-  purpose: 'working_capital',
+  purpose: "working_capital",
   business: {
     revenue: 1200000,
     creditScore: 720,
     timeInBusiness: 36,
-    industry: 'Retail',
-    entityType: 'llc',
+    industry: "Retail",
+    entityType: "llc",
   },
   termPreferenceMonths: 60,
 });
@@ -93,6 +97,7 @@ console.log(bestOffer.matching.approvalProbability);
 ```
 
 ### Calculate Loan Payment
+
 ```typescript
 const calculation = await securelend.loans.calculate({
   amount: 200000,
@@ -109,11 +114,12 @@ console.log(`APR: ${calculation.apr}%`);
 ```
 
 ### Error Handling
+
 ```typescript
-import { 
-  SecureLendError, 
-  AuthenticationError, 
-  RateLimitError 
+import {
+  SecureLendError,
+  AuthenticationError,
+  RateLimitError
 } from '@securelend/sdk';
 
 try {
@@ -136,18 +142,19 @@ try {
 ## TypeScript Support
 
 This package includes TypeScript definitions:
+
 ```typescript
-import type { 
-  LoanOffer, 
-  BankingAccount, 
+import type {
+  LoanOffer,
+  BankingAccount,
   CreditCardOffer,
-  BusinessProfile 
-} from '@securelend/sdk';
+  BusinessProfile,
+} from "@securelend/sdk";
 
 const business: BusinessProfile = {
   basic: {
-    legalName: 'Acme Corp',
-    entityType: 'llc',
+    legalName: "Acme Corp",
+    entityType: "llc",
   },
   financials: {
     revenue: {

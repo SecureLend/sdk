@@ -38,6 +38,7 @@ Be respectful, inclusive, and professional. We're building financial infrastruct
 8. Open a Pull Request
 
 ## Development Setup
+
 ```bash
 # Clone your fork
 git clone https://github.com/YOUR_USERNAME/sdk.git
@@ -60,6 +61,7 @@ npm run dev
 ```
 
 ## Project Structure
+
 ```
 sdk/
 ├── packages/
@@ -74,6 +76,7 @@ sdk/
 ```
 
 ## Testing
+
 ```bash
 # Run all tests
 npm test
