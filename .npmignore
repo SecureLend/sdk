@@ -1,0 +1,22 @@
+# Source files
+src/
+tests/
+*.test.ts
+*.spec.ts
+
+# Config files
+tsconfig.json
+.eslintrc.js
+.prettierrc
+jest.config.js
+
+# Development
+.github/
+examples/
+docs/
+coverage/
+*.tsbuildinfo
+
+# Git
+.git/
+.gitignore
