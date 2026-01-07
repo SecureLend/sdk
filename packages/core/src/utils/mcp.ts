@@ -63,7 +63,7 @@ export class MCPClient {
 
   async callTool(
     name: string,
-    args: Record<string, unknown>,
+    args: Record<string, any>,
   ): Promise<ToolResult> {
     await this.connect(); // Ensure connection exists
 
@@ -74,7 +74,7 @@ export class MCPClient {
     try {
       const result = await this.mcp.callTool({
         name,
-        arguments: args as Record<string, any>,
+        arguments: args,
       });
 
       if (this.debug) {
