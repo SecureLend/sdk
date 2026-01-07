@@ -297,4 +297,4 @@ MIT © [SecureLend](https://securelend.ai)
 
 ---
 
-**Get started:** [Sign up for API key](https://securelend.ai/signup) • [View documentation](https://docs.securelend.ai) • [Explore examples](./examples)
+**Get started:** [Sign up for API key](https://developers.securelend.ai/signup) • [View documentation](https://docs.securelend.ai) • [Explore examples](./examples)
