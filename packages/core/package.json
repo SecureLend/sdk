@@ -54,7 +54,7 @@
   },
   "homepage": "https://securelend.ai/docs/sdk",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "0.1.0"
+    "@modelcontextprotocol/sdk": "latest"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
