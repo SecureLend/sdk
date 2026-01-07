@@ -1,7 +1,7 @@
 {
-  "name": "@securelend/mcp-client",
+  "name": "@securelend/sdk",
   "version": "1.0.0",
-  "description": "SecureLend MCP-native SDK for JavaScript/TypeScript",
+  "description": "SecureLend SDK for JavaScript/TypeScript - Financial services infrastructure for AI",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -34,15 +34,13 @@
   },
   "keywords": [
     "securelend",
-    "mcp",
-    "model-context-protocol",
-    "ai",
     "sdk",
     "loans",
     "banking",
     "credit-cards",
     "fintech",
-    "financial-services"
+    "financial-services",
+    "ai"
   ],
   "author": "SecureLend <support@securelend.ai>",
   "license": "MIT",

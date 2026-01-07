@@ -1,4 +1,4 @@
-import { SecureLendMCP } from '../../../src/client';
+import { SecureLend } from '../../../src/client';
 import { MCPClient } from '../../../src/utils/mcp';
 import { CreditCardComparisonRequest } from '../../../src/types';
 
@@ -6,12 +6,12 @@ jest.mock('../../../src/utils/mcp');
 const MCPClientMock = MCPClient as jest.MockedClass<typeof MCPClient>;
 
 describe('CreditCards Resource', () => {
-  let securelend: SecureLendMCP;
+  let securelend: SecureLend;
   let mcpClientInstance: jest.Mocked<MCPClient>;
 
   beforeEach(() => {
     MCPClientMock.mockClear();
-    securelend = new SecureLendMCP('sk_test_abcdef123456789012345678901234567890');
+    securelend = new SecureLend('sk_test_abcdef123456789012345678901234567890');
     mcpClientInstance = MCPClientMock.mock.instances[0] as jest.Mocked<MCPClient>;
   });
 
@@ -21,6 +21,7 @@ describe('CreditCards Resource', () => {
         creditScore: 750,
         monthlySpend: 5000,
       };
+      (mcpClientInstance.callTool as jest.Mock).mockResolvedValue({ content: [{ type: 'text', text: JSON.stringify({ cards: [] }) }] });
       await securelend.creditCards.compare(request);
       expect(mcpClientInstance.callTool).toHaveBeenCalledWith('find_credit_cards', request);
     });

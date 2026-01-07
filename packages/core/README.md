@@ -1,17 +1,17 @@
-# @securelend/mcp-client
+# @securelend/sdk
 
-Official SecureLend MCP-native SDK for JavaScript and TypeScript.
+Official SecureLend SDK for JavaScript and TypeScript.
 
 ## Installation
 ```bash
-npm install @securelend/mcp-client
+npm install @securelend/sdk
 ```
 
 ## Quick Start
 ```typescript
-import { SecureLendMCP } from '@securelend/mcp-client';
+import { SecureLend } from '@securelend/sdk';
 
-const securelend = new SecureLendMCP('sk_test_...');
+const securelend = new SecureLend('sk_test_...');
 
 // Compare business loans
 const loans = await securelend.loans.compare({
@@ -49,7 +49,7 @@ const cards = await securelend.creditCards.compare({
 
 ## Features
 
-- ✅ **MCP Native** - Built on the Model Context Protocol for AI applications.
+- ✅ **AI Native** - Built on the Model Context Protocol for seamless integration with AI applications.
 - ✅ **Business Loans** - Compare term loans, SBA loans, lines of credit
 - ✅ **Business Banking** - Compare checking, savings, money market accounts
 - ✅ **Business Credit Cards** - Compare rewards, cashback, and travel cards
@@ -63,9 +63,9 @@ const cards = await securelend.creditCards.compare({
 
 ### Initialize Client
 ```typescript
-import { SecureLendMCP } from '@securelend/mcp-client';
+import { SecureLend } from '@securelend/sdk';
 
-const securelend = new SecureLendMCP('sk_test_...', {
+const securelend = new SecureLend('sk_test_...', {
   mcpURL: 'https://mcp.securelend.ai/sse', // Optional
 });
 ```
@@ -114,7 +114,7 @@ import {
   SecureLendError, 
   AuthenticationError, 
   RateLimitError 
-} from '@securelend/mcp-client';
+} from '@securelend/sdk';
 
 try {
   // Connection can fail, or tool calls can fail
@@ -142,7 +142,7 @@ import type {
   BankingAccount, 
   CreditCardOffer,
   BusinessProfile 
-} from '@securelend/mcp-client';
+} from '@securelend/sdk';
 
 const business: BusinessProfile = {
   basic: {

@@ -1,4 +1,4 @@
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { Client, ToolResult } from '@modelcontextprotocol/sdk/client/index.js';
 import { SSEClientTransport } from '@modelcontextprotocol/sdk/client/sse.js';
 import { SecureLendError, AuthenticationError, NetworkError, ValidationError } from './errors';
 
@@ -17,7 +17,7 @@ export class MCPClient {
     this.config = config;
     
     this.mcp = new Client(
-      { name: '@securelend/mcp-client', version: '1.0.0' },
+      { name: '@securelend/sdk', version: '1.0.0' },
       { capabilities: { tools: {}, widgets: { supportsHtml: true } } }
     );
   }
@@ -50,7 +50,7 @@ export class MCPClient {
     }
   }
 
-  async callTool<T>(name: string, args: Record<string, any>): Promise<T> {
+  async callTool(name: string, args: Record<string, any>): Promise<ToolResult> {
     await this.connect(); // Ensure connection exists
 
     if (this.debug) {
@@ -63,23 +63,7 @@ export class MCPClient {
       if (this.debug) {
         console.log(`[SecureLend SDK] Tool result for ${name}:`, result);
       }
-
-      // Assuming the relevant content is in the first part and is JSON.
-      // This is a big assumption and might need to be more robust.
-      const content = result.content[0];
-      if (content?.type === 'resource' && content.resource.mimeType === 'application/json') {
-        return JSON.parse(content.resource.text);
-      } else if (content?.type === 'text') {
-        // Attempt to parse if it looks like JSON
-        try {
-          return JSON.parse(content.text);
-        } catch (e) {
-            // Not JSON, return as is. This might not match <T>.
-            return content.text as any;
-        }
-      }
-
-      throw new SecureLendError('Unexpected tool response format from MCP server', 'mcp_error', result);
+      return result;
     } catch (error: any) {
       if (error instanceof SecureLendError) throw error;
       // Again, poor man's error mapping

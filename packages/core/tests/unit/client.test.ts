@@ -1,4 +1,4 @@
-import { SecureLendMCP } from '../../src/client';
+import { SecureLend } from '../../src/client';
 import { MCPClient } from '../../src/utils/mcp';
 
 // Mock the MCPClient to avoid actual network calls
@@ -6,7 +6,7 @@ jest.mock('../../src/utils/mcp');
 
 const MCPClientMock = MCPClient as jest.MockedClass<typeof MCPClient>;
 
-describe('SecureLendMCP Client', () => {
+describe('SecureLend Client', () => {
   beforeEach(() => {
     // Clears the record of calls to the mock constructor and its methods
     MCPClientMock.mockClear();
@@ -14,8 +14,8 @@ describe('SecureLendMCP Client', () => {
 
   describe('constructor', () => {
     it('should create client with valid API key', () => {
-      const client = new SecureLendMCP('sk_test_abcdef123456789012345678901234567890');
-      expect(client).toBeInstanceOf(SecureLendMCP);
+      const client = new SecureLend('sk_test_abcdef123456789012345678901234567890');
+      expect(client).toBeInstanceOf(SecureLend);
       expect(client.loans).toBeDefined();
       expect(client.banking).toBeDefined();
       expect(client.creditCards).toBeDefined();
@@ -24,21 +24,21 @@ describe('SecureLendMCP Client', () => {
 
     it('should throw error with invalid API key format', () => {
       expect(() => {
-        new SecureLendMCP('invalid_key');
+        new SecureLend('invalid_key');
       }).toThrow('Invalid API key format');
     });
 
     it('should throw error with empty API key', () => {
       expect(() => {
-        new SecureLendMCP('');
+        new SecureLend('');
       }).toThrow('Invalid API key format');
     });
   });
 
   describe('configuration', () => {
     it('should use default config when not provided', () => {
-      const client = new SecureLendMCP('sk_test_abcdef123456789012345678901234567890');
-      expect(client).toBeInstanceOf(SecureLendMCP);
+      const client = new SecureLend('sk_test_abcdef123456789012345678901234567890');
+      expect(client).toBeInstanceOf(SecureLend);
       expect(MCPClientMock).toHaveBeenCalledWith({
         apiKey: 'sk_test_abcdef123456789012345678901234567890',
         mcpURL: 'https://mcp.securelend.ai/sse',
@@ -46,10 +46,10 @@ describe('SecureLendMCP Client', () => {
     });
 
     it('should accept custom configuration', () => {
-      const client = new SecureLendMCP('sk_test_abcdef123456789012345678901234567890', {
+      const client = new SecureLend('sk_test_abcdef123456789012345678901234567890', {
         mcpURL: 'https://custom.mcp.com/sse',
       });
-      expect(client).toBeInstanceOf(SecureLendMCP);
+      expect(client).toBeInstanceOf(SecureLend);
       expect(MCPClientMock).toHaveBeenCalledWith({
         apiKey: 'sk_test_abcdef123456789012345678901234567890',
         mcpURL: 'https://custom.mcp.com/sse',
@@ -58,11 +58,11 @@ describe('SecureLendMCP Client', () => {
   });
 
   describe('methods', () => {
-    let client: SecureLendMCP;
+    let client: SecureLend;
     let mcpClientInstance: jest.Mocked<MCPClient>;
 
     beforeEach(() => {
-      client = new SecureLendMCP('sk_test_abcdef123456789012345678901234567890');
+      client = new SecureLend('sk_test_abcdef123456789012345678901234567890');
       mcpClientInstance = MCPClientMock.mock.instances[0] as jest.Mocked<MCPClient>;
     });
 

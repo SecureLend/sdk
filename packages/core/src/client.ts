@@ -19,9 +19,9 @@ export interface SecureLendConfig {
  * 
  * @example
  * ```typescript
- * import { SecureLendMCP } from '@securelend/mcp-client';
+ * import { SecureLend } from '@securelend/sdk';
  * 
- * const securelend = new SecureLendMCP('sk_live_...');
+ * const securelend = new SecureLend('sk_live_...');
  * 
  * const loans = await securelend.loans.compare({
  *   amount: 200000,
@@ -34,7 +34,7 @@ export interface SecureLendConfig {
  * });
  * ```
  */
-export class SecureLendMCP {
+export class SecureLend {
   private mcpClient: MCPClient;
   
   /** Loan comparison and management */

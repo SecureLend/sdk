@@ -9,10 +9,12 @@ export class CreditCards extends BaseResource {
     request: CreditCardComparisonRequest
   ): Promise<CreditCardComparisonResponse> {
     this.validateCardRequest(request);
-    return this.client.callTool<CreditCardComparisonResponse>(
-      'find_credit_cards',
-      request
-    );
+    const toolResult = await this.client.callTool('find_credit_cards', request);
+    const data = this.parseJsonResponse<Omit<CreditCardComparisonResponse, 'widget'>>(toolResult);
+    return {
+      ...data,
+      widget: this.getWidget(toolResult),
+    };
   }
   
   private validateCardRequest(request: CreditCardComparisonRequest): void {

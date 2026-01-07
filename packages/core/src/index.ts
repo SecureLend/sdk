@@ -1,13 +1,13 @@
 /**
- * SecureLend MCP-native SDK
+ * SecureLend SDK
  * 
  * Official SDK for SecureLend - Financial services infrastructure for AI
  * 
  * @packageDocumentation
  */
 
-export { SecureLendMCP } from './client';
-export { SecureLendMCP as default } from './client';
+export { SecureLend } from './client';
+export { SecureLend as default } from './client';
 
 // Resource exports
 export { Loans } from './resources/loans';

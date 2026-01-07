@@ -4,18 +4,18 @@ The official SDK for SecureLend - Financial services infrastructure for AI assis
 
 ## Packages
 
-- [`@securelend/mcp-client`](./packages/core) - Core SDK for JavaScript/TypeScript
+- [`@securelend/sdk`](./packages/core) - Core SDK for JavaScript/TypeScript
 - [`@securelend/react`](./packages/react) - React hooks and components
 - More coming soon: Python, Ruby, Go
 
 ## Quick Start
 ```bash
-npm install @securelend/mcp-client
+npm install @securelend/sdk
 ```
 ```typescript
-import { SecureLendMCP } from '@securelend/mcp-client';
+import { SecureLend } from '@securelend/sdk';
 
-const securelend = new SecureLendMCP('sk_test_...');
+const securelend = new SecureLend('sk_test_...');
 
 const loans = await securelend.loans.compare({
   amount: 200000,

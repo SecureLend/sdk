@@ -164,6 +164,7 @@ export interface LoanComparisonResponse {
     queryId: string;
     timestamp: string;
   };
+  widget?: string;
 }
 
 // ============================================================================
@@ -224,6 +225,7 @@ export interface BankingComparisonResponse {
     bestForHighTransactions?: string;
     bestForInterest?: string;
   };
+  widget?: string;
 }
 
 // ============================================================================
@@ -274,6 +276,7 @@ export interface CreditCardOffer {
 
 export interface CreditCardComparisonResponse {
   cards: CreditCardOffer[];
+  widget?: string;
 }
 
 // ============================================================================

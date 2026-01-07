@@ -9,7 +9,12 @@ export class Banking extends BaseResource {
     request: BankingComparisonRequest
   ): Promise<BankingComparisonResponse> {
     this.validateBankingRequest(request);
-    return this.client.callTool<BankingComparisonResponse>('find_banking_accounts', request);
+    const toolResult = await this.client.callTool('find_banking_accounts', request);
+    const data = this.parseJsonResponse<Omit<BankingComparisonResponse, 'widget'>>(toolResult);
+    return {
+      ...data,
+      widget: this.getWidget(toolResult),
+    };
   }
   
   private validateBankingRequest(request: BankingComparisonRequest): void {

@@ -11,11 +11,17 @@ export class Loans extends BaseResource {
     request: LoanComparisonRequest
   ): Promise<LoanComparisonResponse> {
     this.validateComparisonRequest(request);
-    return this.client.callTool<LoanComparisonResponse>('find_business_loan_options', request);
+    const toolResult = await this.client.callTool('find_business_loan_options', request);
+    const data = this.parseJsonResponse<Omit<LoanComparisonResponse, 'widget'>>(toolResult);
+    return {
+      ...data,
+      widget: this.getWidget(toolResult),
+    };
   }
   
   async calculate(params: LoanCalculation): Promise<LoanCalculationResult> {
-    return this.client.callTool<LoanCalculationResult>('calculate_loan_payment', params);
+    const toolResult = await this.client.callTool('calculate_loan_payment', params);
+    return this.parseJsonResponse<LoanCalculationResult>(toolResult);
   }
   
   private validateComparisonRequest(request: LoanComparisonRequest): void {
