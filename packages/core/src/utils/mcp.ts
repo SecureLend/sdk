@@ -1,6 +1,11 @@
-import { Client, ToolResult } from '@modelcontextprotocol/sdk/client/index.js';
-import { SSEClientTransport } from '@modelcontextprotocol/sdk/client/sse.js';
-import { SecureLendError, AuthenticationError, NetworkError, ValidationError } from './errors';
+import { Client, ToolResult } from "@modelcontextprotocol/sdk/client/index.js";
+import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
+import {
+  SecureLendError,
+  AuthenticationError,
+  NetworkError,
+  ValidationError,
+} from "./errors";
 
 interface MCPClientConfig {
   apiKey: string;
@@ -15,10 +20,10 @@ export class MCPClient {
 
   constructor(config: MCPClientConfig) {
     this.config = config;
-    
+
     this.mcp = new Client(
-      { name: '@securelend/sdk', version: '1.0.0' },
-      { capabilities: { tools: {}, widgets: { supportsHtml: true } } }
+      { name: "@securelend/sdk", version: "1.0.0" },
+      { capabilities: { tools: {}, widgets: { supportsHtml: true } } },
     );
   }
 
@@ -27,12 +32,14 @@ export class MCPClient {
 
     try {
       if (this.debug) {
-        console.log(`[SecureLend SDK] Connecting to MCP server at ${this.config.mcpURL}`);
+        console.log(
+          `[SecureLend SDK] Connecting to MCP server at ${this.config.mcpURL}`,
+        );
       }
       const transport = new SSEClientTransport({
         url: this.config.mcpURL,
         headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
+          Authorization: `Bearer ${this.config.apiKey}`,
         },
       });
       await this.mcp.connect(transport);
@@ -43,8 +50,10 @@ export class MCPClient {
     } catch (error: any) {
       this.isConnected = false;
       // Poor man's error mapping. The MCP SDK should have better error types.
-      if (error.message?.includes('401')) {
-        throw new AuthenticationError('MCP connection failed: Invalid API key.');
+      if (error.message?.includes("401")) {
+        throw new AuthenticationError(
+          "MCP connection failed: Invalid API key.",
+        );
       }
       throw new NetworkError(`MCP connection failed: ${error.message}`);
     }
@@ -59,7 +68,7 @@ export class MCPClient {
 
     try {
       const result = await this.mcp.callTool({ name, arguments: args });
-      
+
       if (this.debug) {
         console.log(`[SecureLend SDK] Tool result for ${name}:`, result);
       }
@@ -67,10 +76,14 @@ export class MCPClient {
     } catch (error: any) {
       if (error instanceof SecureLendError) throw error;
       // Again, poor man's error mapping
-      if (error.message?.includes('400')) {
-        throw new ValidationError('Invalid tool arguments', error.details);
+      if (error.message?.includes("400")) {
+        throw new ValidationError("Invalid tool arguments", error.details);
       }
-      throw new SecureLendError(`Tool call failed: ${error.message}`, 'mcp_tool_error', error);
+      throw new SecureLendError(
+        `Tool call failed: ${error.message}`,
+        "mcp_tool_error",
+        error,
+      );
     }
   }
 

@@ -8,13 +8,13 @@
 export class SecureLendError extends Error {
   public readonly type: string;
   public readonly details?: any;
-  
+
   constructor(message: string, type: string, details?: any) {
     super(message);
-    this.name = 'SecureLendError';
+    this.name = "SecureLendError";
     this.type = type;
     this.details = details;
-    
+
     // Maintains proper stack trace for where our error was thrown
     Error.captureStackTrace(this, this.constructor);
   }
@@ -25,8 +25,8 @@ export class SecureLendError extends Error {
  */
 export class AuthenticationError extends SecureLendError {
   constructor(message: string) {
-    super(message, 'authentication_error');
-    this.name = 'AuthenticationError';
+    super(message, "authentication_error");
+    this.name = "AuthenticationError";
   }
 }
 
@@ -35,10 +35,10 @@ export class AuthenticationError extends SecureLendError {
  */
 export class RateLimitError extends SecureLendError {
   public readonly retryAfter?: number;
-  
+
   constructor(message: string, retryAfter?: number) {
-    super(message, 'rate_limit_error');
-    this.name = 'RateLimitError';
+    super(message, "rate_limit_error");
+    this.name = "RateLimitError";
     this.retryAfter = retryAfter;
   }
 }
@@ -48,8 +48,8 @@ export class RateLimitError extends SecureLendError {
  */
 export class ValidationError extends SecureLendError {
   constructor(message: string, errors?: any) {
-    super(message, 'validation_error', errors);
-    this.name = 'ValidationError';
+    super(message, "validation_error", errors);
+    this.name = "ValidationError";
   }
 }
 
@@ -58,8 +58,8 @@ export class ValidationError extends SecureLendError {
  */
 export class NotFoundError extends SecureLendError {
   constructor(message: string) {
-    super(message, 'not_found');
-    this.name = 'NotFoundError';
+    super(message, "not_found");
+    this.name = "NotFoundError";
   }
 }
 
@@ -68,8 +68,8 @@ export class NotFoundError extends SecureLendError {
  */
 export class NetworkError extends SecureLendError {
   constructor(message: string) {
-    super(message, 'network_error');
-    this.name = 'NetworkError';
+    super(message, "network_error");
+    this.name = "NetworkError";
   }
 }
 
@@ -78,7 +78,7 @@ export class NetworkError extends SecureLendError {
  */
 export class ServerError extends SecureLendError {
   constructor(message: string) {
-    super(message, 'server_error');
-    this.name = 'ServerError';
+    super(message, "server_error");
+    this.name = "ServerError";
   }
 }
