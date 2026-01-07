@@ -50,16 +50,21 @@ export class MCPClient {
     } catch (error: unknown) {
       this.isConnected = false;
       // Poor man's error mapping. The MCP SDK should have better error types.
-      if (error.message?.includes("401")) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes("401")) {
         throw new AuthenticationError(
           "MCP connection failed: Invalid API key.",
         );
       }
-      throw new NetworkError(`MCP connection failed: ${error.message}`);
+      throw new NetworkError(`MCP connection failed: ${errorMessage}`);
     }
   }
 
-  async callTool(name: string, args: Record<string, any>): Promise<ToolResult> {
+  async callTool(
+    name: string,
+    args: Record<string, unknown>,
+  ): Promise<ToolResult> {
     await this.connect(); // Ensure connection exists
 
     if (this.debug) {
@@ -67,7 +72,10 @@ export class MCPClient {
     }
 
     try {
-      const result = await this.mcp.callTool({ name, arguments: args });
+      const result = await this.mcp.callTool({
+        name,
+        arguments: args as Record<string, any>,
+      });
 
       if (this.debug) {
         console.log(`[SecureLend SDK] Tool result for ${name}:`, result);
@@ -76,11 +84,13 @@ export class MCPClient {
     } catch (error: unknown) {
       if (error instanceof SecureLendError) throw error;
       // Again, poor man's error mapping
-      if (error.message?.includes("400")) {
-        throw new ValidationError("Invalid tool arguments", error.details);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes("400")) {
+        throw new ValidationError("Invalid tool arguments", error);
       }
       throw new SecureLendError(
-        `Tool call failed: ${error.message}`,
+        `Tool call failed: ${errorMessage}`,
         "mcp_tool_error",
         error,
       );
