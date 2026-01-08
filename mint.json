@@ -3,7 +3,7 @@
   "name": "SecureLend SDK",
   "logo": {
     "dark": "/logo-dark.png",
-    "light": "/logo-light.png"
+    "light": "/logo-light.svg"
   },
   "favicon": "/favicon.png",
   "theme": "mint",
