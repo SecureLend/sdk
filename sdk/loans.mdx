@@ -1,8 +1,111 @@
 ---
-title: Loans
-description: Information about the Loans API.
+title: Loans API
+description: Compare business loans and calculate payments.
 ---
 
 # Loans API
 
-Content to be added here.
+The Loans API allows you to find and compare business loan offers from multiple lenders.
+
+## Compare Loan Offers
+
+This is the primary method for finding loan options that match a business's profile and needs.
+
+```typescript Method
+const result = await securelend.loans.compare(request: LoanComparisonRequest);
+```
+
+<RequestExample>
+```typescript Example
+const result = await securelend.loans.compare({
+  amount: 200000,
+  purpose: "equipment",
+  business: {
+    revenue: 1200000,
+    creditScore: 720,
+    timeInBusiness: 36,
+  },
+});
+```
+</RequestExample>
+
+### Request Parameters
+
+<AccordionGroup>
+  <Accordion title="`amount` (required)">
+    The requested loan amount. Must be at least $5,000.
+    - Type: `number`
+  </Accordion>
+  <Accordion title="`purpose` (required)">
+    The purpose of the loan.
+    - Type: `string`
+    - Examples: `"equipment"`, `"working_capital"`, `"expansion"`
+  </Accordion>
+  <Accordion title="`business` (required)">
+    An object containing information about the business.
+    - Type: `object`
+    - `revenue`: Annual business revenue. (Type: `number`)
+    - `creditScore`: Business owner's credit score (300-850). (Type: `number`)
+    - `timeInBusiness`: Months in business. (Type: `number`)
+  </Accordion>
+</AccordionGroup>
+
+### Response
+
+The `compare` method returns a `LoanComparisonResult` object.
+
+<ResponseExample>
+```json
+{
+  "summary": {
+    "totalOffers": 15,
+    "bestRate": 7.99
+  },
+  "offers": [
+    {
+      "lender": { "name": "Lender A" },
+      "terms": {
+        "interestRate": { "rate": 7.99 },
+        "monthlyPayment": 4054.50
+      },
+      ...
+    }
+  ]
+}
+```
+</ResponseExample>
+
+---
+
+## Calculate Loan Payment
+
+Calculates the estimated monthly payment, total interest, and APR for a given loan.
+
+```typescript Method
+const calculation = await securelend.loans.calculate(request: LoanCalculationRequest);
+```
+
+<RequestExample>
+```typescript Example
+const calculation = await securelend.loans.calculate({
+  amount: 200000,
+  rate: 8.5,
+  termMonths: 60,
+  fees: {
+    origination: 2000,
+  },
+});
+```
+</RequestExample>
+
+### Response
+
+<ResponseExample>
+```json
+{
+  "monthlyPayment": 4103.33,
+  "totalInterest": 46199.80,
+  "apr": 8.91
+}
+```
+</ResponseExample>

@@ -1,8 +1,73 @@
 ---
 title: Error Handling
-description: How to handle errors returned by the SDK.
+description: Understand and handle errors returned by the SecureLend SDK.
 ---
 
 # Error Handling
 
-Content to be added here.
+The SecureLend SDK uses custom error classes that extend the built-in `Error` object. This makes it easy to handle different types of errors that may occur during an API call.
+
+All SDK errors are instances of `SecureLendError`.
+
+## Error Handling Example
+
+Here's a comprehensive example of how to handle various error types using a `try...catch` block.
+
+```typescript
+import {
+  SecureLendError,
+  AuthenticationError,
+  RateLimitError,
+  ValidationError,
+  NetworkError,
+} from '@securelend/sdk';
+
+try {
+  const loans = await securelend.loans.compare({ ... });
+} catch (error) {
+  if (error instanceof AuthenticationError) {
+    console.error('Authentication Error:', error.message);
+    // Handle invalid API key
+  } else if (error instanceof RateLimitError) {
+    console.error('Rate Limit Error:', error.message);
+    // Handle rate limiting (e.g., retry with backoff)
+  } else if (error instanceof ValidationError) {
+    console.error('Validation Error:', error.message);
+    // Handle invalid input from the user
+  } else if (error instanceof NetworkError) {
+    console.error('Network Error:', error.message);
+    // Handle network connectivity issues
+  } else if (error instanceof SecureLendError) {
+    console.error('SecureLend API Error:', error.message);
+    // Handle generic API errors
+  } else {
+    console.error('An unexpected error occurred:', error.message);
+  }
+}
+```
+
+## Error Types
+
+<AccordionGroup>
+  <Accordion title="SecureLendError">
+    The base error class for all SDK-specific errors. Catching this will catch any error originating from the SecureLend SDK.
+  </Accordion>
+  <Accordion title="AuthenticationError">
+    Thrown when the API key is missing, invalid, or expired.
+  </Accordion>
+  <Accordion title="RateLimitError">
+    Thrown when the API rate limit has been exceeded for your account.
+  </Accordion>
+  <Accordion title="ValidationError">
+    Thrown when the request parameters are invalid (e.g., missing a required field, amount too low).
+  </Accordion>
+  <Accordion title="NotFoundError">
+    Thrown when a requested resource could not be found.
+  </Accordion>
+  <Accordion title="ServerError">
+    Thrown for internal errors on SecureLend's servers.
+  </Accordion>
+  <Accordion title="NetworkError">
+    Thrown when there is a problem with the network connection during the request.
+  </Accordion>
+</AccordionGroup>

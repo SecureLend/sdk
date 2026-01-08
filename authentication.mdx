@@ -1,8 +1,31 @@
 ---
 title: Authentication
-description: How to authenticate with the SecureLend API.
+description: How to authenticate your requests to the SecureLend API.
 ---
 
 # Authentication
 
-Content to be added here.
+The SecureLend SDK uses API keys to authenticate requests. You can view and manage your API keys in the [SecureLend Dashboard](https://dashboard.securelend.ai/settings/keys).
+
+Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
+
+## Using API Keys
+
+All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication will also fail.
+
+To authenticate, you need to provide your secret key when initializing the client:
+
+```typescript
+import { SecureLend } from '@securelend/sdk';
+
+const client = new SecureLend('sk_test_YOUR_SECRET_KEY');
+```
+
+We strongly recommend using environment variables to manage your API keys and avoid committing them to version control.
+
+```typescript
+// Best practice: use environment variables
+const client = new SecureLend(process.env.SECURELEND_API_KEY);
+```
+
+If you provide an invalid or expired API key, the SDK will throw an `AuthenticationError`. See the [Error Handling](/guides/errors) guide for more details.

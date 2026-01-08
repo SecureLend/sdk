@@ -1,6 +1,18 @@
 {
+  "$schema": "https://mintlify.com/schema.json",
   "name": "SecureLend SDK",
+  "logo": {
+    "dark": "/logo-dark.png",
+    "light": "/logo-light.png"
+  },
+  "favicon": "/favicon.png",
   "theme": "mint",
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@securelend.ai"
+    }
+  ],
   "navigation": [
     {
       "group": "Get Started",
@@ -14,5 +26,8 @@
       "group": "Guides",
       "pages": ["guides/errors", "guides/webhooks"]
     }
-  ]
+  ],
+  "footerSocials": {
+    "github": "https://github.com/SecureLend/sdk"
+  }
 }

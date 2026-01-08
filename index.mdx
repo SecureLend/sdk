@@ -1,25 +1,24 @@
 ---
-title: SecureLend SDK
+title: Introduction
 description: Official SDK for comparing business loan offers with SecureLend.
 ---
 
-## Install
+# Introduction
 
-```bash
-npm install @securelend/sdk
-```
+Welcome to the SecureLend SDK documentation. Our SDK provides a simple and powerful way to integrate financial product comparisons into your applications. It's built on the AI-native Model Context Protocol (MCP), ensuring seamless integration with modern AI assistants and applications.
 
-## Quick Start
-```typescript
-import { SecureLend } from "@securelend/sdk";
+<CardGroup cols={2}>
+  <Card title="Quickstart" href="/quickstart">
+    Get up and running in 5 minutes.
+  </Card>
+  <Card title="SDK Reference" href="/sdk/overview">
+    Explore the SDK's features and APIs.
+  </Card>
+</CardGroup>
 
-const client = new SecureLend(process.env.SECURELEND_API_KEY);
+## Why SecureLend?
 
-const result = await client.loans.compare({
-  amount: 200000,
-  purpose: "equipment",
-  business: { revenue: 1200000, creditScore: 720, timeInBusiness: 36 }
-});
-
-console.log(result.offers?.[0]);
-```
+- **AI Native**: Built on MCP for seamless AI integration.
+- **Comprehensive**: Compare loans, banking, and credit cards.
+- **TypeScript First**: Full type safety out of the box.
+- **Interactive Widgets**: Embed rich, interactive UI components.

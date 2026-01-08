@@ -1,8 +1,81 @@
 ---
 title: Quickstart
-description: A quickstart guide for the SecureLend SDK.
+description: A 5-minute guide to get up and running with the SecureLend SDK.
 ---
 
 # Quickstart
 
-Content to be added here.
+This guide will walk you through installing the SDK, authenticating, and making your first API call to compare business loans.
+
+## 1. Installation
+
+Install the SDK using your preferred package manager.
+
+<CodeGroup>
+```bash npm
+npm install @securelend/sdk
+```
+```bash yarn
+yarn add @securelend/sdk
+```
+```bash pnpm
+pnpm add @securelend/sdk
+```
+</CodeGroup>
+
+## 2. Get your API Key
+
+You'll need an API key to authenticate with SecureLend. You can get your key from the [SecureLend Dashboard](https://dashboard.securelend.ai).
+
+## 3. Initialize the Client
+
+Import the `SecureLend` client and initialize it with your API key. We recommend using an environment variable to store your key.
+
+```typescript
+import { SecureLend } from "@securelend/sdk";
+
+const securelend = new SecureLend(process.env.SECURELEND_API_KEY);
+```
+
+## 4. Compare Loan Offers
+
+Now you're ready to make your first API call. Let's compare business loan offers.
+
+```typescript
+async function compareBusinessLoans() {
+  try {
+    const result = await securelend.loans.compare({
+      amount: 200000,
+      purpose: "equipment",
+      business: {
+        revenue: 1200000,
+        creditScore: 720,
+        timeInBusiness: 36,
+      },
+    });
+
+    console.log(`Found ${result.summary.totalOffers} offers.`);
+    
+    const bestOffer = result.offers[0];
+    if (bestOffer) {
+      console.log("Best offer details:");
+      console.log(`- Lender: ${bestOffer.lender.name}`);
+      console.log(`- Rate: ${bestOffer.terms.interestRate.rate}%`);
+      console.log(`- Monthly Payment: $${bestOffer.terms.monthlyPayment}`);
+    }
+
+  } catch (error) {
+    console.error("An error occurred:", error.message);
+  }
+}
+
+compareBusinessLoans();
+```
+
+That's it! You've successfully compared loan offers using the SecureLend SDK.
+
+## Next Steps
+
+- Explore the [SDK Overview](/sdk/overview) to see what else you can do.
+- Dive into the [Loans API Reference](/sdk/loans).
+- Learn about [Error Handling](/guides/errors).
