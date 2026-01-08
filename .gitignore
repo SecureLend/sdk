@@ -40,5 +40,23 @@ lerna-debug.log*
 *.tmp
 .cache/
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+env/
+venv/
+pip-wheel-metadata/
+.installed.cfg
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
 # Aider files
 .aider*
