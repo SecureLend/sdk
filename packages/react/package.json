@@ -1,0 +1,33 @@
+{
+  "name": "@securelend/react",
+  "version": "1.0.0",
+  "description": "React hooks and components for the SecureLend SDK",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint . --ext .ts,.tsx",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@securelend/sdk": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT"
+}
