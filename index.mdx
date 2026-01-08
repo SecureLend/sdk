@@ -1,0 +1,25 @@
+---
+title: SecureLend SDK
+description: Official SDK for comparing business loan offers with SecureLend.
+---
+
+## Install
+
+```bash
+npm install @securelend/sdk
+```
+
+## Quick Start
+```typescript
+import { SecureLend } from "@securelend/sdk";
+
+const client = new SecureLend(process.env.SECURELEND_API_KEY);
+
+const result = await client.loans.compare({
+  amount: 200000,
+  purpose: "equipment",
+  business: { revenue: 1200000, creditScore: 720, timeInBusiness: 36 }
+});
+
+console.log(result.offers?.[0]);
+```
