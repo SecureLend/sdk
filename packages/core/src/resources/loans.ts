@@ -1,3 +1,4 @@
+import { ValidationError } from "../utils/errors";
 import { BaseResource } from "./base";
 import type {
   LoanComparisonRequest,
@@ -35,21 +36,21 @@ export class Loans extends BaseResource {
 
   private validateComparisonRequest(request: LoanComparisonRequest): void {
     if (!request.amount || request.amount < 5000) {
-      throw new Error("Loan amount must be at least $5,000");
+      throw new ValidationError("Loan amount must be at least $5,000");
     }
 
     if (!request.purpose) {
-      throw new Error("Loan purpose is required");
+      throw new ValidationError("Loan purpose is required");
     }
 
     if (!request.business) {
-      throw new Error("Business information is required");
+      throw new ValidationError("Business information is required");
     }
 
     const { business } = request;
 
     if (!business.revenue || business.revenue < 0) {
-      throw new Error("Valid business revenue is required");
+      throw new ValidationError("Valid business revenue is required");
     }
 
     if (
@@ -57,7 +58,7 @@ export class Loans extends BaseResource {
       business.creditScore < 300 ||
       business.creditScore > 850
     ) {
-      throw new Error("Credit score must be between 300 and 850");
+      throw new ValidationError("Credit score must be between 300 and 850");
     }
   }
 }

@@ -1,3 +1,4 @@
+import { ValidationError } from "../utils/errors";
 import { BaseResource } from "./base";
 import type {
   BankingComparisonRequest,
@@ -25,12 +26,12 @@ export class Banking extends BaseResource {
 
   private validateBankingRequest(request: BankingComparisonRequest): void {
     if (!request.accountType) {
-      throw new Error("Account type is required");
+      throw new ValidationError("Account type is required");
     }
 
     const validTypes = ["checking", "savings", "both"];
     if (!validTypes.includes(request.accountType)) {
-      throw new Error(
+      throw new ValidationError(
         `Invalid account type. Must be one of: ${validTypes.join(", ")}`,
       );
     }

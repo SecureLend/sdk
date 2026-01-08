@@ -24,6 +24,8 @@ export {
   RateLimitError,
   ValidationError,
   NotFoundError,
+  NetworkError,
+  ServerError,
 } from "./utils/errors";
 
 // Version

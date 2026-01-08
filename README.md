@@ -4,7 +4,7 @@ The official SDK for SecureLend - Financial services infrastructure for AI assis
 
 ## Packages
 
-- [`@securelend/sdk`](./packages/core) - Core SDK for JavaScript/TypeScript
+- [`@securelend/sdk`](./packages/sdk) - Core SDK for JavaScript/TypeScript
 - [`@securelend/react`](./packages/react) - React hooks and components
 - More coming soon: Python, Ruby, Go
 

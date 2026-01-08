@@ -1,3 +1,4 @@
+import { ValidationError } from "../utils/errors";
 import { BaseResource } from "./base";
 import type {
   CreditCardComparisonRequest,
@@ -26,11 +27,11 @@ export class CreditCards extends BaseResource {
       request.creditScore < 300 ||
       request.creditScore > 850
     ) {
-      throw new Error("Valid credit score (300-850) is required");
+      throw new ValidationError("Valid credit score (300-850) is required");
     }
 
     if (!request.monthlySpend || request.monthlySpend < 0) {
-      throw new Error("Monthly spend must be a positive number");
+      throw new ValidationError("Monthly spend must be a positive number");
     }
   }
 }
