@@ -12,7 +12,7 @@ The Loans API allows you to find and compare business loan offers from multiple 
 This is the primary method for finding loan options that match a business's profile and needs.
 
 ```typescript
-const result = await securelend.loans.compare(request: LoanComparisonRequest);
+securelend.loans.compare(request: LoanComparisonRequest)
 ```
 
 <RequestExample>
@@ -67,8 +67,8 @@ The `compare` method returns a `LoanComparisonResult` object.
       "terms": {
         "interestRate": { "rate": 7.99 },
         "monthlyPayment": 4054.50
-      },
-      ...
+      }
+      // ... more offer details
     }
   ]
 }
@@ -82,7 +82,7 @@ The `compare` method returns a `LoanComparisonResult` object.
 Calculates the estimated monthly payment, total interest, and APR for a given loan.
 
 ```typescript
-const calculation = await securelend.loans.calculate(request: LoanCalculationRequest);
+securelend.loans.calculate(request: LoanCalculationRequest)
 ```
 
 <RequestExample>
