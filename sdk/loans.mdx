@@ -33,24 +33,21 @@ const result = await securelend.loans.compare({
 
 ### Request Parameters
 
-<AccordionGroup>
-  <Accordion title="`amount` (required)">
-    The requested loan amount. Must be at least $5,000.
-    - Type: `number`
-  </Accordion>
-  <Accordion title="`purpose` (required)">
-    The purpose of the loan.
-    - Type: `string`
-    - Examples: `"equipment"`, `"working_capital"`, `"expansion"`
-  </Accordion>
-  <Accordion title="`business` (required)">
-    An object containing information about the business.
-    - Type: `object`
-    - `revenue`: Annual business revenue. (Type: `number`)
-    - `creditScore`: Business owner's credit score (300-850). (Type: `number`)
-    - `timeInBusiness`: Months in business. (Type: `number`)
-  </Accordion>
-</AccordionGroup>
+#### `amount` (required)
+The requested loan amount. Must be at least $5,000.
+- Type: `number`
+
+#### `purpose` (required)
+The purpose of the loan.
+- Type: `string`
+- Examples: `"equipment"`, `"working_capital"`, `"expansion"`
+
+#### `business` (required)
+An object containing information about the business.
+- Type: `object`
+- `revenue`: Annual business revenue. (Type: `number`)
+- `creditScore`: Business owner's credit score (300-850). (Type: `number`)
+- `timeInBusiness`: Months in business. (Type: `number`)
 
 ### Response
 

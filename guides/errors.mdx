@@ -49,26 +49,23 @@ try {
 
 ## Error Types
 
-<AccordionGroup>
-  <Accordion title="SecureLendError">
-    The base error class for all SDK-specific errors. Catching this will catch any error originating from the SecureLend SDK.
-  </Accordion>
-  <Accordion title="AuthenticationError">
-    Thrown when the API key is missing, invalid, or expired.
-  </Accordion>
-  <Accordion title="RateLimitError">
-    Thrown when the API rate limit has been exceeded for your account.
-  </Accordion>
-  <Accordion title="ValidationError">
-    Thrown when the request parameters are invalid (e.g., missing a required field, amount too low).
-  </Accordion>
-  <Accordion title="NotFoundError">
-    Thrown when a requested resource could not be found.
-  </Accordion>
-  <Accordion title="ServerError">
-    Thrown for internal errors on SecureLend's servers.
-  </Accordion>
-  <Accordion title="NetworkError">
-    Thrown when there is a problem with the network connection during the request.
-  </Accordion>
-</AccordionGroup>
+#### `SecureLendError`
+The base error class for all SDK-specific errors. Catching this will catch any error originating from the SecureLend SDK.
+
+#### `AuthenticationError`
+Thrown when the API key is missing, invalid, or expired.
+
+#### `RateLimitError`
+Thrown when the API rate limit has been exceeded for your account.
+
+#### `ValidationError`
+Thrown when the request parameters are invalid (e.g., missing a required field, amount too low).
+
+#### `NotFoundError`
+Thrown when a requested resource could not be found.
+
+#### `ServerError`
+Thrown for internal errors on SecureLend's servers.
+
+#### `NetworkError`
+Thrown when there is a problem with the network connection during the request.
