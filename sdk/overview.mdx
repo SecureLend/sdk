@@ -39,10 +39,12 @@ Once initialized, you can access the API resources through the client instance. 
 
 ```typescript
 // Access the loans resource
-await securelend.loans.compare(...);
+await securelend.loans.compare({
+  // ... your loan comparison parameters
+});
 
 // Access the banking resource (example)
-// await securelend.banking.compare(...);
+// await securelend.banking.compare({ ... });
 ```
 
 ## TypeScript and Intellisense

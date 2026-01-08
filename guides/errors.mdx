@@ -23,7 +23,8 @@ import {
 } from '@securelend/sdk';
 
 try {
-  const loans = await securelend.loans.compare({ ... });
+  // Example request that might fail
+  const loans = await securelend.loans.compare({ amount: 1000 /* invalid */ });
 } catch (error) {
   if (error instanceof AuthenticationError) {
     console.error('Authentication Error:', error.message);
