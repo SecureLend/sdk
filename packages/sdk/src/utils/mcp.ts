@@ -12,11 +12,6 @@ interface MCPClientConfig {
   mcpURL: string;
 }
 
-// Minimal interface definition to satisfy the compiler.
-interface ToolResult {
-  // Define properties of ToolResult if known, otherwise use a generic object
-  [key: string]: any;
-}
 
 export class MCPClient {
   public mcp: Client;
@@ -27,10 +22,7 @@ export class MCPClient {
   constructor(config: MCPClientConfig) {
     this.config = config;
 
-    this.mcp = new Client(
-      { name: "@securelend/sdk", version: "1.0.0" },
-      { capabilities: { widgets: { supportsHtml: true } } },
-    );
+    this.mcp = new Client({ name: "@securelend/sdk", version: "1.0.0" });
   }
 
   async connect(): Promise<void> {
@@ -43,7 +35,7 @@ export class MCPClient {
         );
       }
       const transport = new SSEClientTransport({
-        uri: this.config.mcpURL,
+        url: this.config.mcpURL,
         headers: {
           Authorization: `Bearer ${this.config.apiKey}`,
         },
@@ -70,7 +62,7 @@ export class MCPClient {
   async callTool(
     name: string,
     args: Record<string, any>,
-  ): Promise<ToolResult> {
+  ): Promise<any> {
     await this.connect(); // Ensure connection exists
 
     if (this.debug) {

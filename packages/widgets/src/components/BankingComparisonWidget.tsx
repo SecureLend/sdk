@@ -1,5 +1,3 @@
-import React from "react";
-
 export function BankingComparisonWidget() {
   return (
     <div className="sl-widget">

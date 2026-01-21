@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import {
-  LoanComparisonRequest,
+  BusinessLoanComparisonRequest,
   LoanComparisonResponse,
   SecureLendError,
 } from "@securelend/sdk";
@@ -14,14 +14,14 @@ export function useLoanComparison() {
   const [error, setError] = useState<SecureLendError | null>(null);
 
   const compare = useCallback(
-    async (request: LoanComparisonRequest) => {
+    async (request: BusinessLoanComparisonRequest) => {
       setLoading(true);
       setError(null);
       setData(null);
       setWidget(null);
 
       try {
-        const result = await client.loans.compare(request);
+        const result = await client.compareBusinessLoans(request);
         setData(result);
         if (result.widget) {
           setWidget(result.widget);

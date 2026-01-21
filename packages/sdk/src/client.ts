@@ -292,7 +292,7 @@ export class SecureLend {
     }
 
     try {
-      if (jsonContent.type === "text") {
+      if (jsonContent.type === "text" && jsonContent.text) {
         return JSON.parse(jsonContent.text);
       } else if (jsonContent.type === "resource" && jsonContent.resource) {
         return JSON.parse(jsonContent.resource.text);
