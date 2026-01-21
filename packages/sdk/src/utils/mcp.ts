@@ -35,7 +35,7 @@ export class MCPClient {
         );
       }
       const transport = new SSEClientTransport({
-        uri: this.config.mcpURL,
+        url: this.config.mcpURL,
         headers: {
           Authorization: `Bearer ${this.config.apiKey}`,
         },
