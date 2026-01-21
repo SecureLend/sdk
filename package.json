@@ -4,7 +4,8 @@
   "private": true,
   "description": "SecureLend SDK monorepo",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ],
   "scripts": {
     "build": "npm run build -w @securelend/sdk && npm run build --workspaces --if-present",
