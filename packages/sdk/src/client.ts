@@ -3,6 +3,18 @@ import * as types from "./types";
 import { SecureLendError } from "./utils/errors";
 
 // Minimal interface definitions to satisfy the compiler.
+// This is necessary because `@modelcontextprotocol/sdk` may not export `ToolResult` as expected.
+interface ContentItem {
+  type: "resource" | "text";
+  resource?: {
+    mimeType: string;
+    text: string;
+  };
+  text?: string;
+}
+interface ToolResult {
+  content: ContentItem[];
+}
 
 /**
  * SecureLend MCP-native SDK Client

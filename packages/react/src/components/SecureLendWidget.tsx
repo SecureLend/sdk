@@ -1,5 +1,3 @@
-import React from "react";
-
 interface SecureLendWidgetProps {
   html: string;
   className?: string;
