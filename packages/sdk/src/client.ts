@@ -335,6 +335,7 @@ export class SecureLend {
           throw new Error("Invalid content structure");
         }
       }
+      console.log("Received JSON data:", JSON.stringify(jsonData, null, 2));
       return schema.parse(jsonData);
     } catch (e) {
       if (e instanceof z.ZodError) {
