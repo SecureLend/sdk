@@ -692,8 +692,8 @@ export const loanComparisonResponseSchema = z.object({
     ])
     .optional(),
   metadata: z.object({
-    queryId: z.string().uuid(),
-    timestamp: z.string().datetime(),
+    queryId: z.string(),
+    timestamp: z.string(),
     sessionId: z.string().optional(),
   }),
   widget: z.string().optional(),
