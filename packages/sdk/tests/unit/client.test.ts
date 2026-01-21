@@ -65,10 +65,22 @@ describe("SecureLend Client", () => {
     });
 
     it("should call mcpClient.callTool with correct params for compareBusinessLoans", async () => {
-      const request: types.BusinessLoanComparisonRequest = {
+      const request: types.BusinessLoanSearchParams = {
         loanAmount: 10000,
         purpose: "working_capital",
         annualRevenue: 50000,
+      };
+
+      const mockApiResponse = {
+        offers: [],
+        summary: {
+          totalOffers: 0,
+          bestRate: 0,
+        },
+        metadata: {
+          queryId: "d1a2f6e3-4c5b-4a9b-8f3c-1d3e2f5a6b7c",
+          timestamp: new Date().toISOString(),
+        },
       };
 
       const mockToolResult = {
@@ -76,19 +88,20 @@ describe("SecureLend Client", () => {
         content: [
           {
             type: "text",
-            text: JSON.stringify({ offers: [] }),
+            text: JSON.stringify(mockApiResponse),
           },
         ],
       };
 
       mcpClientInstance.callTool.mockResolvedValue(mockToolResult);
 
-      await client.compareBusinessLoans(request);
+      const response = await client.compareBusinessLoans(request);
 
       expect(mcpClientInstance.callTool).toHaveBeenCalledWith(
         "compare_business_loans",
         request,
       );
+      expect(response.summary.totalOffers).toBe(0);
     });
 
     it("should call mcpClient.connect when connect is called", async () => {
