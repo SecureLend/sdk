@@ -62,10 +62,15 @@ export interface LenderSearchCriteria {
 
 // Loan Offer Related Types
 
-const moneySchema = z.object({
-  amount: z.number(),
-  currency: z.string().length(3).default("USD"),
-});
+const moneySchema = z
+  .object({
+    amount: z.number(),
+    currency: z.string().length(3).optional(),
+  })
+  .transform((data) => ({
+    ...data,
+    currency: data.currency ?? "USD",
+  }));
 
 export type Money = z.infer<typeof moneySchema>;
 
