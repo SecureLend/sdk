@@ -257,9 +257,14 @@ export class SecureLend {
     toolName: string,
     request: unknown,
   ): Promise<T> {
-    const toolResult = await this.mcpClient.callTool(toolName, request as Record<string, any>);
-    const data = this.parseJsonResponse<Omit<T, "widget">>(toolResult);
-    return { ...data, widget: this.getWidget(toolResult) } as T;
+    const toolResult = await this.mcpClient.callTool(
+      toolName,
+      request as Record<string, any>,
+    );
+    const data = this.parseJsonResponse<Omit<T, "widget">>(
+      toolResult as ToolResult,
+    );
+    return { ...data, widget: this.getWidget(toolResult as ToolResult) } as T;
   }
 
   private parseJsonResponse<T>(toolResult: ToolResult): T {
