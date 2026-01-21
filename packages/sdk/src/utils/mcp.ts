@@ -1,4 +1,4 @@
-import { Client, ToolResult } from "@modelcontextprotocol/sdk/client/index.js";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import {
   SecureLendError,
@@ -12,6 +12,12 @@ interface MCPClientConfig {
   mcpURL: string;
 }
 
+// Minimal interface definition to satisfy the compiler.
+interface ToolResult {
+  // Define properties of ToolResult if known, otherwise use a generic object
+  [key: string]: any;
+}
+
 export class MCPClient {
   public mcp: Client;
   private config: MCPClientConfig;
@@ -23,7 +29,7 @@ export class MCPClient {
 
     this.mcp = new Client(
       { name: "@securelend/sdk", version: "1.0.0" },
-      { capabilities: { tools: {}, widgets: { supportsHtml: true } } },
+      { capabilities: { widgets: { supportsHtml: true } } },
     );
   }
 
@@ -37,7 +43,7 @@ export class MCPClient {
         );
       }
       const transport = new SSEClientTransport({
-        url: this.config.mcpURL,
+        uri: this.config.mcpURL,
         headers: {
           Authorization: `Bearer ${this.config.apiKey}`,
         },

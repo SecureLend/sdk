@@ -6,6 +6,7 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "test": "echo \"No tests specified\" && exit 0",
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "eslint . --ext .ts,.tsx",

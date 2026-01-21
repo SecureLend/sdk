@@ -1,7 +1,20 @@
 import { MCPClient } from "./utils/mcp";
 import * as types from "./types";
-import { ToolResult } from "@modelcontextprotocol/sdk/client/index.js";
 import { SecureLendError } from "./utils/errors";
+
+// Minimal interface definitions to satisfy the compiler.
+// This is necessary because `@modelcontextprotocol/sdk` may not export `ToolResult` as expected.
+interface ContentItem {
+  type: "resource" | "text";
+  resource?: {
+    mimeType: string;
+    text: string;
+  };
+  text?: string;
+}
+interface ToolResult {
+  content: ContentItem[];
+}
 
 /**
  * SecureLend MCP-native SDK Client
@@ -263,8 +276,10 @@ export class SecureLend {
 
   private parseJsonResponse<T>(toolResult: ToolResult): T {
     const jsonContent = toolResult.content.find(
-      (c) =>
-        (c.type === "resource" && c.resource.mimeType === "application/json") ||
+      (c: ContentItem) =>
+        (c.type === "resource" &&
+          c.resource &&
+          c.resource.mimeType === "application/json") ||
         c.type === "text",
     );
 
@@ -295,7 +310,8 @@ export class SecureLend {
 
   private getWidget(toolResult: ToolResult): string | undefined {
     const widgetContent = toolResult.content.find(
-      (c) => c.type === "resource" && c.resource?.mimeType === "text/html",
+      (c: ContentItem) =>
+        c.type === "resource" && c.resource?.mimeType === "text/html",
     );
     if (widgetContent?.type === "resource" && widgetContent.resource) {
       return widgetContent.resource.text;

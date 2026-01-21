@@ -1,4 +1,3 @@
-import React from "react";
 import type { LoanComparisonResponse } from "@securelend/sdk";
 
 interface LoanComparisonWidgetProps {

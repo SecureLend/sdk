@@ -327,6 +327,7 @@ export interface LoanCalculationResponse {
   monthlyPayment: number;
   totalPayment: number;
   totalInterest: number;
+  widget?: string;
 }
 
 export interface MortgageCalculationRequest {
@@ -344,6 +345,7 @@ export interface MortgageCalculationResponse {
   monthlyPropertyTax: number;
   monthlyHomeInsurance: number;
   totalMonthlyPayment: number;
+  widget?: string;
 }
 
 export interface LeaseVsPurchaseRequest {
@@ -367,6 +369,7 @@ export interface LeaseVsPurchaseResponse {
   comparison: {
     recommendation: string;
   };
+  widget?: string;
 }
 
 // ============================================================================
@@ -394,6 +397,7 @@ export interface ApplicationResponse {
     providerName: string;
     status: string;
   }>;
+  widget?: string;
 }
 
 export interface DisplayOfferFormRequest {
@@ -437,6 +441,7 @@ export interface SubmitDocumentsResponse {
   message: string;
   documentId?: string;
   uploadUrl?: string;
+  widget?: string;
 }
 
 // ============================================================================
