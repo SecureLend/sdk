@@ -144,6 +144,7 @@ export interface LoanOffer {
   monthlyPayment: number;
   loanAmount: number;
   approvalLikelihood?: Percentage;
+  applicationUrl?: string;
 }
 
 export interface LoanComparisonResponse {

@@ -338,6 +338,7 @@ export class SecureLend {
       monthlyPayment: offer.terms?.payment?.amount?.amount,
       loanAmount: offer.terms?.amount?.amount,
       approvalLikelihood: offer.matching?.approvalProbability, // Note: may not exist in all server responses
+      applicationUrl: offer.process?.applicationUrl,
     };
   }
 }
