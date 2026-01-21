@@ -13,7 +13,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@securelend/sdk": "workspace:^"
+    "@securelend/sdk": "file:../sdk"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
