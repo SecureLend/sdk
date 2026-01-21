@@ -22,6 +22,7 @@ Connect to SecureLend's MCP server programmatically or integrate with Claude and
 ---
 
 ## Installation
+
 ```bash
 npm install @securelend/sdk
 # or
@@ -35,8 +36,9 @@ yarn add @securelend/sdk
 ## Quick Start
 
 ### Basic Usage
+
 ```typescript
-import { SecureLend } from '@securelend/sdk';
+import { SecureLend } from "@securelend/sdk";
 
 // Create client - connects to https://mcp.securelend.ai/mcp by default
 const securelend = new SecureLend();
@@ -44,19 +46,20 @@ const securelend = new SecureLend();
 // Compare business loans
 const result = await securelend.compareBusinessLoans({
   loanAmount: 200000,
-  purpose: 'equipment',
+  purpose: "equipment",
   annualRevenue: 1200000,
-  creditScore: 720
+  creditScore: 720,
 });
 
 // Type-safe access to results
 console.log(`Found ${result.offers.length} loan offers`);
-result.offers.forEach(offer => {
+result.offers.forEach((offer) => {
   console.log(`${offer.lenderName}: ${offer.interestRate}% APR`);
 });
 ```
 
 ### Calculate Mortgage Payment
+
 ```typescript
 const payment = await securelend.calculateMortgagePayment({
   propertyValue: 400000,
@@ -64,7 +67,7 @@ const payment = await securelend.calculateMortgagePayment({
   interestRate: 6.5,
   loanTermInYears: 30,
   propertyTaxRate: 1.2,
-  homeInsurance: 1500
+  homeInsurance: 1500,
 });
 
 console.log(`Monthly PITI: $${payment.monthlyPayment}`);
@@ -74,17 +77,20 @@ console.log(`Insurance: $${payment.insurance}`);
 ```
 
 ### Compare Personal Loans
+
 ```typescript
 const loans = await securelend.comparePersonalLoans({
   loanAmount: 25000,
-  purpose: 'debt_consolidation',
+  purpose: "debt_consolidation",
   creditScore: 720,
-  state: 'CA'
+  state: "CA",
 });
 
 // Get best rate
 const bestOffer = loans.offers[0];
-console.log(`Best rate: ${bestOffer.interestRate}% from ${bestOffer.lenderName}`);
+console.log(
+  `Best rate: ${bestOffer.interestRate}% from ${bestOffer.lenderName}`,
+);
 ```
 
 ---
@@ -92,35 +98,37 @@ console.log(`Best rate: ${bestOffer.interestRate}% from ${bestOffer.lenderName}`
 ## Configuration
 
 ### Custom Server URL
+
 ```typescript
-import { SecureLend } from '@securelend/sdk';
+import { SecureLend } from "@securelend/sdk";
 
 const securelend = new SecureLend({
-  serverUrl: 'https://custom-mcp-server.com/mcp',
-  timeout: 30000 // 30 seconds
+  serverUrl: "https://custom-mcp-server.com/mcp",
+  timeout: 30000, // 30 seconds
 });
 ```
 
 ### TypeScript Configuration
 
 The SDK includes complete TypeScript definitions:
+
 ```typescript
-import { 
-  SecureLend, 
+import {
+  SecureLend,
   BusinessLoanRequest,
   LoanComparisonResponse,
   MortgageCalculationRequest,
-  MortgagePaymentResponse
-} from '@securelend/sdk';
+  MortgagePaymentResponse,
+} from "@securelend/sdk";
 
 // Fully typed requests and responses
 const request: BusinessLoanRequest = {
   loanAmount: 200000,
-  purpose: 'equipment',
-  annualRevenue: 1200000
+  purpose: "equipment",
+  annualRevenue: 1200000,
 };
 
-const response: LoanComparisonResponse = 
+const response: LoanComparisonResponse =
   await securelend.compareBusinessLoans(request);
 ```
 
@@ -130,43 +138,43 @@ const response: LoanComparisonResponse =
 
 ### Loan Comparison (6 methods)
 
-| Method | Description |
-|--------|-------------|
-| `comparePersonalLoans()` | Compare personal loan offers |
-| `compareBusinessLoans()` | Compare business loan offers |
-| `compareCarLoans()` | Compare auto loan rates |
-| `compareStudentLoans()` | Compare student loan options |
-| `comparePersonalMortgages()` | Compare mortgage rates |
+| Method                       | Description                  |
+| ---------------------------- | ---------------------------- |
+| `comparePersonalLoans()`     | Compare personal loan offers |
+| `compareBusinessLoans()`     | Compare business loan offers |
+| `compareCarLoans()`          | Compare auto loan rates      |
+| `compareStudentLoans()`      | Compare student loan options |
+| `comparePersonalMortgages()` | Compare mortgage rates       |
 | `compareBusinessMortgages()` | Compare commercial mortgages |
 
 ### Banking & Credit Cards (5 methods)
 
-| Method | Description |
-|--------|-------------|
-| `comparePersonalBanking()` | Compare checking/savings accounts |
-| `compareBusinessBanking()` | Compare business banking products |
-| `compareSavingsAccounts()` | Compare high-yield savings |
-| `comparePersonalCreditCards()` | Compare personal credit cards |
-| `compareBusinessCreditCards()` | Compare business credit cards |
+| Method                         | Description                       |
+| ------------------------------ | --------------------------------- |
+| `comparePersonalBanking()`     | Compare checking/savings accounts |
+| `compareBusinessBanking()`     | Compare business banking products |
+| `compareSavingsAccounts()`     | Compare high-yield savings        |
+| `comparePersonalCreditCards()` | Compare personal credit cards     |
+| `compareBusinessCreditCards()` | Compare business credit cards     |
 
 ### Financial Calculators (3 methods)
 
-| Method | Description |
-|--------|-------------|
-| `calculateLoanPayment()` | Calculate monthly loan payments |
+| Method                       | Description                      |
+| ---------------------------- | -------------------------------- |
+| `calculateLoanPayment()`     | Calculate monthly loan payments  |
 | `calculateMortgagePayment()` | Calculate PITI mortgage payments |
-| `compareLeaseVsPurchase()` | Compare vehicle lease vs buy |
+| `compareLeaseVsPurchase()`   | Compare vehicle lease vs buy     |
 
 ### Application Management (6 methods)
 
-| Method | Description |
-|--------|-------------|
-| `getOffer()` | Submit application to one lender |
-| `getMultipleOffers()` | Submit to multiple lenders |
-| `trackOfferStatus()` | Check application status |
-| `displayOfferForm()` | Generate pre-filled form |
-| `displayUploadDocumentsForm()` | Upload documents interface |
-| `submitDocuments()` | Submit application documents |
+| Method                         | Description                      |
+| ------------------------------ | -------------------------------- |
+| `getOffer()`                   | Submit application to one lender |
+| `getMultipleOffers()`          | Submit to multiple lenders       |
+| `trackOfferStatus()`           | Check application status         |
+| `displayOfferForm()`           | Generate pre-filled form         |
+| `displayUploadDocumentsForm()` | Upload documents interface       |
+| `submitDocuments()`            | Submit application documents     |
 
 **Total: 20 methods** covering all SecureLend MCP tools
 
@@ -177,24 +185,25 @@ const response: LoanComparisonResponse =
 ## Examples
 
 ### Complete Loan Comparison Flow
+
 ```typescript
-import { SecureLend } from '@securelend/sdk';
+import { SecureLend } from "@securelend/sdk";
 
 async function findBestBusinessLoan() {
   const securelend = new SecureLend();
-  
+
   // 1. Compare offers
   const comparison = await securelend.compareBusinessLoans({
     loanAmount: 200000,
-    purpose: 'equipment',
+    purpose: "equipment",
     annualRevenue: 1200000,
-    industry: 'technology',
+    industry: "technology",
     creditScore: 720,
-    state: 'CA'
+    state: "CA",
   });
-  
+
   console.log(`Found ${comparison.offers.length} offers`);
-  
+
   // 2. Show top 3 offers
   comparison.offers.slice(0, 3).forEach((offer, i) => {
     console.log(`\n${i + 1}. ${offer.lenderName}`);
@@ -203,20 +212,20 @@ async function findBestBusinessLoan() {
     console.log(`   Term: ${offer.termMonths} months`);
     console.log(`   Approval Likelihood: ${offer.approvalLikelihood}%`);
   });
-  
+
   // 3. Calculate payment for best offer
   const bestOffer = comparison.offers[0];
   const payment = await securelend.calculateLoanPayment({
     loanAmount: bestOffer.loanAmount,
     interestRate: bestOffer.interestRate,
-    loanTermInMonths: bestOffer.termMonths
+    loanTermInMonths: bestOffer.termMonths,
   });
-  
+
   console.log(`\nBest offer payment breakdown:`);
   console.log(`Monthly: $${payment.monthlyPayment}`);
   console.log(`Total Interest: $${payment.totalInterest}`);
   console.log(`Total Paid: $${payment.totalAmount}`);
-  
+
   return bestOffer;
 }
 
@@ -224,52 +233,54 @@ findBestBusinessLoan().catch(console.error);
 ```
 
 ### Error Handling
+
 ```typescript
-import { SecureLend, SecureLendError } from '@securelend/sdk';
+import { SecureLend, SecureLendError } from "@securelend/sdk";
 
 const securelend = new SecureLend();
 
 try {
   const loans = await securelend.compareBusinessLoans({
     loanAmount: 200000,
-    purpose: 'equipment'
+    purpose: "equipment",
   });
-  
+
   console.log(`Found ${loans.offers.length} offers`);
 } catch (error) {
   if (error instanceof SecureLendError) {
-    console.error('SecureLend Error:', error.code);
-    console.error('Message:', error.message);
-    console.error('Details:', error.details);
+    console.error("SecureLend Error:", error.code);
+    console.error("Message:", error.message);
+    console.error("Details:", error.details);
   } else {
-    console.error('Unexpected error:', error);
+    console.error("Unexpected error:", error);
   }
 }
 ```
 
 ### Using with Next.js
+
 ```typescript
 // app/api/compare-loans/route.ts
-import { SecureLend } from '@securelend/sdk';
-import { NextResponse } from 'next/server';
+import { SecureLend } from "@securelend/sdk";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  
+
   const securelend = new SecureLend();
-  
+
   try {
     const result = await securelend.compareBusinessLoans({
       loanAmount: body.amount,
       purpose: body.purpose,
-      annualRevenue: body.revenue
+      annualRevenue: body.revenue,
     });
-    
+
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to compare loans' },
-      { status: 500 }
+      { error: "Failed to compare loans" },
+      { status: 500 },
     );
   }
 }
@@ -281,25 +292,26 @@ export async function POST(request: Request) {
 
 The SDK is a lightweight wrapper around the SecureLend MCP server:
 ┌─────────────────────────────┐
-│   Your Application          │
-│   (Node.js, React, etc.)    │
+│ Your Application │
+│ (Node.js, React, etc.) │
 └─────────────────────────────┘
 ↓
 ┌─────────────────────────────┐
-│   @securelend/sdk           │
-│   • Type definitions        │
-│   • Method wrappers         │
-│   • Error handling          │
+│ @securelend/sdk │
+│ • Type definitions │
+│ • Method wrappers │
+│ • Error handling │
 └─────────────────────────────┘
 ↓ MCP Protocol
 ┌─────────────────────────────┐
-│   mcp.securelend.ai/mcp     │
-│   • 20 financial tools      │
-│   • Lender integrations     │
-│   • Real-time data          │
+│ mcp.securelend.ai/mcp │
+│ • 20 financial tools │
+│ • Lender integrations │
+│ • Real-time data │
 └─────────────────────────────┘
 
 **Benefits:**
+
 - ✅ No API keys required (public MCP server)
 - ✅ Always up-to-date (connects to live server)
 - ✅ No server-side maintenance
@@ -312,16 +324,19 @@ The SDK is a lightweight wrapper around the SecureLend MCP server:
 This is a monorepo containing multiple packages:
 
 ### [@securelend/sdk](./packages/core)
+
 Core TypeScript SDK - works in Node.js and browsers
 
 **Status:** ✅ In Development (Beta)
 
 ### [@securelend/react](./packages/react)
+
 React hooks and components
 
 **Status:** 🔄 Coming Soon
 
 **Planned API:**
+
 ```typescript
 import { useLoans, useLoanCalculator } from '@securelend/react';
 
@@ -330,10 +345,10 @@ function LoanFinder() {
     loanAmount: 200000,
     purpose: 'equipment'
   });
-  
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  
+
   return (
     <div>
       {data.offers.map(offer => (
@@ -345,6 +360,7 @@ function LoanFinder() {
 ```
 
 ### Python SDK
+
 Python client library
 
 **Status:** 🔄 Planned for Q2 2025
@@ -366,9 +382,11 @@ Python client library
 If you want to use SecureLend with Claude Desktop or ChatGPT instead of programmatic access:
 
 ### Claude Desktop
+
 Download one-click installer: [extensions.securelend.ai](https://extensions.securelend.ai)
 
 Or manually configure:
+
 ```json
 {
   "mcpServers": {
@@ -380,6 +398,7 @@ Or manually configure:
 ```
 
 ### ChatGPT
+
 Search for "SecureLend Financial Services" in the GPT store.
 
 [Full setup guide →](https://docs.securelend.ai/mcp/setup)
@@ -389,6 +408,7 @@ Search for "SecureLend Financial Services" in the GPT store.
 ## Development
 
 ### Setup
+
 ```bash
 # Clone repository
 git clone https://github.com/SecureLend/sdk.git
@@ -411,23 +431,25 @@ npm run type-check
 ```
 
 ### Project Structure
+
 sdk/
 ├── packages/
-│   ├── core/              # @securelend/sdk
-│   │   ├── src/
-│   │   │   ├── client.ts
-│   │   │   ├── types.ts
-│   │   │   └── index.ts
-│   │   ├── tests/
-│   │   └── package.json
-│   └── react/             # @securelend/react (planned)
-├── examples/              # Usage examples
+│ ├── core/ # @securelend/sdk
+│ │ ├── src/
+│ │ │ ├── client.ts
+│ │ │ ├── types.ts
+│ │ │ └── index.ts
+│ │ ├── tests/
+│ │ └── package.json
+│ └── react/ # @securelend/react (planned)
+├── examples/ # Usage examples
 ├── .github/
-│   └── workflows/         # CI/CD
-├── package.json           # Root package
-└── tsconfig.json          # TypeScript config
+│ └── workflows/ # CI/CD
+├── package.json # Root package
+└── tsconfig.json # TypeScript config
 
 ### Publishing
+
 ```bash
 # Build all packages
 npm run build
@@ -447,6 +469,7 @@ npm publish --access public
 We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 **Ways to contribute:**
+
 - Report bugs or issues
 - Suggest new features
 - Improve documentation
@@ -465,7 +488,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ## License
 
-MIT © 2025 SecureLend, Inc.
+MIT © 2026 SecureLend, Inc.
 
 ---
 
@@ -476,4 +499,4 @@ MIT © 2025 SecureLend, Inc.
 
 ---
 
-**Built by [SecureLend](https://securelend.ai)** • [Docs](https://docs.securelend.ai) • [MCP Server](https://docs.securelend.ai/mcp) • [Privacy](https://securelend.ai/legal/privacy)
+**Built by [SecureLend](https://securelend.ai)** • [Docs](https://docs.securelend.ai) • [MCP Server](https://docs.securelend.ai/mcp) • [Privacy](https://securelend.ai/legal/privacy) [Terms](https://securelend.ai/legal/terms)
