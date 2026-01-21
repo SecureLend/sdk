@@ -271,7 +271,7 @@ export class SecureLend {
   ): Promise<T> {
     const toolResult = await this.mcpClient.callTool(
       toolName,
-      request as Record<string, any>,
+      request as Record<string, unknown>,
     );
     const data = this.parseJsonResponse<
       Record<string, unknown> & { offers?: unknown[] }
