@@ -262,7 +262,7 @@ export interface StudentLenderAdapter {
 export interface BusinessCreditCardAdapter {
   readonly name: string;
   search(
-    params: BusinessCreditCardSearchParams
+    params: BusinessCreditCardSearchParams,
   ): Promise<BusinessCreditCardOffer[]>;
 }
 
@@ -272,15 +272,13 @@ export interface BusinessBankingAdapter {
     params: BusinessBankingSearchSchema & {
       maxResults?: number;
       includeReviewStatus?: boolean;
-    }
+    },
   ): Promise<BusinessBankingOffer[]>;
 }
 
 export interface PersonalBankingAdapter {
   readonly name: string;
-  search(
-    params: PersonalBankingSearchSchema
-  ): Promise<PersonalBankingOffer[]>;
+  search(params: PersonalBankingSearchSchema): Promise<PersonalBankingOffer[]>;
 }
 
 export interface SavingsAdapter {
@@ -291,7 +289,7 @@ export interface SavingsAdapter {
 export interface PersonalCreditCardAdapter {
   readonly name: string;
   search(
-    params: PersonalCreditCardSearchSchema
+    params: PersonalCreditCardSearchSchema,
   ): Promise<PersonalCreditCardOffer[]>;
 }
 
@@ -340,7 +338,9 @@ export const businessLoanSearchSchema = z.object({
     .number()
     .min(1000)
     .describe("The desired loan amount, e.g., 50000 for $50,000."),
-  purpose: z.string().describe("The reason for the loan, e.g., 'working capital'."),
+  purpose: z
+    .string()
+    .describe("The reason for the loan, e.g., 'working capital'."),
   annualRevenue: z
     .number()
     .min(0)
@@ -358,20 +358,57 @@ export const businessLoanSearchSchema = z.object({
 export type BusinessLoanSearchParams = z.infer<typeof businessLoanSearchSchema>;
 
 export const mortgageSearchSchema = z.object({
-  loanAmount: z.number().min(50000).max(2000000).describe("The desired mortgage loan amount in USD."),
-  homePrice: z.number().min(50000).max(5000000).optional().describe("The purchase price of the home in USD."),
-  downPayment: z.number().min(0).optional().describe("The amount of the down payment in USD."),
-  creditScore: z.number().min(500).max(850).optional().describe("The applicant's estimated credit score (500-850)."),
-  loanType: z.enum(["conventional", "fha", "va", "jumbo", "refinance"]).describe("The type of mortgage loan."),
-  propertyType: z.enum(["primary", "secondary", "investment"]).optional().describe("The intended use of the property."),
-  state: z.string().optional().describe("The state where the property is located (2-letter code)."),
+  loanAmount: z
+    .number()
+    .min(50000)
+    .max(2000000)
+    .describe("The desired mortgage loan amount in USD."),
+  homePrice: z
+    .number()
+    .min(50000)
+    .max(5000000)
+    .optional()
+    .describe("The purchase price of the home in USD."),
+  downPayment: z
+    .number()
+    .min(0)
+    .optional()
+    .describe("The amount of the down payment in USD."),
+  creditScore: z
+    .number()
+    .min(500)
+    .max(850)
+    .optional()
+    .describe("The applicant's estimated credit score (500-850)."),
+  loanType: z
+    .enum(["conventional", "fha", "va", "jumbo", "refinance"])
+    .describe("The type of mortgage loan."),
+  propertyType: z
+    .enum(["primary", "secondary", "investment"])
+    .optional()
+    .describe("The intended use of the property."),
+  state: z
+    .string()
+    .optional()
+    .describe("The state where the property is located (2-letter code)."),
 });
 export type MortgageSearchParams = z.infer<typeof mortgageSearchSchema>;
 
 export const autoLoanSearchSchema = z.object({
-  loanAmount: z.number().min(1000).max(100000).describe("The desired auto loan amount in USD."),
-  creditScore: z.number().min(300).max(850).optional().describe("The applicant's estimated credit score (300-850)."),
-  isNew: z.boolean().describe("Specifies if the vehicle is new (true) or used (false)."),
+  loanAmount: z
+    .number()
+    .min(1000)
+    .max(100000)
+    .describe("The desired auto loan amount in USD."),
+  creditScore: z
+    .number()
+    .min(300)
+    .max(850)
+    .optional()
+    .describe("The applicant's estimated credit score (300-850)."),
+  isNew: z
+    .boolean()
+    .describe("Specifies if the vehicle is new (true) or used (false)."),
   state: z
     .string()
     .optional()
@@ -380,11 +417,32 @@ export const autoLoanSearchSchema = z.object({
 export type AutoLoanSearchParams = z.infer<typeof autoLoanSearchSchema>;
 
 export const studentLoanSearchSchema = z.object({
-  loanAmount: z.number().min(1000).max(250000).describe("The total amount needed for the student loan in USD."),
-  creditScore: z.number().min(300).max(850).optional().describe("The student's estimated credit score (300-850)."),
-  coSignerCreditScore: z.number().min(300).max(850).optional().describe("The co-signer's estimated credit score (300-850), if applicable."),
-  degreeType: z.enum(["undergraduate", "graduate", "mba", "medical", "law"]).describe("The type of degree the loan is for."),
-  state: z.string().optional().describe("The student's state of residence (2-letter code)."),
+  loanAmount: z
+    .number()
+    .min(1000)
+    .max(250000)
+    .describe("The total amount needed for the student loan in USD."),
+  creditScore: z
+    .number()
+    .min(300)
+    .max(850)
+    .optional()
+    .describe("The student's estimated credit score (300-850)."),
+  coSignerCreditScore: z
+    .number()
+    .min(300)
+    .max(850)
+    .optional()
+    .describe(
+      "The co-signer's estimated credit score (300-850), if applicable.",
+    ),
+  degreeType: z
+    .enum(["undergraduate", "graduate", "mba", "medical", "law"])
+    .describe("The type of degree the loan is for."),
+  state: z
+    .string()
+    .optional()
+    .describe("The student's state of residence (2-letter code)."),
 });
 export type StudentLoanSearchParams = z.infer<typeof studentLoanSearchSchema>;
 
@@ -439,8 +497,9 @@ export const businessCreditCardComparisonResponseSchema = z.object({
   }),
   widget: z.string().optional(),
 });
-export type BusinessCreditCardComparisonResponse = z.infer<typeof businessCreditCardComparisonResponseSchema>;
-
+export type BusinessCreditCardComparisonResponse = z.infer<
+  typeof businessCreditCardComparisonResponseSchema
+>;
 
 // Schemas for Business Banking Comparison
 export const businessBankingSearchSchema = z.object({
@@ -478,11 +537,16 @@ export const businessBankingComparisonResponseSchema = z.object({
   }),
   widget: z.string().optional(),
 });
-export type BusinessBankingComparisonResponse = z.infer<typeof businessBankingComparisonResponseSchema>;
+export type BusinessBankingComparisonResponse = z.infer<
+  typeof businessBankingComparisonResponseSchema
+>;
 
 // Schemas for Personal Banking Comparison
 export const personalBankingSearchSchema = z.object({
-  features: z.array(z.string()).optional().describe("Desired account features."),
+  features: z
+    .array(z.string())
+    .optional()
+    .describe("Desired account features."),
 });
 export type PersonalBankingSearchSchema = z.infer<
   typeof personalBankingSearchSchema
@@ -513,11 +577,16 @@ export const personalBankingComparisonResponseSchema = z.object({
   }),
   widget: z.string().optional(),
 });
-export type PersonalBankingComparisonResponse = z.infer<typeof personalBankingComparisonResponseSchema>;
+export type PersonalBankingComparisonResponse = z.infer<
+  typeof personalBankingComparisonResponseSchema
+>;
 
 // Schemas for Savings Account Comparison
 export const savingsSearchSchema = z.object({
-  initialDeposit: z.number().optional().describe("The initial deposit amount in USD."),
+  initialDeposit: z
+    .number()
+    .optional()
+    .describe("The initial deposit amount in USD."),
 });
 export type SavingsSearchSchema = z.infer<typeof savingsSearchSchema>;
 
@@ -544,14 +613,26 @@ export const savingsComparisonResponseSchema = z.object({
   }),
   widget: z.string().optional(),
 });
-export type SavingsAccountComparisonResponse = z.infer<typeof savingsComparisonResponseSchema>;
+export type SavingsAccountComparisonResponse = z.infer<
+  typeof savingsComparisonResponseSchema
+>;
 
 // Schemas for Personal Credit Card Comparison
 export const personalCreditCardSearchSchema = z.object({
-  creditScore: z.number().min(300).max(850).optional().describe("The applicant's estimated credit score (300-850)."),
-  rewardsType: z.enum(["cash_back", "travel", "points"]).optional().describe("Preferred rewards type."),
+  creditScore: z
+    .number()
+    .min(300)
+    .max(850)
+    .optional()
+    .describe("The applicant's estimated credit score (300-850)."),
+  rewardsType: z
+    .enum(["cash_back", "travel", "points"])
+    .optional()
+    .describe("Preferred rewards type."),
 });
-export type PersonalCreditCardSearchSchema = z.infer<typeof personalCreditCardSearchSchema>;
+export type PersonalCreditCardSearchSchema = z.infer<
+  typeof personalCreditCardSearchSchema
+>;
 
 export const personalCreditCardOfferSchema = z.object({
   cardId: z.string(),
@@ -588,8 +669,9 @@ export const personalCreditCardComparisonResponseSchema = z.object({
   }),
   widget: z.string().optional(),
 });
-export type PersonalCreditCardComparisonResponse = z.infer<typeof personalCreditCardComparisonResponseSchema>;
-
+export type PersonalCreditCardComparisonResponse = z.infer<
+  typeof personalCreditCardComparisonResponseSchema
+>;
 
 export const loanComparisonResponseSchema = z.object({
   offers: z.array(loanOfferSchema),
@@ -615,7 +697,9 @@ export const loanComparisonResponseSchema = z.object({
   }),
   widget: z.string().optional(),
 });
-export type LoanComparisonResponse = z.infer<typeof loanComparisonResponseSchema>;
+export type LoanComparisonResponse = z.infer<
+  typeof loanComparisonResponseSchema
+>;
 
 export const applicationProviderSchema = z.object({
   providerId: z.string(),
@@ -679,10 +763,7 @@ export interface Application<TApplicant, TData> {
   email: string; // For GSI
 }
 
-export type PersonalApplication = Application<
-  PersonalApplicant,
-  any
->;
+export type PersonalApplication = Application<PersonalApplicant, any>;
 export type BusinessApplication = Application<BusinessApplicant, any>;
 export type GenericApplication = Application<
   PersonalApplicant | BusinessApplicant,
@@ -704,8 +785,14 @@ export type CreatePersonalApplicationDTO = z.infer<
 >;
 
 export const displayOfferFormSchema = z.object({
-  sessionId: z.string().optional().describe("The session ID from a previous search to retrieve all offers."),
-  offerId: z.string().optional().describe("The specific offer ID to pre-select in the form."),
+  sessionId: z
+    .string()
+    .optional()
+    .describe("The session ID from a previous search to retrieve all offers."),
+  offerId: z
+    .string()
+    .optional()
+    .describe("The specific offer ID to pre-select in the form."),
 });
 export type DisplayOfferFormParams = z.infer<typeof displayOfferFormSchema>;
 
@@ -716,12 +803,20 @@ export const displayOfferFormResponseSchema = z.object({
   productType: z.string(),
   widget: z.string().optional(),
 });
-export type DisplayOfferFormResponse = z.infer<typeof displayOfferFormResponseSchema>;
+export type DisplayOfferFormResponse = z.infer<
+  typeof displayOfferFormResponseSchema
+>;
 
 export const getOfferSchema = z.object({
-  productType: z.nativeEnum(ProductType).describe("The type of financial product being applied for."),
-  applicant: personalApplicantSchema.describe("Personal details of the applicant."),
-  applicationData: anyObjectSchema.describe("The original search parameters or form data for the application."),
+  productType: z
+    .nativeEnum(ProductType)
+    .describe("The type of financial product being applied for."),
+  applicant: personalApplicantSchema.describe(
+    "Personal details of the applicant.",
+  ),
+  applicationData: anyObjectSchema.describe(
+    "The original search parameters or form data for the application.",
+  ),
   provider: z
     .object({
       providerId: z.string().describe("The ID of the selected provider."),
@@ -732,15 +827,21 @@ export const getOfferSchema = z.object({
 export type GetOfferParams = z.infer<typeof getOfferSchema>;
 
 export const getMultipleOffersSchema = z.object({
-  productType: z.nativeEnum(ProductType).describe("The type of financial product being applied for."),
-  applicant: personalApplicantSchema.describe("Personal details of the applicant."),
-  applicationData: anyObjectSchema.describe("The original search parameters or form data for the application."),
+  productType: z
+    .nativeEnum(ProductType)
+    .describe("The type of financial product being applied for."),
+  applicant: personalApplicantSchema.describe(
+    "Personal details of the applicant.",
+  ),
+  applicationData: anyObjectSchema.describe(
+    "The original search parameters or form data for the application.",
+  ),
   providers: z
     .array(
       z.object({
         providerId: z.string().describe("The ID of the selected provider."),
         providerName: z.string().describe("The name of the selected provider."),
-      })
+      }),
     )
     .min(1)
     .describe("The list of selected providers to submit the application to."),
@@ -768,7 +869,9 @@ export const trackOfferStatusResponseSchema = z.object({
   applications: z.array(personalApplicationSchema),
   widget: z.string().optional(),
 });
-export type TrackOfferStatusResponse = z.infer<typeof trackOfferStatusResponseSchema>;
+export type TrackOfferStatusResponse = z.infer<
+  typeof trackOfferStatusResponseSchema
+>;
 
 export const businessApplicantSchema = z.object({
   businessName: z.string(),
@@ -847,12 +950,16 @@ export const submitDocumentsResponseSchema = z.object({
   documentId: z.string().optional(),
   widget: z.string().optional(),
 });
-export type SubmitDocumentsResponse = z.infer<typeof submitDocumentsResponseSchema>;
+export type SubmitDocumentsResponse = z.infer<
+  typeof submitDocumentsResponseSchema
+>;
 
 export const displayUploadDocumentsFormResponseSchema = z.object({
-    widget: z.string().optional(),
+  widget: z.string().optional(),
 });
-export type DisplayUploadDocumentsFormResponse = z.infer<typeof displayUploadDocumentsFormResponseSchema>;
+export type DisplayUploadDocumentsFormResponse = z.infer<
+  typeof displayUploadDocumentsFormResponseSchema
+>;
 
 // Schemas for Calculator Tools
 export const loanPaymentSchema = z.object({
@@ -874,8 +981,12 @@ export type LoanPaymentParams = z.infer<typeof loanPaymentSchema>;
 
 export const loanPaymentResponseSchema = z.object({
   monthlyPayment: z.number().describe("The calculated monthly payment amount."),
-  totalPayment: z.number().describe("The total amount to be paid over the life of the loan."),
-  totalInterest: z.number().describe("The total interest paid over the life of the loan."),
+  totalPayment: z
+    .number()
+    .describe("The total amount to be paid over the life of the loan."),
+  totalInterest: z
+    .number()
+    .describe("The total interest paid over the life of the loan."),
   widget: z.string().optional(),
 });
 export type LoanCalculationResponse = z.infer<typeof loanPaymentResponseSchema>;
@@ -901,7 +1012,7 @@ export const mortgagePaymentSchema = z.object({
   propertyTaxRate: z
     .number()
     .describe(
-      "The annual property tax rate as a percentage (e.g., 1.2 for 1.2%)."
+      "The annual property tax rate as a percentage (e.g., 1.2 for 1.2%).",
     )
     .min(0, "Property tax rate cannot be negative."),
   homeInsurance: z
@@ -913,13 +1024,23 @@ export type MortgagePaymentParams = z.infer<typeof mortgagePaymentSchema>;
 
 export const mortgagePaymentResponseSchema = z.object({
   loanAmount: z.number().describe("The total loan amount after down payment."),
-  principalAndInterest: z.number().describe("The monthly payment for principal and interest."),
-  monthlyPropertyTax: z.number().describe("The estimated monthly property tax payment."),
-  monthlyHomeInsurance: z.number().describe("The estimated monthly home insurance payment."),
-  totalMonthlyPayment: z.number().describe("The total estimated monthly payment (PITI)."),
+  principalAndInterest: z
+    .number()
+    .describe("The monthly payment for principal and interest."),
+  monthlyPropertyTax: z
+    .number()
+    .describe("The estimated monthly property tax payment."),
+  monthlyHomeInsurance: z
+    .number()
+    .describe("The estimated monthly home insurance payment."),
+  totalMonthlyPayment: z
+    .number()
+    .describe("The total estimated monthly payment (PITI)."),
   widget: z.string().optional(),
 });
-export type MortgageCalculationResponse = z.infer<typeof mortgagePaymentResponseSchema>;
+export type MortgageCalculationResponse = z.infer<
+  typeof mortgagePaymentResponseSchema
+>;
 
 // Schemas for Lease vs. Purchase Calculator
 export const leaseVsPurchaseSchema = z.object({
@@ -952,7 +1073,10 @@ export const leaseVsPurchaseSchema = z.object({
     .positive()
     .int()
     .describe("Lease duration in months."),
-  monthlyLeasePayment: z.number().positive().describe("Monthly payment for the lease in USD."),
+  monthlyLeasePayment: z
+    .number()
+    .positive()
+    .describe("Monthly payment for the lease in USD."),
   moneyFactor: z
     .number()
     .positive("Money factor must be positive.")
@@ -973,7 +1097,9 @@ export const leaseVsPurchaseSchema = z.object({
     .number()
     .min(0)
     .max(100, "Residual value percentage cannot exceed 100.")
-    .describe("Estimated value of the vehicle at the end of the lease, as a percentage of MSRP."),
+    .describe(
+      "Estimated value of the vehicle at the end of the lease, as a percentage of MSRP.",
+    ),
   expectedOwnershipInMonths: z
     .number()
     .positive()
@@ -1003,7 +1129,9 @@ export const leaseVsPurchaseResponseSchema = z.object({
   }),
   widget: z.string().optional(),
 });
-export type LeaseVsPurchaseResponse = z.infer<typeof leaseVsPurchaseResponseSchema>;
+export type LeaseVsPurchaseResponse = z.infer<
+  typeof leaseVsPurchaseResponseSchema
+>;
 
 // ============================================================================
 // SDK Config
