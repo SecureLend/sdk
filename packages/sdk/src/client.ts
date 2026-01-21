@@ -16,6 +16,20 @@ interface ToolResult {
   content: ContentItem[];
 }
 
+interface RawLoanOffer {
+  offerId: string;
+  lender?: { name: string };
+  product?: { name: string };
+  terms?: {
+    interestRate?: { apr: types.Percentage };
+    termMonths?: number;
+    payment?: { amount?: types.Money };
+    amount?: types.Money;
+  };
+  matching?: { approvalProbability?: types.Percentage };
+  process?: { applicationUrl?: string };
+}
+
 /**
  * SecureLend MCP-native SDK Client
  *
@@ -330,7 +344,7 @@ export class SecureLend {
     return undefined;
   }
 
-  private transformLoanOffer(offer: any): types.LoanOffer {
+  private transformLoanOffer(offer: RawLoanOffer): types.LoanOffer {
     return {
       offerId: offer.offerId,
       lenderName: offer.lender?.name,
