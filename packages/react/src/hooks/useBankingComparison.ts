@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import {
-  BusinessBankingComparisonRequest,
+  BusinessBankingSearchSchema,
   BusinessBankingComparisonResponse,
   SecureLendError,
 } from "@securelend/sdk";
@@ -14,7 +14,7 @@ export function useBankingComparison() {
   const [error, setError] = useState<SecureLendError | null>(null);
 
   const compare = useCallback(
-    async (request: BusinessBankingComparisonRequest) => {
+    async (request: BusinessBankingSearchSchema) => {
       setLoading(true);
       setError(null);
       setData(null);

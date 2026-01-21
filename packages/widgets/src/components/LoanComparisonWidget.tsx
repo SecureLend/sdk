@@ -40,13 +40,13 @@ export function LoanComparisonWidget({
         <tbody>
           {offers.map((offer) => (
             <tr key={offer.offerId}>
-              <td className="sl-widget-lender">{offer.lenderName}</td>
-              <td>{offer.productName}</td>
+              <td className="sl-widget-lender">{offer.lender.name}</td>
+              <td>{offer.product.name}</td>
               <td className="sl-widget-rate">
-                {offer.interestRate.toFixed(2)}%
+                {offer.terms.interestRate.apr.toFixed(2)}%
               </td>
-              <td>{offer.termMonths} months</td>
-              <td>${offer.monthlyPayment.toFixed(2)}</td>
+              <td>{offer.terms.termMonths} months</td>
+              <td>${offer.terms.payment.amount.amount.toFixed(2)}</td>
               <td>
                 {offer.applicationUrl && (
                   <a

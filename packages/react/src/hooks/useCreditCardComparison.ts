@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import {
-  PersonalCreditCardComparisonRequest,
+  PersonalCreditCardSearchSchema,
   PersonalCreditCardComparisonResponse,
   SecureLendError,
 } from "@securelend/sdk";
@@ -14,7 +14,7 @@ export function useCreditCardComparison() {
   const [error, setError] = useState<SecureLendError | null>(null);
 
   const compare = useCallback(
-    async (request: PersonalCreditCardComparisonRequest) => {
+    async (request: PersonalCreditCardSearchSchema) => {
       setLoading(true);
       setError(null);
       setData(null);
