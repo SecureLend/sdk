@@ -3,30 +3,29 @@ import { MCPClient } from "../../src/utils/mcp";
 import * as types from "../../src/types";
 
 // Mock the MCPClient to avoid actual network calls
-jest.mock("../../src/utils/mcp", () => ({
-  MCPClient: jest.fn().mockImplementation(() => ({
-    mcp: {},
-    connect: jest.fn(),
-    callTool: jest.fn(),
-    enableDebug: jest.fn(),
-    disableDebug: jest.fn(),
-  })),
-}));
+jest.mock("../../src/utils/mcp");
 
-const MCPClientMock = MCPClient as jest.MockedClass<typeof MCPClient>;
+const MCPClientMock = MCPClient as jest.Mock;
 
 describe("SecureLend Client", () => {
+  let mcpClientInstance: {
+    mcp: object;
+    connect: jest.Mock;
+    callTool: jest.Mock;
+    enableDebug: jest.Mock;
+    disableDebug: jest.Mock;
+  };
+
   beforeEach(() => {
-    // Clears the record of calls to the mock constructor and its methods
     MCPClientMock.mockClear();
-    // Re-mock implementation for each test to clear calls between tests
-    MCPClientMock.mockImplementation(() => ({
+    mcpClientInstance = {
       mcp: {},
       connect: jest.fn(),
       callTool: jest.fn(),
       enableDebug: jest.fn(),
       disableDebug: jest.fn(),
-    }));
+    };
+    MCPClientMock.mockImplementation(() => mcpClientInstance);
   });
 
   describe("constructor", () => {
@@ -40,8 +39,7 @@ describe("SecureLend Client", () => {
 
   describe("configuration", () => {
     it("should use default config when not provided", () => {
-      const client = new SecureLend();
-      expect(client).toBeInstanceOf(SecureLend);
+      new SecureLend();
       expect(MCPClientMock).toHaveBeenCalledWith({
         apiKey: "",
         mcpURL: "https://mcp.securelend.ai/mcp",
@@ -49,10 +47,9 @@ describe("SecureLend Client", () => {
     });
 
     it("should accept custom configuration", () => {
-      const client = new SecureLend({
+      new SecureLend({
         serverUrl: "https://custom.mcp.com/mcp",
       });
-      expect(client).toBeInstanceOf(SecureLend);
       expect(MCPClientMock).toHaveBeenCalledWith({
         apiKey: "",
         mcpURL: "https://custom.mcp.com/mcp",
@@ -62,12 +59,9 @@ describe("SecureLend Client", () => {
 
   describe("methods", () => {
     let client: SecureLend;
-    let mcpClientInstance: jest.Mocked<MCPClient>;
 
     beforeEach(() => {
       client = new SecureLend();
-      mcpClientInstance = MCPClientMock.mock
-        .instances[0] as jest.Mocked<MCPClient>;
     });
 
     it("should call mcpClient.callTool with correct params for compareBusinessLoans", async () => {
@@ -87,9 +81,7 @@ describe("SecureLend Client", () => {
         ],
       };
 
-      (mcpClientInstance.callTool as jest.Mock).mockResolvedValue(
-        mockToolResult,
-      );
+      mcpClientInstance.callTool.mockResolvedValue(mockToolResult);
 
       await client.compareBusinessLoans(request);
 
