@@ -48,9 +48,9 @@ export function LoanComparisonWidget({
               <td>{offer.terms.termMonths} months</td>
               <td>${offer.terms.payment.amount.amount.toFixed(2)}</td>
               <td>
-                {offer.applicationUrl && (
+                {offer.process?.applicationUrl && (
                   <a
-                    href={offer.applicationUrl}
+                    href={offer.process.applicationUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="sl-widget-button"

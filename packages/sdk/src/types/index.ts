@@ -195,6 +195,12 @@ const loanTermsSchema = z.object({
     amount: moneySchema,
   }),
   totalCost: moneySchema.optional(),
+  repayment: z
+    .object({
+      totalRepaymentAmount: z.number(),
+      costOfFinancing: z.number(),
+    })
+    .optional(),
 });
 
 const loanFeesSchema = z
@@ -216,6 +222,16 @@ const matchingSchema = z
   })
   .optional();
 
+const processSchema = z.object({
+  applicationMethod: z.string(),
+  applicationUrl: z.string().url().optional(),
+  fundingSpeed: z
+    .object({
+      description: z.string(),
+    })
+    .optional(),
+});
+
 export const loanOfferSchema = z.object({
   offerId: z.string(),
   lender: lenderSchema,
@@ -223,11 +239,10 @@ export const loanOfferSchema = z.object({
   terms: loanTermsSchema,
   fees: loanFeesSchema,
   matching: matchingSchema,
+  process: processSchema.optional(),
   // Additional fields for UI that were in the old schema
   lenderInfo: z.string().optional(),
-  fundingSpeed: z.string().optional(), // e.g., "1-2 business days"
   badges: z.array(z.string()).optional(),
-  applicationUrl: z.string().url().optional(),
   isSecureLendTenant: z.boolean().optional(),
 });
 
