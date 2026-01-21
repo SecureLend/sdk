@@ -288,7 +288,7 @@ export class SecureLend {
       request as Record<string, unknown>,
     );
     const data = this.parseJsonResponse<
-      Record<string, unknown> & { offers?: unknown[] }
+      Record<string, unknown> & { offers?: RawLoanOffer[] }
     >(toolResult as ToolResult);
 
     // Transform nested loan offers to flat structure for consumer convenience
