@@ -761,6 +761,7 @@ export interface Application<TApplicant, TData> {
   applicationData: TData;
   providers: ApplicationProvider[];
   email: string; // For GSI
+  widget?: string;
 }
 
 export type PersonalApplication = Application<
