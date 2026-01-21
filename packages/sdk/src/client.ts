@@ -16,20 +16,6 @@ interface ToolResult {
   content: ContentItem[];
 }
 
-interface RawLoanOffer {
-  offerId: string;
-  lender?: { name: string };
-  product?: { name: string };
-  terms?: {
-    interestRate?: { apr: types.Percentage };
-    termMonths?: number;
-    payment?: { amount?: types.Money };
-    amount?: types.Money;
-  };
-  matching?: { approvalProbability?: types.Percentage };
-  process?: { applicationUrl?: string };
-}
-
 /**
  * SecureLend MCP-native SDK Client
  *
@@ -71,7 +57,7 @@ export class SecureLend {
   // --- Loan Comparison ---
 
   async comparePersonalLoans(
-    request: types.PersonalLoanComparisonRequest,
+    request: types.PersonalLoanSearchParams,
   ): Promise<types.LoanComparisonResponse> {
     return this.callTool<types.LoanComparisonResponse>(
       "compare_personal_loans",
@@ -80,7 +66,7 @@ export class SecureLend {
   }
 
   async compareBusinessLoans(
-    request: types.BusinessLoanComparisonRequest,
+    request: types.BusinessLoanSearchParams,
   ): Promise<types.LoanComparisonResponse> {
     return this.callTool<types.LoanComparisonResponse>(
       "compare_business_loans",
@@ -89,7 +75,7 @@ export class SecureLend {
   }
 
   async comparePersonalMortgages(
-    request: types.MortgageComparisonRequest,
+    request: types.MortgageSearchParams,
   ): Promise<types.LoanComparisonResponse> {
     return this.callTool<types.LoanComparisonResponse>(
       "compare_personal_mortgages",
@@ -98,7 +84,7 @@ export class SecureLend {
   }
 
   async compareBusinessMortgages(
-    request: types.MortgageComparisonRequest,
+    request: types.MortgageSearchParams,
   ): Promise<types.LoanComparisonResponse> {
     return this.callTool<types.LoanComparisonResponse>(
       "compare_business_mortgages",
@@ -107,7 +93,7 @@ export class SecureLend {
   }
 
   async compareCarLoans(
-    request: types.AutoLoanComparisonRequest,
+    request: types.AutoLoanSearchParams,
   ): Promise<types.LoanComparisonResponse> {
     return this.callTool<types.LoanComparisonResponse>(
       "compare_car_loans",
@@ -116,7 +102,7 @@ export class SecureLend {
   }
 
   async compareStudentLoans(
-    request: types.StudentLoanComparisonRequest,
+    request: types.StudentLoanSearchParams,
   ): Promise<types.LoanComparisonResponse> {
     return this.callTool<types.LoanComparisonResponse>(
       "compare_student_loans",
@@ -127,7 +113,7 @@ export class SecureLend {
   // --- Banking & Credit Cards ---
 
   async compareBusinessBanking(
-    request: types.BusinessBankingComparisonRequest,
+    request: types.BusinessBankingSearchSchema,
   ): Promise<types.BusinessBankingComparisonResponse> {
     return this.callTool<types.BusinessBankingComparisonResponse>(
       "compare_business_banking",
@@ -136,7 +122,7 @@ export class SecureLend {
   }
 
   async comparePersonalBanking(
-    request: types.PersonalBankingComparisonRequest,
+    request: types.PersonalBankingSearchSchema,
   ): Promise<types.PersonalBankingComparisonResponse> {
     return this.callTool<types.PersonalBankingComparisonResponse>(
       "compare_personal_banking",
@@ -145,7 +131,7 @@ export class SecureLend {
   }
 
   async compareSavingsAccounts(
-    request: types.SavingsAccountComparisonRequest,
+    request: types.SavingsSearchSchema,
   ): Promise<types.SavingsAccountComparisonResponse> {
     return this.callTool<types.SavingsAccountComparisonResponse>(
       "compare_savings_accounts",
@@ -154,7 +140,7 @@ export class SecureLend {
   }
 
   async compareBusinessCreditCards(
-    request: types.BusinessCreditCardComparisonRequest,
+    request: types.BusinessCreditCardSearchParams,
   ): Promise<types.BusinessCreditCardComparisonResponse> {
     return this.callTool<types.BusinessCreditCardComparisonResponse>(
       "compare_business_credit_cards",
@@ -163,7 +149,7 @@ export class SecureLend {
   }
 
   async comparePersonalCreditCards(
-    request: types.PersonalCreditCardComparisonRequest,
+    request: types.PersonalCreditCardSearchSchema,
   ): Promise<types.PersonalCreditCardComparisonResponse> {
     return this.callTool<types.PersonalCreditCardComparisonResponse>(
       "compare_personal_credit_cards",
@@ -174,7 +160,7 @@ export class SecureLend {
   // --- Financial Calculators ---
 
   async calculateLoanPayment(
-    request: types.LoanCalculationRequest,
+    request: types.LoanPaymentParams,
   ): Promise<types.LoanCalculationResponse> {
     return this.callTool<types.LoanCalculationResponse>(
       "calculate_loan_payment",
@@ -183,7 +169,7 @@ export class SecureLend {
   }
 
   async calculateMortgagePayment(
-    request: types.MortgageCalculationRequest,
+    request: types.MortgagePaymentParams,
   ): Promise<types.MortgageCalculationResponse> {
     return this.callTool<types.MortgageCalculationResponse>(
       "calculate_mortgage_payment",
@@ -192,7 +178,7 @@ export class SecureLend {
   }
 
   async compareLeaseVsPurchase(
-    request: types.LeaseVsPurchaseRequest,
+    request: types.LeaseVsPurchaseParams,
   ): Promise<types.LeaseVsPurchaseResponse> {
     return this.callTool<types.LeaseVsPurchaseResponse>(
       "compare_lease_vs_purchase",
@@ -203,22 +189,22 @@ export class SecureLend {
   // --- Application Management ---
 
   async getOffer(
-    request: types.GetOfferRequest,
-  ): Promise<types.ApplicationResponse> {
-    return this.callTool<types.ApplicationResponse>("get_offer", request);
+    request: types.GetOfferParams,
+  ): Promise<types.PersonalApplication> {
+    return this.callTool<types.PersonalApplication>("get_offer", request);
   }
 
   async getMultipleOffers(
-    request: types.GetMultipleOffersRequest,
-  ): Promise<types.ApplicationResponse> {
-    return this.callTool<types.ApplicationResponse>(
+    request: types.GetMultipleOffersParams,
+  ): Promise<types.PersonalApplication> {
+    return this.callTool<types.PersonalApplication>(
       "get_multiple_offers",
       request,
     );
   }
 
   async displayOfferForm(
-    request: types.DisplayOfferFormRequest,
+    request: types.DisplayOfferFormParams,
   ): Promise<types.DisplayOfferFormResponse> {
     return this.callTool<types.DisplayOfferFormResponse>(
       "display_offer_form",
@@ -227,7 +213,7 @@ export class SecureLend {
   }
 
   async trackOfferStatus(
-    request: types.TrackOfferStatusRequest,
+    request: types.TrackOfferStatusParams,
   ): Promise<types.TrackOfferStatusResponse> {
     return this.callTool<types.TrackOfferStatusResponse>(
       "track_offer_status",
@@ -236,7 +222,7 @@ export class SecureLend {
   }
 
   async displayUploadDocumentsForm(
-    request: types.DisplayUploadDocumentsFormRequest,
+    request: types.DisplayUploadDocumentsFormParams,
   ): Promise<types.DisplayUploadDocumentsFormResponse> {
     return this.callTool<types.DisplayUploadDocumentsFormResponse>(
       "display_upload_documents_form",
@@ -245,7 +231,7 @@ export class SecureLend {
   }
 
   async submitDocuments(
-    request: types.SubmitDocumentsRequest,
+    request: types.SubmitDocumentsParams,
   ): Promise<types.SubmitDocumentsResponse> {
     return this.callTool<types.SubmitDocumentsResponse>(
       "submit_documents",
@@ -287,14 +273,7 @@ export class SecureLend {
       toolName,
       request as Record<string, unknown>,
     );
-    const data = this.parseJsonResponse<
-      Record<string, unknown> & { offers?: RawLoanOffer[] }
-    >(toolResult as ToolResult);
-
-    // Transform nested loan offers to flat structure for consumer convenience
-    if (toolName.toLowerCase().includes("loan") && Array.isArray(data.offers)) {
-      data.offers = data.offers.map(this.transformLoanOffer);
-    }
+    const data = this.parseJsonResponse<T>(toolResult as ToolResult);
 
     return { ...data, widget: this.getWidget(toolResult as ToolResult) } as T;
   }
@@ -344,17 +323,4 @@ export class SecureLend {
     return undefined;
   }
 
-  private transformLoanOffer(offer: RawLoanOffer): types.LoanOffer {
-    return {
-      offerId: offer.offerId,
-      lenderName: offer.lender?.name,
-      productName: offer.product?.name,
-      interestRate: offer.terms?.interestRate?.apr,
-      termMonths: offer.terms?.termMonths,
-      monthlyPayment: offer.terms?.payment?.amount?.amount,
-      loanAmount: offer.terms?.amount?.amount,
-      approvalLikelihood: offer.matching?.approvalProbability, // Note: may not exist in all server responses
-      applicationUrl: offer.process?.applicationUrl,
-    };
-  }
 }
