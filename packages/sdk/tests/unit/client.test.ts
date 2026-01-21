@@ -13,53 +13,34 @@ describe("SecureLend Client", () => {
   });
 
   describe("constructor", () => {
-    it("should create client with valid API key", () => {
-      const client = new SecureLend(
-        "sk_test_abcdef123456789012345678901234567890",
-      );
+    it("should create client", () => {
+      const client = new SecureLend();
       expect(client).toBeInstanceOf(SecureLend);
       expect(client.loans).toBeDefined();
       expect(client.banking).toBeDefined();
       expect(client.creditCards).toBeDefined();
       expect(MCPClientMock).toHaveBeenCalledTimes(1);
     });
-
-    it("should throw error with invalid API key format", () => {
-      expect(() => {
-        new SecureLend("invalid_key");
-      }).toThrow("Invalid API key format");
-    });
-
-    it("should throw error with empty API key", () => {
-      expect(() => {
-        new SecureLend("");
-      }).toThrow("Invalid API key format");
-    });
   });
 
   describe("configuration", () => {
     it("should use default config when not provided", () => {
-      const client = new SecureLend(
-        "sk_test_abcdef123456789012345678901234567890",
-      );
+      const client = new SecureLend();
       expect(client).toBeInstanceOf(SecureLend);
       expect(MCPClientMock).toHaveBeenCalledWith({
-        apiKey: "sk_test_abcdef123456789012345678901234567890",
-        mcpURL: "https://mcp.securelend.ai/sse",
+        apiKey: "",
+        mcpURL: "https://mcp.securelend.ai/mcp",
       });
     });
 
     it("should accept custom configuration", () => {
-      const client = new SecureLend(
-        "sk_test_abcdef123456789012345678901234567890",
-        {
-          mcpURL: "https://custom.mcp.com/sse",
-        },
-      );
+      const client = new SecureLend({
+        serverUrl: "https://custom.mcp.com/mcp",
+      });
       expect(client).toBeInstanceOf(SecureLend);
       expect(MCPClientMock).toHaveBeenCalledWith({
-        apiKey: "sk_test_abcdef123456789012345678901234567890",
-        mcpURL: "https://custom.mcp.com/sse",
+        apiKey: "",
+        mcpURL: "https://custom.mcp.com/mcp",
       });
     });
   });
@@ -69,7 +50,7 @@ describe("SecureLend Client", () => {
     let mcpClientInstance: jest.Mocked<MCPClient>;
 
     beforeEach(() => {
-      client = new SecureLend("sk_test_abcdef123456789012345678901234567890");
+      client = new SecureLend();
       mcpClientInstance = MCPClientMock.mock
         .instances[0] as jest.Mocked<MCPClient>;
     });
@@ -77,13 +58,6 @@ describe("SecureLend Client", () => {
     it("should call mcpClient.connect when connect is called", async () => {
       await client.connect();
       expect(mcpClientInstance.connect).toHaveBeenCalledTimes(1);
-    });
-
-    it("should call mcpClient.setApiKey when setApiKey is called", () => {
-      client.setApiKey("sk_test_newkey123456789012345678901234567890");
-      expect(mcpClientInstance.setApiKey).toHaveBeenCalledWith(
-        "sk_test_newkey123456789012345678901234567890",
-      );
     });
 
     it("should call mcpClient.enableDebug when enableDebug is called", () => {

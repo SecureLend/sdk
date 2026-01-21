@@ -1,69 +1,65 @@
 {
   "name": "@securelend/sdk",
-  "version": "1.0.0",
-  "description": "SecureLend SDK for JavaScript/TypeScript - Financial services infrastructure for AI",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "version": "0.1.0-beta.1",
+  "description": "Official SecureLend SDK for TypeScript and JavaScript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.mjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
-    },
-    "./types": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/types/index.mjs",
-      "require": "./dist/types/index.js"
     }
   },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "build": "tsc && tsc --module esnext --outDir dist --outFile index.mjs",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "lint": "eslint . --ext .ts",
-    "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "lint": "eslint src --ext .ts",
+    "type-check": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm test"
   },
   "keywords": [
     "securelend",
-    "sdk",
+    "financial-services",
     "loans",
+    "mortgages",
     "banking",
     "credit-cards",
-    "fintech",
-    "financial-services",
-    "ai"
+    "mcp",
+    "model-context-protocol",
+    "typescript",
+    "sdk"
   ],
-  "author": "SecureLend <support@securelend.ai>",
+  "author": "SecureLend, Inc.",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/securelend/sdk.git",
     "directory": "packages/core"
   },
+  "homepage": "https://docs.securelend.ai/sdk",
   "bugs": {
     "url": "https://github.com/securelend/sdk/issues"
   },
-  "homepage": "https://securelend.ai/docs/sdk",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
-    "@modelcontextprotocol/sdk": "latest"
+    "@modelcontextprotocol/sdk": "^0.5.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.11",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.1",
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.3"
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=16.0.0"
   }
 }

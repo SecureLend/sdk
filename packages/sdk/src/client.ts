@@ -7,11 +7,8 @@ import { CreditCards } from "./resources/credit-cards";
  * Configuration options for SecureLend client
  */
 export interface SecureLendConfig {
-  /** MCP Server URL (default: https://mcp.securelend.ai/sse) */
-  mcpURL?: string;
-
-  /** Environment (default: production) */
-  environment?: "production" | "development";
+  /** MCP Server URL (default: https://mcp.securelend.ai/mcp) */
+  serverUrl?: string;
 }
 
 /**
@@ -21,7 +18,7 @@ export interface SecureLendConfig {
  * ```typescript
  * import { SecureLend } from '@securelend/sdk';
  *
- * const securelend = new SecureLend('sk_live_...');
+ * const securelend = new SecureLend();
  *
  * const loans = await securelend.loans.compare({
  *   amount: 200000,
@@ -52,19 +49,12 @@ export class SecureLend {
   /**
    * Create a new SecureLend client
    *
-   * @param apiKey - Your SecureLend API key (sk_test_... or sk_live_...)
    * @param config - Optional configuration
    */
-  constructor(apiKey: string, config?: SecureLendConfig) {
-    if (!apiKey || !apiKey.match(/^sk_(test|live)_[a-zA-Z0-9]{32,}$/)) {
-      throw new Error(
-        "Invalid API key format. Expected: sk_test_... or sk_live_...",
-      );
-    }
+  constructor(config?: SecureLendConfig) {
+    const mcpURL = config?.serverUrl || "https://mcp.securelend.ai/mcp";
 
-    const mcpURL = config?.mcpURL || "https://mcp.securelend.ai/sse";
-
-    this.mcpClient = new MCPClient({ apiKey, mcpURL });
+    this.mcpClient = new MCPClient({ apiKey: "", mcpURL });
 
     // Initialize resource modules
     this.loans = new Loans(this.mcpClient);
@@ -79,14 +69,6 @@ export class SecureLend {
    */
   async connect(): Promise<void> {
     await this.mcpClient.connect();
-  }
-
-  /**
-   * Update API key (useful for multi-tenant applications).
-   * This will require a new connection to the MCP server.
-   */
-  setApiKey(apiKey: string): void {
-    this.mcpClient.setApiKey(apiKey);
   }
 
   /**
