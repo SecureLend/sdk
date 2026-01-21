@@ -88,7 +88,7 @@ const loans = await securelend.comparePersonalLoans({
 // Get best rate
 const bestOffer = loans.offers[0];
 console.log(
-  `Best rate: ${bestOffer.interestRate}% from ${bestOffer.lenderName}`,
+  `Best rate: ${bestOffer.terms.interestRate.apr}% from ${bestOffer.lender.name}`,
 );
 ```
 

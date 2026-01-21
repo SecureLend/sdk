@@ -97,6 +97,7 @@ export interface BusinessLoanComparisonRequest {
   loanAmount: number;
   purpose: string;
   annualRevenue?: number;
+  creditScore?: number;
   industry?: string;
   state?: string;
   maxResults?: number;
@@ -106,6 +107,8 @@ export interface PersonalLoanComparisonRequest {
   loanAmount: number;
   purpose: LoanPurpose;
   creditScore?: number;
+  employmentStatus?: "employed" | "self_employed" | "retired" | "unemployed";
+  monthlyIncome?: number;
   state?: string;
   maxResults?: number;
 }
@@ -344,7 +347,8 @@ export interface MortgageCalculationResponse {
   principalAndInterest: number;
   monthlyPropertyTax: number;
   monthlyHomeInsurance: number;
-  totalMonthlyPayment: number;
+  monthlyPayment: number;
+  totalInterest: number;
   widget?: string;
 }
 

@@ -1,5 +1,5 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import {
   SecureLendError,
   AuthenticationError,
@@ -34,9 +34,12 @@ export class MCPClient {
           `[SecureLend SDK] Connecting to MCP server at ${this.config.mcpURL}`,
         );
       }
-      const transport = new StreamableHTTPClientTransport(
-        new URL(this.config.mcpURL),
-      );
+      const transport = new SSEClientTransport({
+        url: this.config.mcpURL,
+        headers: {
+          Authorization: `Bearer ${this.config.apiKey}`,
+        },
+      });
       await this.mcp.connect(transport);
       this.isConnected = true;
       if (this.debug) {
