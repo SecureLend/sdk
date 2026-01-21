@@ -64,7 +64,7 @@ export interface LenderSearchCriteria {
 
 const moneySchema = z.object({
   amount: z.number(),
-  currency: z.string().length(3).default("USD"),
+  currency: z.string().length(3).optional(),
 });
 
 export type Money = z.infer<typeof moneySchema>;
