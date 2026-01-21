@@ -65,7 +65,7 @@ npm run dev
 ```
 sdk/
 ├── packages/
-│   ├── core/          # @securelend/sdk - Main SDK
+│   ├── sdk/           # @securelend/sdk - Main SDK
 │   ├── react/         # @securelend/react - React hooks
 │   └── python/        # securelend-python - Python SDK
 ├── integrations/

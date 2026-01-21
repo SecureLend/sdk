@@ -7,21 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Changed
+- **BREAKING**: Refactored `SecureLend` client to a flat API structure with methods for all 20 MCP tools.
+- **BREAKING**: Removed resource-specific classes (`Loans`, `Banking`, `CreditCards`) and their corresponding files. The new API is now available directly on the `SecureLend` client instance.
 
-- Initial SDK implementation
-- Core package (`@securelend/sdk`) v1.0.0
-- React hooks package (`@securelend/react`) v1.0.0
-- Business loan comparison
-- Personal loan comparison
-- Business banking comparison
-- Business credit card comparison
-- Loan payment calculator
-- TypeScript type definitions
-- Comprehensive error handling
-- Automatic retry logic
-- Rate limiting
-- Example applications
+### Added
+- Added type definitions for all 20 MCP tools, including requests and responses for loans, mortgages, banking, credit cards, calculators, and application management.
 
 ## [1.0.0] - 2025-01-XX
 

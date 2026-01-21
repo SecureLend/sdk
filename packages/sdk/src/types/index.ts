@@ -93,7 +93,7 @@ export type LoanPurpose =
   | "payroll"
   | "other";
 
-export interface LoanComparisonRequest {
+export interface BusinessLoanComparisonRequest {
   amount: number;
   purpose: LoanPurpose;
   business: {
@@ -109,6 +109,36 @@ export interface LoanComparisonRequest {
   };
   termPreferenceMonths?: number;
   collateralAvailable?: boolean;
+  maxResults?: number;
+}
+
+export interface PersonalLoanComparisonRequest {
+  loanAmount: number;
+  purpose: LoanPurpose;
+  creditScore?: number;
+  state?: string;
+  maxResults?: number;
+}
+
+export interface MortgageComparisonRequest {
+  propertyValue: number;
+  loanAmount: number;
+  creditScore?: number;
+  state: string;
+  maxResults?: number;
+}
+
+export interface AutoLoanComparisonRequest {
+  loanAmount: number;
+  creditScore?: number;
+  vehicleType: "new" | "used";
+  maxResults?: number;
+}
+
+export interface StudentLoanComparisonRequest {
+  loanAmount: number;
+  creditScore?: number;
+  degreeType: "undergraduate" | "graduate" | "parent";
   maxResults?: number;
 }
 
@@ -238,7 +268,7 @@ export interface BankingComparisonResponse {
 // Credit Card Types
 // ============================================================================
 
-export interface CreditCardComparisonRequest {
+export interface PersonalCreditCardComparisonRequest {
   creditScore: number;
   monthlySpend: number;
   spendCategories?: Array<{
@@ -250,38 +280,107 @@ export interface CreditCardComparisonRequest {
     annualFeeMax?: number;
     introApr?: boolean;
   };
-  business?: Partial<BusinessProfile>;
   maxResults?: number;
 }
 
-export interface CreditCardOffer {
+export interface PersonalCreditCardOffer {
   cardId: string;
-  cardName: string;
+  name: string;
   issuer: string;
-  rewards: {
-    type: "cashback" | "points" | "miles";
-    baseRate: number;
-    bonusCategories?: Array<{
-      category: string;
-      rate: number;
-    }>;
-  };
-  fees: {
-    annualFee: Money;
-    foreignTransactionFee?: Percentage;
-  };
-  apr: {
-    purchaseApr: Percentage;
-    introApr?: Percentage;
-    introPeriodMonths?: number;
-  };
-  estimatedAnnualRewards?: Money;
-  approvalProbability?: number;
+  bestFor: string;
+  recommendedCreditScore: string;
+  rewardsRate: string;
+  introOffer: string;
   applyUrl: string;
 }
 
-export interface CreditCardComparisonResponse {
-  cards: CreditCardOffer[];
+export interface PersonalCreditCardComparisonResponse {
+  offers: PersonalCreditCardOffer[];
+  widget?: string;
+}
+
+export interface BusinessCreditCardComparisonRequest {
+  creditScore?: number;
+  business: Partial<BusinessProfile>;
+  maxResults?: number;
+}
+
+export interface BusinessCreditCardOffer {
+  cardId: string;
+  name: string;
+  issuer: string;
+  welcomeBonus: string;
+  terms: {
+    apr: number;
+    annualFee: number;
+  };
+  applyUrl: string;
+}
+
+export interface BusinessCreditCardComparisonResponse {
+  offers: BusinessCreditCardOffer[];
+  widget?: string;
+}
+
+// ============================================================================
+// Banking Types (Extended)
+// ============================================================================
+
+export interface BusinessBankingComparisonRequest {
+  industry?: string;
+  monthlyTransactions?: number;
+  maxResults?: number;
+}
+
+export interface BusinessBankingOffer {
+  accountId: string;
+  name: string;
+  issuer: string;
+  bestFor: string;
+  apy: string;
+  monthlyFee: string;
+}
+
+export interface BusinessBankingComparisonResponse {
+  offers: BusinessBankingOffer[];
+  widget?: string;
+}
+
+export interface PersonalBankingComparisonRequest {
+  features?: string[];
+  maxResults?: number;
+}
+
+export interface PersonalBankingOffer {
+  accountId: string;
+  name: string;
+  issuer: string;
+  bestFor: string;
+  apy: string;
+  monthlyFee: string;
+}
+
+export interface PersonalBankingComparisonResponse {
+  offers: PersonalBankingOffer[];
+  widget?: string;
+}
+
+export interface SavingsAccountComparisonRequest {
+  initialDeposit?: number;
+  maxResults?: number;
+}
+
+export interface SavingsAccountOffer {
+  accountId: string;
+  name: string;
+  issuer: string;
+  apy: string;
+  monthlyFee: string;
+  minBalanceForApy: string;
+}
+
+export interface SavingsAccountComparisonResponse {
+  offers: SavingsAccountOffer[];
   widget?: string;
 }
 
@@ -289,28 +388,126 @@ export interface CreditCardComparisonResponse {
 // Calculation Types
 // ============================================================================
 
-export interface LoanCalculation {
-  amount: number;
-  rate: number;
-  termMonths: number;
-  fees?: {
-    origination?: number;
-    processing?: number;
+export interface LoanCalculationRequest {
+  loanAmount: number;
+  interestRate: number;
+  loanTermInMonths: number;
+}
+
+export interface LoanCalculationResponse {
+  monthlyPayment: number;
+  totalPayment: number;
+  totalInterest: number;
+}
+
+export interface MortgageCalculationRequest {
+  propertyValue: number;
+  downPayment: number;
+  interestRate: number;
+  loanTermInYears: number;
+  propertyTaxRate: number;
+  homeInsurance: number;
+}
+
+export interface MortgageCalculationResponse {
+  loanAmount: number;
+  principalAndInterest: number;
+  monthlyPropertyTax: number;
+  monthlyHomeInsurance: number;
+  totalMonthlyPayment: number;
+}
+
+export interface LeaseVsPurchaseRequest {
+  vehiclePrice: number;
+  downPayment: number;
+  loanTermInMonths: number;
+  interestRate: number;
+  monthlyLeasePayment: number;
+  leaseTermInMonths: number;
+  expectedOwnershipInMonths: number;
+}
+
+export interface LeaseVsPurchaseResponse {
+  purchaseAnalysis: {
+    monthlyPayment: number;
+    totalCostOfOwnership: number;
+  };
+  leaseAnalysis: {
+    totalCostOfLeasing: number;
+  };
+  comparison: {
+    recommendation: string;
   };
 }
 
-export interface LoanCalculationResult {
-  monthlyPayment: number;
-  totalInterest: number;
-  totalCost: number;
-  apr: number;
-  amortizationSchedule?: Array<{
-    month: number;
-    payment: number;
-    principal: number;
-    interest: number;
-    balance: number;
+// ============================================================================
+// Application Management Types
+// ============================================================================
+
+export interface GetOfferRequest {
+  offerId: string;
+  sessionId: string;
+  applicationDetails: Record<string, any>; // User-filled form data
+}
+
+export interface GetMultipleOffersRequest {
+  offerIds: string[];
+  sessionId: string;
+  applicationDetails: Record<string, any>;
+}
+
+export interface ApplicationResponse {
+  id: string;
+  status: string;
+  productType: string;
+  submittedAt: DateString;
+  providers: Array<{
+    providerName: string;
+    status: string;
   }>;
+}
+
+export interface DisplayOfferFormRequest {
+  offerId: string;
+  sessionId: string;
+}
+
+export interface DisplayOfferFormResponse {
+  productType: string;
+  offer: LoanOffer | PersonalCreditCardOffer; // etc.
+  widget?: string;
+}
+
+export interface TrackOfferStatusRequest {
+  applicationId?: string;
+  email?: string;
+}
+
+export interface TrackOfferStatusResponse {
+  applications: ApplicationResponse[];
+  widget?: string;
+}
+
+export interface DisplayUploadDocumentsFormRequest {
+  applicationId: string;
+}
+
+export interface DisplayUploadDocumentsFormResponse {
+  widget?: string;
+}
+
+export interface SubmitDocumentsRequest {
+  applicationId: string;
+  documentType: string;
+  fileName: string;
+  fileType: string;
+}
+
+export interface SubmitDocumentsResponse {
+  success: boolean;
+  message: string;
+  documentId?: string;
+  uploadUrl?: string;
 }
 
 // ============================================================================
@@ -318,9 +515,6 @@ export interface LoanCalculationResult {
 // ============================================================================
 
 export interface SecureLendConfig {
-  /** MCP Server URL (default: https://mcp.securelend.ai/sse) */
-  mcpURL?: string;
-
-  /** Environment (default: production) */
-  environment?: "production" | "development";
+  /** MCP Server URL (default: https://mcp.securelend.ai/mcp) */
+  serverUrl?: string;
 }

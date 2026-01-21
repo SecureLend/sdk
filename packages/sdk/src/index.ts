@@ -9,11 +9,6 @@
 export { SecureLend } from "./client";
 export { SecureLend as default } from "./client";
 
-// Resource exports
-export { Loans } from "./resources/loans";
-export { Banking } from "./resources/banking";
-export { CreditCards } from "./resources/credit-cards";
-
 // Type exports
 export * from "./types";
 
@@ -29,4 +24,4 @@ export {
 } from "./utils/errors";
 
 // Version
-export const VERSION = "1.0.0";
+export const VERSION = "0.1.0-beta.1";

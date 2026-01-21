@@ -323,7 +323,7 @@ The SDK is a lightweight wrapper around the SecureLend MCP server:
 
 This is a monorepo containing multiple packages:
 
-### [@securelend/sdk](./packages/core)
+### [@securelend/sdk](./packages/sdk)
 
 Core TypeScript SDK - works in Node.js and browsers
 
@@ -434,7 +434,7 @@ npm run type-check
 
 sdk/
 ├── packages/
-│ ├── core/ # @securelend/sdk
+│ ├── sdk/ # @securelend/sdk
 │ │ ├── src/
 │ │ │ ├── client.ts
 │ │ │ ├── types.ts
@@ -458,7 +458,7 @@ npm run build
 npm test
 
 # Publish to npm (requires auth)
-cd packages/core
+cd packages/sdk
 npm publish --access public
 ```
 

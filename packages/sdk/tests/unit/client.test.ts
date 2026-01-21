@@ -16,9 +16,7 @@ describe("SecureLend Client", () => {
     it("should create client", () => {
       const client = new SecureLend();
       expect(client).toBeInstanceOf(SecureLend);
-      expect(client.loans).toBeDefined();
-      expect(client.banking).toBeDefined();
-      expect(client.creditCards).toBeDefined();
+      expect(client.mcp).toBeDefined();
       expect(MCPClientMock).toHaveBeenCalledTimes(1);
     });
   });
@@ -53,6 +51,37 @@ describe("SecureLend Client", () => {
       client = new SecureLend();
       mcpClientInstance = MCPClientMock.mock
         .instances[0] as jest.Mocked<MCPClient>;
+    });
+
+    it("should call mcpClient.callTool with correct params for compareBusinessLoans", async () => {
+      const request = {
+        amount: 10000,
+        purpose: "working_capital",
+        business: {
+          revenue: 50000,
+          creditScore: 700,
+          timeInBusiness: 12,
+        },
+      };
+
+      const mockToolResult = {
+        toolName: "compare_business_loans",
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({ offers: [] }),
+          },
+        ],
+      };
+
+      mcpClientInstance.callTool.mockResolvedValue(mockToolResult as any);
+
+      await client.compareBusinessLoans(request as any);
+
+      expect(mcpClientInstance.callTool).toHaveBeenCalledWith(
+        "compare_business_loans",
+        request,
+      );
     });
 
     it("should call mcpClient.connect when connect is called", async () => {
