@@ -191,7 +191,7 @@ const loanTermsSchema = z.object({
   }),
   termMonths: z.number().int(),
   payment: z.object({
-    frequency: z.string().default("monthly"),
+    frequency: z.string().optional(),
     amount: moneySchema,
   }),
   totalCost: moneySchema.optional(),
