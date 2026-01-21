@@ -311,8 +311,8 @@ export interface MortgageCalculationRequest {
 export interface MortgageCalculationResponse {
   loanAmount: number;
   principalAndInterest: number;
-  propertyTaxes: number;
-  insurance: number;
+  monthlyPropertyTax: number;
+  monthlyHomeInsurance: number;
   monthlyPayment: number;
   totalInterest: number;
   widget?: string;
