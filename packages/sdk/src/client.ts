@@ -15,6 +15,7 @@ interface ContentItem {
 }
 interface ToolResult {
   content: ContentItem[];
+  structuredContent?: unknown;
 }
 
 /**
@@ -303,30 +304,36 @@ export class SecureLend {
     toolResult: ToolResult,
     schema: z.ZodType<T>,
   ): T {
-    const jsonContent = toolResult.content.find(
-      (c: ContentItem) =>
-        (c.type === "resource" &&
-          c.resource &&
-          c.resource.mimeType === "application/json") ||
-        c.type === "text",
-    );
-
-    if (!jsonContent) {
-      throw new SecureLendError(
-        "Invalid response from MCP server: missing JSON content",
-        "mcp_error",
-        toolResult,
-      );
-    }
-
     try {
       let jsonData: unknown;
-      if (jsonContent.type === "text" && jsonContent.text) {
-        jsonData = JSON.parse(jsonContent.text);
-      } else if (jsonContent.type === "resource" && jsonContent.resource) {
-        jsonData = JSON.parse(jsonContent.resource.text);
+
+      // Prefer structuredContent if available from the underlying MCP-SDK
+      if (toolResult.structuredContent) {
+        jsonData = toolResult.structuredContent;
       } else {
-        throw new Error("Invalid content structure");
+        const jsonContent = toolResult.content.find(
+          (c: ContentItem) =>
+            (c.type === "resource" &&
+              c.resource &&
+              c.resource.mimeType === "application/json") ||
+            c.type === "text",
+        );
+
+        if (!jsonContent) {
+          throw new SecureLendError(
+            "Invalid response from MCP server: missing JSON content",
+            "mcp_error",
+            toolResult,
+          );
+        }
+
+        if (jsonContent.type === "text" && jsonContent.text) {
+          jsonData = JSON.parse(jsonContent.text);
+        } else if (jsonContent.type === "resource" && jsonContent.resource) {
+          jsonData = JSON.parse(jsonContent.resource.text);
+        } else {
+          throw new Error("Invalid content structure");
+        }
       }
       return schema.parse(jsonData);
     } catch (e) {
