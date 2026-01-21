@@ -333,7 +333,7 @@ export class SecureLend {
       if (e instanceof z.ZodError) {
         throw new ValidationError(
           "Invalid response from MCP server: failed to validate JSON content",
-          { validationErrors: e.errors, serverResponse: toolResult },
+          { validationErrors: e.issues, serverResponse: toolResult },
         );
       }
       throw new SecureLendError(
