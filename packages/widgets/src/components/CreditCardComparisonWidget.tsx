@@ -44,9 +44,9 @@ export function CreditCardComparisonWidget({
               <td>{offer.rewardsRate}</td>
               <td>{offer.introOffer}</td>
               <td>
-                {offer.applyUrl && (
+                {offer.applicationUrl && (
                   <a
-                    href={offer.applyUrl}
+                    href={offer.applicationUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="sl-widget-button"

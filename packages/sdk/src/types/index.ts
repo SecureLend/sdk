@@ -654,6 +654,7 @@ export const personalCreditCardOfferSchema = z.object({
       annual: z.number(),
     }),
   }),
+  applicationUrl: z.string().url().optional(),
 });
 export type PersonalCreditCardOffer = z.infer<
   typeof personalCreditCardOfferSchema
