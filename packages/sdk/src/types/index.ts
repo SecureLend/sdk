@@ -137,47 +137,13 @@ export interface StudentLoanComparisonRequest {
 
 export interface LoanOffer {
   offerId: string;
-  lender: {
-    id: string;
-    name: string;
-    type: string;
-  };
-  product: {
-    name: string;
-    type: string;
-    description?: string;
-  };
-  terms: {
-    amount: Money;
-    interestRate: {
-      type: "fixed" | "variable";
-      rate: Percentage;
-      apr: Percentage;
-    };
-    termMonths: number;
-    payment?: {
-      amount: Money;
-      frequency: string;
-    };
-    totalCost: Money;
-  };
-  fees?: {
-    origination?: {
-      amount?: Money;
-      percentage?: Percentage;
-    };
-    processing?: Money;
-  };
-  matching: {
-    matchScore?: number;
-    matchReasons?: string[];
-  };
-  process?: {
-    applicationUrl?: string;
-    fundingSpeed?: {
-      description: string;
-    };
-  };
+  lenderName: string;
+  productName: string;
+  interestRate: Percentage;
+  termMonths: number;
+  monthlyPayment: number;
+  loanAmount: number;
+  approvalLikelihood?: Percentage;
 }
 
 export interface LoanComparisonResponse {
@@ -345,8 +311,8 @@ export interface MortgageCalculationRequest {
 export interface MortgageCalculationResponse {
   loanAmount: number;
   principalAndInterest: number;
-  monthlyPropertyTax: number;
-  monthlyHomeInsurance: number;
+  propertyTaxes: number;
+  insurance: number;
   monthlyPayment: number;
   totalInterest: number;
   widget?: string;

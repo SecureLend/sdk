@@ -273,9 +273,13 @@ export class SecureLend {
       toolName,
       request as Record<string, any>,
     );
-    const data = this.parseJsonResponse<Omit<T, "widget">>(
-      toolResult as ToolResult,
-    );
+    let data = this.parseJsonResponse<any>(toolResult as ToolResult);
+
+    // Transform nested loan offers to flat structure for consumer convenience
+    if (toolName.toLowerCase().includes("loan") && Array.isArray(data.offers)) {
+      data.offers = data.offers.map(this.transformLoanOffer);
+    }
+
     return { ...data, widget: this.getWidget(toolResult as ToolResult) } as T;
   }
 
@@ -322,5 +326,18 @@ export class SecureLend {
       return widgetContent.resource.text;
     }
     return undefined;
+  }
+
+  private transformLoanOffer(offer: any): types.LoanOffer {
+    return {
+      offerId: offer.offerId,
+      lenderName: offer.lender?.name,
+      productName: offer.product?.name,
+      interestRate: offer.terms?.interestRate?.apr,
+      termMonths: offer.terms?.termMonths,
+      monthlyPayment: offer.terms?.payment?.amount?.amount,
+      loanAmount: offer.terms?.amount?.amount,
+      approvalLikelihood: offer.matching?.approvalProbability, // Note: may not exist in all server responses
+    };
   }
 }
