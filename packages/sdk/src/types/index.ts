@@ -64,10 +64,75 @@ export interface LenderSearchCriteria {
 
 const moneySchema = z.object({
   amount: z.number(),
-  currency: z.literal("USD"),
+  currency: z.string().length(3).default("USD"),
 });
 
 export type Money = z.infer<typeof moneySchema>;
+
+export interface BankAccountOffer {
+  id: string;
+  providerName: string;
+  providerLogo?: string;
+  accountName: string;
+  monthlyFee: number;
+  minBalance: number;
+  interestRate: number; // APY
+  features: string[];
+  isSecureLendTenant?: boolean;
+  applicationUrl?: string;
+}
+
+export interface CreditCardOffer {
+  id: string;
+  issuerName: string;
+  issuerLogo?: string;
+  cardName: string;
+  apr: {
+    min: number;
+    max: number;
+  };
+  annualFee: number;
+  rewards: {
+    type: "cash_back" | "points" | "miles";
+    summary: string;
+    signupBonus?: string;
+  };
+  isSecureLendTenant?: boolean;
+  applicationUrl?: string;
+}
+
+export const bankAccountOfferSchema = z.object({
+  id: z.string(),
+  providerName: z.string(),
+  providerLogo: z.string().optional(),
+  accountName: z.string(),
+  monthlyFee: z.number(),
+  minBalance: z.number(),
+  interestRate: z.number(),
+  features: z.array(z.string()),
+  isSecureLendTenant: z.boolean().optional(),
+  applicationUrl: z.string().url().optional(),
+});
+
+export const creditCardOfferSchema = z.object({
+  id: z.string(),
+  issuerName: z.string(),
+  issuerLogo: z.string().optional(),
+  cardName: z.string(),
+  apr: z.object({
+    min: z.number(),
+    max: z.number(),
+  }),
+  annualFee: z.number(),
+  rewards: z.object({
+    type: z.enum(["cash_back", "points", "miles"]),
+    summary: z.string(),
+    signupBonus: z.string().optional(),
+  }),
+  isSecureLendTenant: z.boolean().optional(),
+  applicationUrl: z.string().url().optional(),
+});
+
 export type Percentage = number; // 0-100
 export type BasisPoints = number;
 export type DateString = string; // ISO 8601
@@ -102,63 +167,68 @@ export const personalApplicantSchema = z.object({
   phone: z.string().optional().describe("The applicant's phone number."),
 });
 
+// Published Schema Aligned Types
+
+const lenderSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  type: z.string(),
+  logoUrl: z.string().url().optional(),
+});
+
+const productSchema = z.object({
+  name: z.string(),
+  type: z.string(),
+  description: z.string().optional(),
+});
+
+const loanTermsSchema = z.object({
+  amount: moneySchema,
+  interestRate: z.object({
+    type: z.enum(["fixed", "variable"]),
+    rate: z.number().optional(), // rate might not always be available if only APR is given
+    apr: z.number(),
+  }),
+  termMonths: z.number().int(),
+  payment: z.object({
+    frequency: z.string().default("monthly"),
+    amount: moneySchema,
+  }),
+  totalCost: moneySchema.optional(),
+});
+
+const loanFeesSchema = z
+  .object({
+    origination: z
+      .object({
+        amount: moneySchema.optional(),
+        percentage: z.number().optional(),
+      })
+      .optional(),
+  })
+  .optional();
+
+const matchingSchema = z
+  .object({
+    approvalProbability: z.number().min(0).max(1),
+    matchScore: z.number().min(0).max(100),
+    matchReasons: z.array(z.string()),
+  })
+  .optional();
+
 export const loanOfferSchema = z.object({
-  offerId: z.string().describe("A unique identifier for this specific loan offer."),
-  lender: z.object({
-    id: z.string().describe("The unique identifier for the lender."),
-    name: z.string().describe("The display name of the lender."),
-    type: z.string().describe("The type of lending institution (e.g., 'Bank', 'Credit Union')."),
-  }).describe("Details about the lender providing the offer."),
-  product: z.object({
-    name: z.string().describe("The name of the financial product being offered."),
-    type: z.nativeEnum(ProductType).describe("The category of the financial product."),
-    description: z.string().optional().describe("A brief description of the product."),
-  }).describe("Details about the financial product."),
-  terms: z.object({
-    amount: moneySchema.describe("The principal loan amount."),
-    interestRate: z.object({
-      type: z.enum(["fixed", "variable"]).describe("The type of interest rate."),
-      rate: z.number().describe("The nominal interest rate."),
-      apr: z.number().describe("The Annual Percentage Rate, including fees."),
-    }).describe("Details about the interest rate."),
-    termMonths: z.number().describe("The duration of the loan in months."),
-    payment: z
-      .object({
-        frequency: z.literal("monthly").describe("The frequency of payments."),
-        amount: moneySchema.describe("The amount of each payment."),
-      })
-      .optional().describe("Details about the repayment schedule."),
-    totalCost: moneySchema.optional().describe("The total cost of the loan, including interest and fees."),
-    prepaymentPenalty: z.boolean().optional().describe("Indicates if there is a penalty for early repayment."),
-    repayment: z
-      .object({
-        totalRepaymentAmount: z.number().describe("The total amount to be repaid over the life of the loan."),
-        costOfFinancing: z.number().describe("The total cost of borrowing (interest and fees)."),
-      })
-      .optional().describe("Summary of repayment details."),
-  }).describe("The terms and conditions of the loan offer."),
-  fees: z
-    .object({
-      origination: z
-        .object({
-          amount: moneySchema.describe("The origination fee amount."),
-          percentage: z.number().optional().describe("The origination fee as a percentage of the loan amount."),
-        })
-        .optional().describe("Fee charged by the lender for processing the loan."),
-    })
-    .optional().describe("Any fees associated with the loan."),
-  matching: z
-    .object({
-      matchScore: z.number().optional().describe("A score indicating how well the offer matches the search criteria."),
-      matchReasons: z.array(z.string()).optional().describe("Reasons for the match score."),
-    })
-    .optional().describe("Information about how the offer was matched."),
-  process: z.object({
-    applicationMethod: z.enum(["online", "phone", "in_person"]).describe("How to apply for the loan."),
-    applicationUrl: z.string().url().optional().describe("The URL to the online application form."),
-    fundingSpeed: z.object({ description: z.string().describe("Estimated time to receive funds.") }).optional().describe("Information on how quickly the loan is funded."),
-  }).describe("Details about the application and funding process."),
-  isSecureLendTenant: z.boolean().describe("Indicates if the offer is from a SecureLend-managed tenant."),
+  offerId: z.string(),
+  lender: lenderSchema,
+  product: productSchema,
+  terms: loanTermsSchema,
+  fees: loanFeesSchema,
+  matching: matchingSchema,
+  // Additional fields for UI that were in the old schema
+  lenderInfo: z.string().optional(),
+  fundingSpeed: z.string().optional(), // e.g., "1-2 business days"
+  badges: z.array(z.string()).optional(),
+  applicationUrl: z.string().url().optional(),
+  isSecureLendTenant: z.boolean().optional(),
 });
 
 export type LoanOffer = z.infer<typeof loanOfferSchema>;
@@ -524,9 +594,10 @@ export type PersonalCreditCardComparisonResponse = z.infer<typeof personalCredit
 export const loanComparisonResponseSchema = z.object({
   offers: z.array(loanOfferSchema),
   summary: z.object({
-    totalOffers: z.number(),
+    totalOffers: z.number().int(),
     bestRate: z.number(),
-    fastestFunding: z.string(),
+    bestApprovalProbability: z.number().optional(),
+    fastestFunding: z.string().optional(),
   }),
   searchCriteria: z
     .union([
@@ -538,8 +609,8 @@ export const loanComparisonResponseSchema = z.object({
     ])
     .optional(),
   metadata: z.object({
-    queryId: z.string(),
-    timestamp: z.string(),
+    queryId: z.string().uuid(),
+    timestamp: z.string().datetime(),
     sessionId: z.string().optional(),
   }),
   widget: z.string().optional(),
