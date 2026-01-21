@@ -48,13 +48,12 @@ const result = await securelend.compareBusinessLoans({
   loanAmount: 200000,
   purpose: "equipment",
   annualRevenue: 1200000,
-  creditScore: 720,
 });
 
 // Type-safe access to results
 console.log(`Found ${result.offers.length} loan offers`);
 result.offers.forEach((offer) => {
-  console.log(`${offer.lenderName}: ${offer.interestRate}% APR`);
+  console.log(`${offer.lender.name}: ${offer.terms.interestRate.apr}% APR`);
 });
 ```
 
@@ -115,14 +114,14 @@ The SDK includes complete TypeScript definitions:
 ```typescript
 import {
   SecureLend,
-  BusinessLoanRequest,
+  BusinessLoanComparisonRequest,
   LoanComparisonResponse,
   MortgageCalculationRequest,
-  MortgagePaymentResponse,
+  MortgageCalculationResponse,
 } from "@securelend/sdk";
 
 // Fully typed requests and responses
-const request: BusinessLoanRequest = {
+const request: BusinessLoanComparisonRequest = {
   loanAmount: 200000,
   purpose: "equipment",
   annualRevenue: 1200000,
@@ -198,7 +197,6 @@ async function findBestBusinessLoan() {
     purpose: "equipment",
     annualRevenue: 1200000,
     industry: "technology",
-    creditScore: 720,
     state: "CA",
   });
 
@@ -206,25 +204,24 @@ async function findBestBusinessLoan() {
 
   // 2. Show top 3 offers
   comparison.offers.slice(0, 3).forEach((offer, i) => {
-    console.log(`\n${i + 1}. ${offer.lenderName}`);
-    console.log(`   Rate: ${offer.interestRate}% APR`);
-    console.log(`   Monthly: $${offer.monthlyPayment}`);
-    console.log(`   Term: ${offer.termMonths} months`);
-    console.log(`   Approval Likelihood: ${offer.approvalLikelihood}%`);
+    console.log(`\n${i + 1}. ${offer.lender.name}`);
+    console.log(`   Rate: ${offer.terms.interestRate.apr}% APR`);
+    console.log(`   Monthly: $${offer.terms.payment?.amount.amount}`);
+    console.log(`   Term: ${offer.terms.termMonths} months`);
   });
 
   // 3. Calculate payment for best offer
   const bestOffer = comparison.offers[0];
   const payment = await securelend.calculateLoanPayment({
-    loanAmount: bestOffer.loanAmount,
-    interestRate: bestOffer.interestRate,
-    loanTermInMonths: bestOffer.termMonths,
+    loanAmount: bestOffer.terms.amount.amount,
+    interestRate: bestOffer.terms.interestRate.rate,
+    loanTermInMonths: bestOffer.terms.termMonths,
   });
 
   console.log(`\nBest offer payment breakdown:`);
   console.log(`Monthly: $${payment.monthlyPayment}`);
   console.log(`Total Interest: $${payment.totalInterest}`);
-  console.log(`Total Paid: $${payment.totalAmount}`);
+  console.log(`Total Paid: $${payment.totalPayment}`);
 
   return bestOffer;
 }
@@ -488,7 +485,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ## License
 
-MIT © 2026 SecureLend, Inc.
+MIT © 2025 SecureLend, Inc.
 
 ---
 

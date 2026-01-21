@@ -1,8 +1,17 @@
 import { SecureLend } from "../../src/client";
 import { MCPClient } from "../../src/utils/mcp";
+import * as types from "../../src/types";
 
 // Mock the MCPClient to avoid actual network calls
-jest.mock("../../src/utils/mcp");
+jest.mock("../../src/utils/mcp", () => ({
+  MCPClient: jest.fn().mockImplementation(() => ({
+    mcp: {},
+    connect: jest.fn(),
+    callTool: jest.fn(),
+    enableDebug: jest.fn(),
+    disableDebug: jest.fn(),
+  })),
+}));
 
 const MCPClientMock = MCPClient as jest.MockedClass<typeof MCPClient>;
 
@@ -10,6 +19,14 @@ describe("SecureLend Client", () => {
   beforeEach(() => {
     // Clears the record of calls to the mock constructor and its methods
     MCPClientMock.mockClear();
+    // Re-mock implementation for each test to clear calls between tests
+    MCPClientMock.mockImplementation(() => ({
+      mcp: {},
+      connect: jest.fn(),
+      callTool: jest.fn(),
+      enableDebug: jest.fn(),
+      disableDebug: jest.fn(),
+    }));
   });
 
   describe("constructor", () => {
@@ -54,14 +71,10 @@ describe("SecureLend Client", () => {
     });
 
     it("should call mcpClient.callTool with correct params for compareBusinessLoans", async () => {
-      const request = {
-        amount: 10000,
+      const request: types.BusinessLoanComparisonRequest = {
+        loanAmount: 10000,
         purpose: "working_capital",
-        business: {
-          revenue: 50000,
-          creditScore: 700,
-          timeInBusiness: 12,
-        },
+        annualRevenue: 50000,
       };
 
       const mockToolResult = {
@@ -74,9 +87,11 @@ describe("SecureLend Client", () => {
         ],
       };
 
-      mcpClientInstance.callTool.mockResolvedValue(mockToolResult as any);
+      (mcpClientInstance.callTool as jest.Mock).mockResolvedValue(
+        mockToolResult,
+      );
 
-      await client.compareBusinessLoans(request as any);
+      await client.compareBusinessLoans(request);
 
       expect(mcpClientInstance.callTool).toHaveBeenCalledWith(
         "compare_business_loans",

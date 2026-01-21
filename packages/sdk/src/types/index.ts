@@ -94,21 +94,11 @@ export type LoanPurpose =
   | "other";
 
 export interface BusinessLoanComparisonRequest {
-  amount: number;
-  purpose: LoanPurpose;
-  business: {
-    revenue: number;
-    creditScore: number;
-    timeInBusiness: number;
-    industry?: string;
-    entityType?: string;
-    location?: {
-      state?: string;
-      country?: string;
-    };
-  };
-  termPreferenceMonths?: number;
-  collateralAvailable?: boolean;
+  loanAmount: number;
+  purpose: string;
+  annualRevenue?: number;
+  industry?: string;
+  state?: string;
   maxResults?: number;
 }
 
@@ -176,8 +166,7 @@ export interface LoanOffer {
     processing?: Money;
   };
   matching: {
-    approvalProbability: number;
-    matchScore: number;
+    matchScore?: number;
     matchReasons?: string[];
   };
   process?: {
@@ -193,7 +182,6 @@ export interface LoanComparisonResponse {
   summary: {
     totalOffers: number;
     bestRate: number;
-    bestApprovalProbability: number;
     fastestFunding: string;
   };
   metadata: {
@@ -203,66 +191,6 @@ export interface LoanComparisonResponse {
   widget?: string;
 }
 
-// ============================================================================
-// Banking Types
-// ============================================================================
-
-export interface BankingComparisonRequest {
-  accountType: "checking" | "savings" | "both";
-  monthlyRevenue?: number;
-  monthlyTransactions?: number;
-  averageBalance?: number;
-  featuresNeeded?: string[];
-  accountingSoftware?: "quickbooks" | "xero" | "freshbooks" | "none";
-  maxResults?: number;
-}
-
-export interface BankingAccount {
-  accountId: string;
-  bank: {
-    id: string;
-    name: string;
-    type: string;
-  };
-  account: {
-    name: string;
-    type: string;
-    description?: string;
-  };
-  ratesAndFees: {
-    interestRate?: {
-      apy?: Percentage;
-    };
-    monthlyFee?: Money;
-    feeWaiverConditions?: string[];
-    minimumBalance?: Money;
-  };
-  features?: {
-    onlineBanking?: boolean;
-    mobileApp?: {
-      available: boolean;
-      rating?: number;
-    };
-    accountingIntegrations?: string[];
-  };
-  matching?: {
-    matchScore?: number;
-    estimatedMonthlyCost?: Money;
-    pros?: string[];
-    cons?: string[];
-  };
-}
-
-export interface BankingComparisonResponse {
-  accounts: BankingAccount[];
-  summary: {
-    lowestMonthlyCost: number;
-    highestApy: number;
-    bestForHighTransactions?: string;
-    bestForInterest?: string;
-  };
-  widget?: string;
-}
 
 // ============================================================================
 // Credit Card Types
@@ -301,7 +229,8 @@ export interface PersonalCreditCardComparisonResponse {
 
 export interface BusinessCreditCardComparisonRequest {
   creditScore?: number;
-  business: Partial<BusinessProfile>;
+  annualRevenue?: number;
+  businessAgeInYears?: number;
   maxResults?: number;
 }
 
