@@ -1,6 +1,7 @@
+import { z } from "zod";
 import { MCPClient } from "./utils/mcp";
 import * as types from "./types";
-import { SecureLendError } from "./utils/errors";
+import { SecureLendError, ValidationError } from "./utils/errors";
 
 // Minimal interface definitions to satisfy the compiler.
 // This is necessary because `@modelcontextprotocol/sdk` may not export `ToolResult` as expected.
@@ -59,54 +60,60 @@ export class SecureLend {
   async comparePersonalLoans(
     request: types.PersonalLoanSearchParams,
   ): Promise<types.LoanComparisonResponse> {
-    return this.callTool<types.LoanComparisonResponse>(
+    return this.callTool(
       "compare_personal_loans",
       request,
+      types.loanComparisonResponseSchema,
     );
   }
 
   async compareBusinessLoans(
     request: types.BusinessLoanSearchParams,
   ): Promise<types.LoanComparisonResponse> {
-    return this.callTool<types.LoanComparisonResponse>(
+    return this.callTool(
       "compare_business_loans",
       request,
+      types.loanComparisonResponseSchema,
     );
   }
 
   async comparePersonalMortgages(
     request: types.MortgageSearchParams,
   ): Promise<types.LoanComparisonResponse> {
-    return this.callTool<types.LoanComparisonResponse>(
+    return this.callTool(
       "compare_personal_mortgages",
       request,
+      types.loanComparisonResponseSchema,
     );
   }
 
   async compareBusinessMortgages(
     request: types.MortgageSearchParams,
   ): Promise<types.LoanComparisonResponse> {
-    return this.callTool<types.LoanComparisonResponse>(
+    return this.callTool(
       "compare_business_mortgages",
       request,
+      types.loanComparisonResponseSchema,
     );
   }
 
   async compareCarLoans(
     request: types.AutoLoanSearchParams,
   ): Promise<types.LoanComparisonResponse> {
-    return this.callTool<types.LoanComparisonResponse>(
+    return this.callTool(
       "compare_car_loans",
       request,
+      types.loanComparisonResponseSchema,
     );
   }
 
   async compareStudentLoans(
     request: types.StudentLoanSearchParams,
   ): Promise<types.LoanComparisonResponse> {
-    return this.callTool<types.LoanComparisonResponse>(
+    return this.callTool(
       "compare_student_loans",
       request,
+      types.loanComparisonResponseSchema,
     );
   }
 
@@ -115,45 +122,50 @@ export class SecureLend {
   async compareBusinessBanking(
     request: types.BusinessBankingSearchSchema,
   ): Promise<types.BusinessBankingComparisonResponse> {
-    return this.callTool<types.BusinessBankingComparisonResponse>(
+    return this.callTool(
       "compare_business_banking",
       request,
+      types.businessBankingComparisonResponseSchema,
     );
   }
 
   async comparePersonalBanking(
     request: types.PersonalBankingSearchSchema,
   ): Promise<types.PersonalBankingComparisonResponse> {
-    return this.callTool<types.PersonalBankingComparisonResponse>(
+    return this.callTool(
       "compare_personal_banking",
       request,
+      types.personalBankingComparisonResponseSchema,
     );
   }
 
   async compareSavingsAccounts(
     request: types.SavingsSearchSchema,
   ): Promise<types.SavingsAccountComparisonResponse> {
-    return this.callTool<types.SavingsAccountComparisonResponse>(
+    return this.callTool(
       "compare_savings_accounts",
       request,
+      types.savingsComparisonResponseSchema,
     );
   }
 
   async compareBusinessCreditCards(
     request: types.BusinessCreditCardSearchParams,
   ): Promise<types.BusinessCreditCardComparisonResponse> {
-    return this.callTool<types.BusinessCreditCardComparisonResponse>(
+    return this.callTool(
       "compare_business_credit_cards",
       request,
+      types.businessCreditCardComparisonResponseSchema,
     );
   }
 
   async comparePersonalCreditCards(
     request: types.PersonalCreditCardSearchSchema,
   ): Promise<types.PersonalCreditCardComparisonResponse> {
-    return this.callTool<types.PersonalCreditCardComparisonResponse>(
+    return this.callTool(
       "compare_personal_credit_cards",
       request,
+      types.personalCreditCardComparisonResponseSchema,
     );
   }
 
@@ -162,27 +174,30 @@ export class SecureLend {
   async calculateLoanPayment(
     request: types.LoanPaymentParams,
   ): Promise<types.LoanCalculationResponse> {
-    return this.callTool<types.LoanCalculationResponse>(
+    return this.callTool(
       "calculate_loan_payment",
       request,
+      types.loanPaymentResponseSchema,
     );
   }
 
   async calculateMortgagePayment(
     request: types.MortgagePaymentParams,
   ): Promise<types.MortgageCalculationResponse> {
-    return this.callTool<types.MortgageCalculationResponse>(
+    return this.callTool(
       "calculate_mortgage_payment",
       request,
+      types.mortgagePaymentResponseSchema,
     );
   }
 
   async compareLeaseVsPurchase(
     request: types.LeaseVsPurchaseParams,
   ): Promise<types.LeaseVsPurchaseResponse> {
-    return this.callTool<types.LeaseVsPurchaseResponse>(
+    return this.callTool(
       "compare_lease_vs_purchase",
       request,
+      types.leaseVsPurchaseResponseSchema,
     );
   }
 
@@ -191,51 +206,56 @@ export class SecureLend {
   async getOffer(
     request: types.GetOfferParams,
   ): Promise<types.PersonalApplication> {
-    return this.callTool<types.PersonalApplication>("get_offer", request);
+    return this.callTool("get_offer", request, types.personalApplicationSchema);
   }
 
   async getMultipleOffers(
     request: types.GetMultipleOffersParams,
   ): Promise<types.PersonalApplication> {
-    return this.callTool<types.PersonalApplication>(
+    return this.callTool(
       "get_multiple_offers",
       request,
+      types.personalApplicationSchema,
     );
   }
 
   async displayOfferForm(
     request: types.DisplayOfferFormParams,
   ): Promise<types.DisplayOfferFormResponse> {
-    return this.callTool<types.DisplayOfferFormResponse>(
+    return this.callTool(
       "display_offer_form",
       request,
+      types.displayOfferFormResponseSchema,
     );
   }
 
   async trackOfferStatus(
     request: types.TrackOfferStatusParams,
   ): Promise<types.TrackOfferStatusResponse> {
-    return this.callTool<types.TrackOfferStatusResponse>(
+    return this.callTool(
       "track_offer_status",
       request,
+      types.trackOfferStatusResponseSchema,
     );
   }
 
   async displayUploadDocumentsForm(
     request: types.DisplayUploadDocumentsFormParams,
   ): Promise<types.DisplayUploadDocumentsFormResponse> {
-    return this.callTool<types.DisplayUploadDocumentsFormResponse>(
+    return this.callTool(
       "display_upload_documents_form",
       request,
+      types.displayUploadDocumentsFormResponseSchema,
     );
   }
 
   async submitDocuments(
     request: types.SubmitDocumentsParams,
   ): Promise<types.SubmitDocumentsResponse> {
-    return this.callTool<types.SubmitDocumentsResponse>(
+    return this.callTool(
       "submit_documents",
       request,
+      types.submitDocumentsResponseSchema,
     );
   }
 
@@ -268,17 +288,21 @@ export class SecureLend {
   private async callTool<T extends { widget?: string }>(
     toolName: string,
     request: unknown,
+    schema: z.ZodType<T>,
   ): Promise<T> {
     const toolResult = await this.mcpClient.callTool(
       toolName,
       request as Record<string, unknown>,
     );
-    const data = this.parseJsonResponse<T>(toolResult as ToolResult);
+    const data = this.parseJsonResponse(toolResult as ToolResult, schema);
 
-    return { ...data, widget: this.getWidget(toolResult as ToolResult) } as T;
+    return { ...data, widget: this.getWidget(toolResult as ToolResult) };
   }
 
-  private parseJsonResponse<T>(toolResult: ToolResult): T {
+  private parseJsonResponse<T>(
+    toolResult: ToolResult,
+    schema: z.ZodType<T>,
+  ): T {
     const jsonContent = toolResult.content.find(
       (c: ContentItem) =>
         (c.type === "resource" &&
@@ -296,18 +320,26 @@ export class SecureLend {
     }
 
     try {
+      let jsonData: unknown;
       if (jsonContent.type === "text" && jsonContent.text) {
-        return JSON.parse(jsonContent.text);
+        jsonData = JSON.parse(jsonContent.text);
       } else if (jsonContent.type === "resource" && jsonContent.resource) {
-        return JSON.parse(jsonContent.resource.text);
+        jsonData = JSON.parse(jsonContent.resource.text);
+      } else {
+        throw new Error("Invalid content structure");
       }
-      // This path should not be reachable if jsonContent is found
-      throw new Error("Invalid content structure");
+      return schema.parse(jsonData);
     } catch (e) {
+      if (e instanceof z.ZodError) {
+        throw new ValidationError(
+          "Invalid response from MCP server: failed to validate JSON content",
+          { validationErrors: e.errors, serverResponse: toolResult },
+        );
+      }
       throw new SecureLendError(
         "Invalid response from MCP server: failed to parse JSON content",
         "mcp_error",
-        toolResult,
+        { originalError: e, serverResponse: toolResult },
       );
     }
   }
