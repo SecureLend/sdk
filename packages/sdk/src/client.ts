@@ -273,7 +273,9 @@ export class SecureLend {
       toolName,
       request as Record<string, any>,
     );
-    let data = this.parseJsonResponse<any>(toolResult as ToolResult);
+    const data = this.parseJsonResponse<
+      Record<string, unknown> & { offers?: unknown[] }
+    >(toolResult as ToolResult);
 
     // Transform nested loan offers to flat structure for consumer convenience
     if (toolName.toLowerCase().includes("loan") && Array.isArray(data.offers)) {
