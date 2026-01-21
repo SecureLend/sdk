@@ -322,5 +322,4 @@ export class SecureLend {
     }
     return undefined;
   }
-
 }
