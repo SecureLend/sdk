@@ -763,11 +763,17 @@ export interface Application<TApplicant, TData> {
   email: string; // For GSI
 }
 
-export type PersonalApplication = Application<PersonalApplicant, any>;
-export type BusinessApplication = Application<BusinessApplicant, any>;
+export type PersonalApplication = Application<
+  PersonalApplicant,
+  Record<string, unknown>
+>;
+export type BusinessApplication = Application<
+  BusinessApplicant,
+  Record<string, unknown>
+>;
 export type GenericApplication = Application<
   PersonalApplicant | BusinessApplicant,
-  any
+  Record<string, unknown>
 >;
 
 // Zod schemas for validation
@@ -796,9 +802,18 @@ export const displayOfferFormSchema = z.object({
 });
 export type DisplayOfferFormParams = z.infer<typeof displayOfferFormSchema>;
 
+export const anyOfferSchema = z.union([
+  loanOfferSchema,
+  businessCreditCardOfferSchema,
+  businessBankingOfferSchema,
+  personalBankingOfferSchema,
+  savingsOfferSchema,
+  personalCreditCardOfferSchema,
+]);
+
 export const displayOfferFormResponseSchema = z.object({
-  offer: z.any(),
-  allOffers: z.array(z.any()),
+  offer: anyOfferSchema,
+  allOffers: z.array(anyOfferSchema),
   applicationData: anyObjectSchema,
   productType: z.string(),
   widget: z.string().optional(),
