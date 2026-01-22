@@ -515,7 +515,7 @@ export const ApplicationFormWidget = ({
                 style={{
                   ...styles.button,
                   backgroundColor: "transparent",
-                  color: isDark ? "#9CA3AF" : "#6B7280",
+                  color: "var(--text-muted)",
                   marginTop: "0.5rem",
                 }}
               >
