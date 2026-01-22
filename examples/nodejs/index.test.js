@@ -1,8 +1,11 @@
-import { main } from './index.js';
-import { SecureLend } from '@securelend/sdk';
+import { jest } from '@jest/globals';
 
-// Mock the SDK to avoid actual network calls
-jest.mock('@securelend/sdk');
+jest.unstable_mockModule('@securelend/sdk', () => ({
+  SecureLend: jest.fn(),
+}));
+
+const { SecureLend } = await import('@securelend/sdk');
+const { main } = await import('./index.js');
 
 describe('NodeJS Example', () => {
   let secureLendInstance;

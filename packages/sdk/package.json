@@ -19,6 +19,10 @@
     "type-check": "tsc --noEmit",
     "prepublishOnly": "npm run build && npm test"
   },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
   "keywords": [
     "securelend",
     "financial-services",
