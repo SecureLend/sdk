@@ -20,12 +20,12 @@ Next, activate it. Your shell prompt should change to indicate that the virtual 
 source venv/bin/activate
 ```
 
-**2. Install Dependencies:**
+**2. Install the Python SDK:**
 
-With the virtual environment active, install the required dependencies for the example script. This script runs the SDK directly from the source code in the `packages/python` directory.
+Install the `securelend` package in editable mode using the `pip` from your virtual environment. This ensures all dependencies from `pyproject.toml` are installed into the correct environment.
 
 ```bash
-pip install -r examples/python/requirements.txt
+./venv/bin/pip install -e packages/python
 ```
 
 **3. Set Environment Variables (Optional):**
@@ -38,13 +38,8 @@ export SECURELEND_API_KEY="sk_test_..."
 
 ## Running the Example
 
-After following the setup steps above, your virtual environment should be active. You can now run the example script:
+After following the setup steps, run the example script using the Python executable from your virtual environment to ensure it can find the installed package.
 
-```bash
-python examples/python/main.py
-```
-
-If you encounter a `ModuleNotFoundError`, it means your virtual environment is not active. You can either activate it with `source venv/bin/activate` or run the script using the Python executable from the virtual environment directly:
 ```bash
 ./venv/bin/python examples/python/main.py
 ```
