@@ -12,9 +12,9 @@
     "next": "latest",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "@securelend/sdk": "file:../../packages/sdk",
-    "@securelend/react": "file:../../packages/react",
-    "@securelend/widgets": "file:../../packages/widgets"
+    "@securelend/sdk": "workspace:*",
+    "@securelend/react": "workspace:*",
+    "@securelend/widgets": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",
