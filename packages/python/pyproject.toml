@@ -14,7 +14,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "httpx[http2]>=0.25.0",
+    "model-context-protocol[http-client]>=1.2.0",
     "pydantic>=2.0"
 ]
 

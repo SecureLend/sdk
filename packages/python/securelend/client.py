@@ -286,27 +286,31 @@ class SecureLend:
             ) from e
 
     def _parse_json_response(self, tool_result: types.ToolResult) -> Dict[str, Any]:
-        content_list = tool_result.get("content", [])
+        if tool_result.structured_content:
+            return tool_result.structured_content
+
+        content_list = tool_result.content
         if not isinstance(content_list, list):
             raise SecureLendError(
                 "Invalid response: content is not a list", "server_error"
             )
 
         for item in content_list:
-            item_type = item.get("type")
-            if item_type == "text":
+            if item.type == "text" and item.text:
                 try:
-                    return json.loads(item.get("text", "{}"))
+                    return json.loads(item.text)
                 except json.JSONDecodeError as e:
                     raise SecureLendError(
                         f"Failed to parse JSON response: {e}", "server_error"
                     ) from e
             elif (
-                item_type == "resource"
-                and item.get("resource", {}).get("mimeType") == "application/json"
+                item.type == "resource"
+                and item.resource
+                and item.resource.mime_type == "application/json"
+                and item.resource.text
             ):
                 try:
-                    return json.loads(item.get("resource", {}).get("text", "{}"))
+                    return json.loads(item.resource.text)
                 except json.JSONDecodeError as e:
                     raise SecureLendError(
                         f"Failed to parse JSON response: {e}", "server_error"
@@ -317,14 +321,15 @@ class SecureLend:
         )
 
     def _get_widget(self, tool_result: types.ToolResult) -> Optional[str]:
-        content_list = tool_result.get("content", [])
+        content_list = tool_result.content
         if not isinstance(content_list, list):
             return None
 
         for item in content_list:
             if (
-                item.get("type") == "resource"
-                and item.get("resource", {}).get("mimeType") == "text/html"
+                item.type == "resource"
+                and item.resource
+                and item.resource.mime_type == "text/html"
             ):
-                return item.get("resource", {}).get("text")
+                return item.resource.text
         return None
