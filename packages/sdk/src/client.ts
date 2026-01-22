@@ -50,7 +50,12 @@ export class SecureLend {
    * @param config - Optional configuration
    */
   constructor(config?: types.SecureLendConfig) {
-    const mcpURL = config?.serverUrl || "https://mcp.securelend.ai/mcp";
+    let mcpURL = config?.serverUrl || "https://mcp.securelend.ai/mcp";
+
+    // Handle relative URLs in browser environments
+    if (typeof window !== "undefined" && mcpURL.startsWith("/")) {
+      mcpURL = window.location.origin + mcpURL;
+    }
 
     this.mcpClient = new MCPClient({ apiKey: "", mcpURL });
     this.mcp = this.mcpClient.mcp;
