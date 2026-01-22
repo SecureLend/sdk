@@ -112,16 +112,98 @@ describe("SecureLend Client", () => {
   describe("tool methods", () => {
     let client: SecureLend;
     const mockRequest = { mock: "request" };
-    // A minimal, valid response for any schema that expects an object
-    const mockApiResponse = {};
-    const mockToolResult = {
-      structuredContent: mockApiResponse,
-      content: [],
+
+    const minimalMetadata = {
+      queryId: "qid-123",
+      timestamp: "2023-01-01T12:00:00Z",
+    };
+    const minimalLoanComparisonResponse = {
+      offers: [],
+      summary: { totalOffers: 0, bestRate: 0.0 },
+      metadata: minimalMetadata,
+    };
+    const minimalOffersComparisonResponse = {
+      offers: [],
+      metadata: minimalMetadata,
+    };
+    const minimalPersonalApplication = {
+      id: "app-123",
+      createdAt: "2023-01-01T12:00:00Z",
+      updatedAt: "2023-01-01T12:00:00Z",
+      applicationType: "PERSONAL",
+      productType: "INSTALLMENT_LOAN",
+      status: "DRAFT",
+      applicant: {
+        firstName: "John",
+        lastName: "Doe",
+        email: "john.doe@example.com",
+      },
+      applicationData: {},
+      providers: [],
+      email: "john.doe@example.com",
+    };
+    const mockResponses: Record<string, any> = {
+      comparePersonalLoans: minimalLoanComparisonResponse,
+      compareBusinessLoans: minimalLoanComparisonResponse,
+      comparePersonalMortgages: minimalLoanComparisonResponse,
+      compareBusinessMortgages: minimalLoanComparisonResponse,
+      compareCarLoans: minimalLoanComparisonResponse,
+      compareStudentLoans: minimalLoanComparisonResponse,
+      compareBusinessBanking: minimalOffersComparisonResponse,
+      comparePersonalBanking: minimalOffersComparisonResponse,
+      compareSavingsAccounts: minimalOffersComparisonResponse,
+      compareBusinessCreditCards: minimalOffersComparisonResponse,
+      comparePersonalCreditCards: minimalOffersComparisonResponse,
+      calculateLoanPayment: {
+        monthlyPayment: 100.0,
+        totalPayment: 1200.0,
+        totalInterest: 200.0,
+      },
+      calculateMortgagePayment: {
+        loanAmount: 200000,
+        principalAndInterest: 1000,
+        monthlyPropertyTax: 200,
+        monthlyHomeInsurance: 100,
+        totalMonthlyPayment: 1300,
+      },
+      compareLeaseVsPurchase: {
+        purchaseAnalysis: {},
+        leaseAnalysis: {},
+        comparison: {},
+      },
+      getOffer: minimalPersonalApplication,
+      getMultipleOffers: minimalPersonalApplication,
+      displayOfferForm: {
+        // A minimal LoanOffer
+        offer: {
+          offerId: "offer-123",
+          lender: { id: "lender-1", name: "Test Lender", type: "BANK" },
+          product: { name: "Test Loan", type: "INSTALLMENT_LOAN" },
+          terms: {
+            amount: { amount: 10000, currency: "USD" },
+            interestRate: { type: "fixed", apr: 0.05 },
+            termMonths: 12,
+            payment: { amount: { amount: 856.07, currency: "USD" } },
+          },
+        },
+        allOffers: [],
+        applicationData: {},
+        productType: "INSTALLMENT_LOAN",
+      },
+      trackOfferStatus: {
+        applications: [],
+      },
+      displayUploadDocumentsForm: {
+        widget: "<div>upload form</div>",
+      },
+      submitDocuments: {
+        success: true,
+        message: "OK",
+      },
     };
 
     beforeEach(() => {
       client = new SecureLend();
-      mcpClientInstance.callTool.mockResolvedValue(mockToolResult);
     });
 
     const toolMethods: Array<[keyof SecureLend, string]> = [
@@ -150,15 +232,21 @@ describe("SecureLend Client", () => {
     test.each(toolMethods)(
       "should call %s correctly",
       async (methodName, toolName) => {
-        // This test is simplified to just check the correct tool name is called.
-        // It relies on mock API response being a generic object.
+        const mockApiResponse = mockResponses[methodName as string];
+        const mockToolResult = {
+          structuredContent: mockApiResponse,
+          content: [],
+        };
+        mcpClientInstance.callTool.mockResolvedValue(mockToolResult);
+
         // @ts-expect-error - Calling method dynamically
-        await client[methodName](mockRequest);
+        const response = await client[methodName](mockRequest);
 
         expect(mcpClientInstance.callTool).toHaveBeenCalledWith(
           toolName,
           mockRequest,
         );
+        expect(response).toMatchObject(mockApiResponse);
       },
     );
   });
