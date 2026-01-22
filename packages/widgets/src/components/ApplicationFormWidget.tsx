@@ -7,6 +7,24 @@ import type {
   PersonalApplication,
 } from "@securelend/sdk";
 
+// Helper to safely extract provider info from different offer types
+function getProviderInfo(offer: any): { name: string; id: string } | null {
+  if (!offer) return null;
+  // Loan Offer
+  if ("lender" in offer && offer.lender) {
+    return { name: offer.lender.name, id: offer.lender.id };
+  }
+  // Credit Card Offer (personal and business)
+  if ("issuer" in offer && "cardId" in offer) {
+    return { name: offer.issuer, id: offer.cardId };
+  }
+  // Banking/Savings Offer
+  if ("issuer" in offer && "accountId" in offer) {
+    return { name: offer.issuer, id: offer.accountId };
+  }
+  return null;
+}
+
 type ApplicantInfo = {
   firstName: string;
   lastName: string;
@@ -356,17 +374,9 @@ export const ApplicationFormWidget = ({
 
     try {
       if (submissionType === "single") {
-        const lenderName =
-          (offerData.offer as any).lender?.name ||
-          (offerData.offer as any).issuer ||
-          "the provider";
-        const providerId =
-          (offerData.offer as any).lender?.id ||
-          (offerData.offer as any).cardId ||
-          (offerData.offer as any).accountId;
-
-        if (!providerId) {
-          console.error("Could not determine provider ID from offer.");
+        const providerInfo = getProviderInfo(offerData.offer);
+        if (!providerInfo) {
+          console.error("Could not determine provider info from offer.");
           return;
         }
 
@@ -375,17 +385,24 @@ export const ApplicationFormWidget = ({
           applicant: applicantInfo,
           applicationData: offerData.applicationData,
           provider: {
-            providerId,
-            providerName: lenderName,
+            providerId: providerInfo.id,
+            providerName: providerInfo.name,
           },
         };
         const result = await submitOffer(request);
         onSubmitted("single", result);
       } else {
-        const providers = offerData.allOffers.map((offer: any) => ({
-          providerId: offer.lender?.id || offer.cardId || offer.accountId,
-          providerName: offer.lender?.name || offer.issuer,
-        }));
+        const providers = offerData.allOffers
+          .map((offer) => {
+            const info = getProviderInfo(offer);
+            return info ? { providerId: info.id, providerName: info.name } : null;
+          })
+          .filter((p): p is { providerId: string; providerName: string } => !!p);
+        
+        if (providers.length === 0) {
+          console.error("Could not determine provider for any of the offers.");
+          return;
+        }
 
         const request: GetMultipleOffersParams = {
           productType: offerData.productType as any,
@@ -414,11 +431,7 @@ export const ApplicationFormWidget = ({
     executeSubmission();
   };
 
-  const lenderName =
-    (offerData?.offer as any)?.lender?.name ||
-    (offerData?.offer as any)?.issuer ||
-    (offerData?.offer as any)?.name ||
-    "the provider";
+  const lenderName = getProviderInfo(offerData.offer)?.name || "the provider";
 
   return (
     <div style={styles.pageWrapper}>
