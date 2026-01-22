@@ -465,16 +465,14 @@ sdk/
 
 ### Publishing
 
+Publishing is handled by Lerna to ensure all packages are versioned and published correctly.
+
 ```bash
-# Build all packages
-npm run build
+# Make sure you are logged into npm
+npm login
 
-# Test before publishing
-npm test
-
-# Publish to npm (requires auth)
-cd packages/sdk
-npm publish --access public
+# Run the publish script from the root of the repository
+npm run publish:all
 ```
 
 ---
