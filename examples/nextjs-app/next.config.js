@@ -16,11 +16,11 @@ const nextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       // Force all modules to use the same instance of React
-      react: path.resolve(__dirname, 'node_modules/react'),
-      'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
-      'react/jsx-dev-runtime': path.resolve(__dirname, 'node_modules/react/jsx-dev-runtime'),
+      react: path.resolve(__dirname, '../../node_modules/react'),
+      'react-dom': path.resolve(__dirname, '../../node_modules/react-dom'),
+      'react/jsx-dev-runtime': path.resolve(__dirname, '../../node_modules/react/jsx-dev-runtime'),
       // Force all modules to use the same instance of @securelend/react
-      '@securelend/react': path.resolve(__dirname, 'node_modules/@securelend/react'),
+      '@securelend/react': path.resolve(__dirname, '../../node_modules/@securelend/react'),
     };
     return config;
   },
