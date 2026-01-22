@@ -20,12 +20,12 @@ Next, activate it. Your shell prompt should change to indicate that the virtual 
 source venv/bin/activate
 ```
 
-**2. Install the Python SDK:**
+**2. Install Dependencies:**
 
-With the virtual environment active, install the `securelend` package in editable mode.
+With the virtual environment active, install the required dependencies for the example script. This script runs the SDK directly from the source code in the `packages/python` directory.
 
 ```bash
-pip install -e packages/python
+pip install -r examples/python/requirements.txt
 ```
 
 **3. Set Environment Variables (Optional):**
