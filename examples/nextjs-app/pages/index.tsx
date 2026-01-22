@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useState } from 'react';
 import { useLoanComparison } from '@securelend/react';
-import { LoanComparisonWidget, SecureLendWidget } from '@securelend/widgets';
+import { SecureLendWidget } from '@securelend/react';
+import { LoanComparisonWidget } from '@securelend/widgets';
 import type { BusinessLoanSearchParams } from '@securelend/sdk';
 
 export default function Home() {
