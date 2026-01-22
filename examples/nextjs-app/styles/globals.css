@@ -150,7 +150,7 @@ button:disabled {
 }
 
 /* Style widget buttons to match the app's theme */
-.sl-widget-button {
+.sl-widget-button, a.sl-widget-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -167,7 +167,8 @@ button:disabled {
   white-space: nowrap;
 }
 
-.sl-widget-button:hover {
+.sl-widget-button:hover, a.sl-widget-button:hover {
   transform: translateY(-2px);
   opacity: 0.95;
+  color: #FFFFFF;
 }
