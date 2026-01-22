@@ -57,7 +57,7 @@ export class SecureLend {
       mcpURL = window.location.origin + mcpURL;
     }
 
-    this.mcpClient = new MCPClient({ apiKey: "", mcpURL });
+    this.mcpClient = new MCPClient({ apiKey: config?.apiKey || "", mcpURL });
     this.mcp = this.mcpClient.mcp;
   }
 
@@ -287,6 +287,14 @@ export class SecureLend {
    */
   disableDebug(): void {
     this.mcpClient.disableDebug();
+  }
+
+  /**
+   * Set the API key for subsequent requests.
+   * @param apiKey - The new API key
+   */
+  setApiKey(apiKey: string): void {
+    this.mcpClient.setApiKey(apiKey);
   }
 
   // --- Private Helpers ---

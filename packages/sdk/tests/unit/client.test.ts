@@ -14,6 +14,7 @@ describe("SecureLend Client", () => {
     callTool: jest.Mock;
     enableDebug: jest.Mock;
     disableDebug: jest.Mock;
+    setApiKey: jest.Mock;
   };
 
   beforeEach(() => {
@@ -24,6 +25,7 @@ describe("SecureLend Client", () => {
       callTool: jest.fn(),
       enableDebug: jest.fn(),
       disableDebug: jest.fn(),
+      setApiKey: jest.fn(),
     };
     MCPClientMock.mockImplementation(() => mcpClientInstance);
   });
@@ -48,10 +50,11 @@ describe("SecureLend Client", () => {
 
     it("should accept custom configuration", () => {
       new SecureLend({
+        apiKey: "sk_test_123",
         serverUrl: "https://custom.mcp.com/mcp",
       });
       expect(MCPClientMock).toHaveBeenCalledWith({
-        apiKey: "",
+        apiKey: "sk_test_123",
         mcpURL: "https://custom.mcp.com/mcp",
       });
     });
@@ -117,6 +120,11 @@ describe("SecureLend Client", () => {
     it("should call mcpClient.disableDebug when disableDebug is called", () => {
       client.disableDebug();
       expect(mcpClientInstance.disableDebug).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call mcpClient.setApiKey when setApiKey is called", () => {
+      client.setApiKey("new-key");
+      expect(mcpClientInstance.setApiKey).toHaveBeenCalledWith("new-key");
     });
   });
 });

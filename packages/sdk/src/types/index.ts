@@ -1170,6 +1170,8 @@ export type LeaseVsPurchaseResponse = z.infer<
 // ============================================================================
 
 export interface SecureLendConfig {
+  /** API Key for authentication. */
+  apiKey?: string;
   /** MCP Server URL (default: https://mcp.securelend.ai/mcp) */
   serverUrl?: string;
 }

@@ -4,7 +4,10 @@ import { fileURLToPath } from 'url';
 export async function main() {
   console.log('Running SecureLend SDK NodeJS example...');
 
-  const securelend = new SecureLend();
+  // It's recommended to load the API key from a secure source, like environment variables
+  const securelend = new SecureLend({
+    apiKey: process.env.SECURELEND_API_KEY || 'sk_test_placeholder',
+  });
 
   try {
     const response = await securelend.compareBusinessLoans({

@@ -6,7 +6,13 @@ import { Header } from '../components/Header';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SecureLendProvider config={{ serverUrl: '/api/mcp' }}>
+    <SecureLendProvider
+      config={{
+        apiKey:
+          process.env.NEXT_PUBLIC_SECURELEND_API_KEY || 'sk_test_placeholder',
+        serverUrl: '/api/mcp',
+      }}
+    >
       <Header />
       <Component {...pageProps} />
     </SecureLendProvider>
