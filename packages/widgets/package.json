@@ -16,9 +16,11 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@securelend/react": "file:../react",
     "@securelend/sdk": "file:../sdk"
   },
   "peerDependencies": {
+    "@securelend/react": ">=1.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
