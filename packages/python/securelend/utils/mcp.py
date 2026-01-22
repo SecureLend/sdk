@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 
 import httpx
 from mcp import ClientSession
-from mcp.client.streamable_http import streamablehttp_client_transport
+from mcp.client.streamable_http import streamablehttp_client
 from mcp.data import ToolResult
 from mcp.exceptions import MCPError
 
@@ -46,7 +46,7 @@ class MCPClient:
             print(f"[SecureLend SDK] Connecting to MCP server at {self._mcp_url}")
 
         try:
-            transport_context = streamablehttp_client_transport(
+            transport_context = streamablehttp_client(
                 url=self._mcp_url, headers=headers
             )
             read_stream, write_stream = await self._exit_stack.enter_async_context(
