@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional
 
-from mcp.client import Client, ToolResult
+from mcp.client.client import Client
+from mcp.types import CallToolResult
 from mcp.client.transports.http import StreamableHTTPClientTransport
 
 from ..utils.errors import ServerError
@@ -57,7 +58,7 @@ class MCPClient:
             print(f"[SecureLend SDK] Calling tool '{name}' with args: {args}")
 
         try:
-            result: ToolResult = await self._mcp.tools.call(name, **args)
+            result: CallToolResult = await self._mcp.tools.call(name, **args)
             return result.model_dump(by_alias=True)
         except Exception as e:
             raise ServerError(f"MCP tool call failed: {e}") from e
