@@ -18,7 +18,7 @@ const nextConfig = {
       // Force all modules to use the same instance of React and SecureLend context
       react: path.resolve(__dirname, '../../node_modules/react'),
       'react-dom': path.resolve(__dirname, '../../node_modules/react-dom'),
-      '@securelend/react': path.resolve(__dirname, '../../packages/react'),
+      '@securelend/react': path.resolve(__dirname, '../../packages/react/src'),
     };
     return config;
   },
