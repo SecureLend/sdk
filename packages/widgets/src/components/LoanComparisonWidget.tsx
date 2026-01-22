@@ -55,7 +55,7 @@ export function LoanComparisonWidget({
                     onClick={() => onApplyClick(offer)}
                     className="sl-widget-button"
                   >
-                    Apply
+                    Learn More
                   </button>
                 ) : offer.process?.applicationUrl ? (
                   <a
@@ -64,7 +64,7 @@ export function LoanComparisonWidget({
                     rel="noopener noreferrer"
                     className="sl-widget-button"
                   >
-                    Apply
+                    Learn More
                   </a>
                 ) : null}
               </td>

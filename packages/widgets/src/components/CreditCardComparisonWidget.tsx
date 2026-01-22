@@ -51,7 +51,7 @@ export function CreditCardComparisonWidget({
                     rel="noopener noreferrer"
                     className="sl-widget-button"
                   >
-                    Apply
+                    Learn More
                   </a>
                 )}
               </td>

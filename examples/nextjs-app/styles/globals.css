@@ -148,3 +148,26 @@ button:disabled {
   width: 100%;
   margin-top: 2rem;
 }
+
+/* Style widget buttons to match the app's theme */
+.sl-widget-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary);
+  color: #FFFFFF;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: transform 0.2s, opacity 0.2s;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sl-widget-button:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
