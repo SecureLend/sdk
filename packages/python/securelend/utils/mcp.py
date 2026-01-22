@@ -1,11 +1,10 @@
-from typing import Any, Dict, Optional
-from contextlib import AsyncExitStack
+import json
+from typing import Any, Dict
 
-from mcp import ClientSession
-from mcp.client.transports.http import streamable_http_client
-from mcp.types import CallToolResult
+import httpx
+from httpx_sse import aconnect_sse
 
-from ..utils.errors import ServerError
+from ..utils.errors import AuthenticationError, NetworkError, ServerError
 
 
 class MCPClient:
@@ -13,59 +12,65 @@ class MCPClient:
         self._api_key = api_key
         self._mcp_url = mcp_url
         self._debug = False
-        self._session: Optional[ClientSession] = None
-        self._exit_stack = AsyncExitStack()
 
-    async def connect(self) -> None:
-        if self._session:
-            return
-
-        if self._debug:
-            print(f"[SecureLend SDK] Connecting to MCP server at {self._mcp_url}")
-
+    async def call_tool(self, name: str, args: Dict[str, Any]) -> Dict[str, Any]:
         headers = {
             "User-Agent": f"securelend-python/{__import__('securelend').__version__}",
+            "Content-Type": "application/json",
+            "Accept": "text/event-stream",
         }
         if self._api_key:
             headers["Authorization"] = f"Bearer {self._api_key}"
 
-        try:
-            read, write = await self._exit_stack.enter_async_context(
-                streamable_http_client(url=self._mcp_url, headers=headers)
-            )
-            self._session = await self._exit_stack.enter_async_context(ClientSession(read, write))
-            await self._session.initialize()
-        except Exception as e:
-            await self.close()
-            raise ServerError(f"Failed to connect to MCP server: {e}") from e
-
-    async def _ensure_connected(self) -> None:
-        if not self._session:
-            await self.connect()
-
-    async def call_tool(self, name: str, args: Dict[str, Any]) -> Dict[str, Any]:
-        await self._ensure_connected()
-        assert self._session is not None
-
         if self._debug:
             print(f"[SecureLend SDK] Calling tool '{name}' with args: {args}")
 
+        body = {
+            "jsonrpc": "2.0",
+            "method": "tool/call",
+            "params": {"name": name, "arguments": args},
+            "id": 1,
+        }
+
         try:
-            result: CallToolResult = await self._session.call_tool(name, args)
-            return result.model_dump(by_alias=True)
-        except Exception as e:
-            raise ServerError(f"MCP tool call failed: {e}") from e
+            async with httpx.AsyncClient() as client:
+                async with aconnect_sse(
+                    client, "POST", self._mcp_url, headers=headers, json=body, timeout=30.0
+                ) as event_source:
+                    async for event in event_source.aiter_sse():
+                        if event.event == "result":
+                            try:
+                                result_data = json.loads(event.data)
+                                return result_data.get("result", {})
+                            except json.JSONDecodeError as e:
+                                raise ServerError(
+                                    f"Failed to parse tool result JSON: {e}"
+                                ) from e
+                        if event.event == "error":
+                            error_data = json.loads(event.data)
+                            raise ServerError(
+                                f"MCP Error: {error_data.get('message', 'Unknown error')} "
+                                f"(Code: {error_data.get('code')})"
+                            )
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code in (401, 403):
+                raise AuthenticationError("Authentication failed.") from e
+            if e.response.status_code >= 500:
+                raise ServerError(f"Server error: {e.response.text}") from e
+            raise NetworkError(f"HTTP error: {e}") from e
+        except httpx.RequestError as e:
+            raise NetworkError(f"Network error: {e}") from e
+
+        raise ServerError("No result received from MCP server.")
+
+    async def connect(self) -> None:
+        pass  # Connection is handled per-request in this implementation
 
     async def close(self):
-        await self._exit_stack.aclose()
-        self._session = None
-        self._exit_stack = AsyncExitStack()
+        pass  # No persistent connection to close
 
     def set_api_key(self, api_key: str) -> None:
         self._api_key = api_key
-        # Force re-connection on next call.
-        if self._session:
-            self._session = None # This will trigger reconnect on next call
 
     def enable_debug(self) -> None:
         self._debug = True
