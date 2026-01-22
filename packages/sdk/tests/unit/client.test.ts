@@ -167,9 +167,18 @@ describe("SecureLend Client", () => {
         totalMonthlyPayment: 1300,
       },
       compareLeaseVsPurchase: {
-        purchaseAnalysis: { totalCost: 50000 },
-        leaseAnalysis: { totalCost: 20000 },
-        comparison: { recommendation: "lease" },
+        purchaseAnalysis: {
+          monthlyPayment: 800,
+          totalCost: 48000,
+        },
+        leaseAnalysis: {
+          monthlyPayment: 500,
+          totalCost: 18000,
+        },
+        comparison: {
+          recommendation: "lease",
+          savings: 30000,
+        },
       },
       getOffer: minimalPersonalApplication,
       getMultipleOffers: minimalPersonalApplication,
