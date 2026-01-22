@@ -132,10 +132,38 @@ describe("MCPClient", () => {
       expect(consoleLogSpy).toHaveBeenCalledWith(
         "[SecureLend SDK] Connecting to MCP server at http://localhost",
       );
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        "[SecureLend SDK] MCP client connected.",
+      );
 
       client.disableDebug();
       // @ts-expect-error - accessing private property
       expect(client.debug).toBe(false);
+
+      consoleLogSpy.mockRestore();
+    });
+
+    it("should log tool calls in debug mode", async () => {
+      const client = new MCPClient({
+        apiKey: "key1",
+        mcpURL: "http://localhost",
+      });
+      const consoleLogSpy = jest
+        .spyOn(console, "log")
+        .mockImplementation(() => {});
+
+      client.enableDebug();
+      mockMcpInstance.callTool.mockResolvedValue({ success: true });
+      await client.callTool("test_tool", { arg: 1 });
+
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        "[SecureLend SDK] Calling tool: test_tool with args:",
+        { arg: 1 },
+      );
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        "[SecureLend SDK] Tool result for test_tool:",
+        { success: true },
+      );
 
       consoleLogSpy.mockRestore();
     });
