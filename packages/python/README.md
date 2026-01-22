@@ -30,7 +30,15 @@ async def main():
         if response.offers:
             top_offer = response.offers[0]
             apr = top_offer.terms.interest_rate.apr * 100
-            print(f"Top offer from {top_offer.lender.name} with {apr:.2f}% APR")
+            print(f"Top offer from {top_offer.lender.name} with {apr:.2f}% APR.")
+
+            # Calculate payment details for the top offer
+            payment_details = await securelend.calculate_loan_payment({
+                "loanAmount": top_offer.terms.amount.amount,
+                "interestRate": apr,
+                "loanTermInMonths": top_offer.terms.term_months,
+            })
+            print(f"  - Estimated Monthly Payment: ${payment_details.monthly_payment:,.2f}")
 
 
 if __name__ == "__main__":

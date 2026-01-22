@@ -20,7 +20,7 @@ async def main():
             print(f"Found {response.summary.total_offers} loan offers.")
 
             if response.offers:
-                print("Top offer:")
+                print("\nTop offer:")
                 top_offer = response.offers[0]
                 print(f"  - Lender: {top_offer.lender.name}")
                 print(f"  - Product: {top_offer.product.name}")
@@ -28,6 +28,16 @@ async def main():
                 apr = top_offer.terms.interest_rate.apr * 100
                 print(f"  - APR: {apr:.2f}%")
                 print(f"  - Term: {top_offer.terms.term_months} months")
+
+                print("\nCalculating payment details for the top offer...")
+                payment_details = await securelend.calculate_loan_payment({
+                    "loanAmount": top_offer.terms.amount.amount,
+                    "interestRate": apr,
+                    "loanTermInMonths": top_offer.terms.term_months,
+                })
+                print(f"  - Monthly Payment: ${payment_details.monthly_payment:,.2f}")
+                print(f"  - Total Interest: ${payment_details.total_interest:,.2f}")
+                print(f"  - Total Payment: ${payment_details.total_payment:,.2f}")
 
     except SecureLendError as e:
         print(f"A SecureLend error occurred: Type={e.type}, Message='{e}'")
