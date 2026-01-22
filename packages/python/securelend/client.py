@@ -255,6 +255,16 @@ class SecureLend:
         """Disable debug logging."""
         self._mcp_client.disable_debug()
 
+    async def aclose(self):
+        """Gracefully close the connection to the MCP server."""
+        await self._mcp_client.close()
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.aclose()
+
     # --- Private Helpers ---
 
     async def _validated_call_tool(

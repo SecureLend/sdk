@@ -92,8 +92,8 @@ class MCPClient:
 
             return {
                 "content": content_list,
-                "structuredContent": result.structuredContent,
-                "requestId": result.requestId,
+                "structuredContent": getattr(result, "structuredContent", None),
+                "requestId": getattr(result, "requestId", None),
             }
         except McpError as e:
             raise ServerError(f"MCP tool call failed: {e.message}") from e
