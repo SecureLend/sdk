@@ -9,9 +9,8 @@ async function main() {
     const response = await securelend.compareBusinessLoans({
       loanAmount: 50000,
       purpose: 'working_capital',
-      annualRevenue: 250000,
-      creditScore: 700,
-      industry: 'Technology',
+      annualRevenue: 300000,
+      industry: 'restaurant',
       state: 'CA',
     });
 

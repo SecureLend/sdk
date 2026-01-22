@@ -18,6 +18,9 @@ export default function Home() {
   const { compare, data, widget, loading, error } = useLoanComparison();
   const [loanAmount, setLoanAmount] = useState("50000");
   const [purpose, setPurpose] = useState("working_capital");
+  const [annualRevenue, setAnnualRevenue] = useState("300000");
+  const [industry, setIndustry] = useState("restaurant");
+  const [usState, setUsState] = useState("CA");
 
   const {
     displayForm,
@@ -36,6 +39,9 @@ export default function Home() {
     const request: BusinessLoanSearchParams = {
       loanAmount: parseInt(loanAmount, 10),
       purpose,
+      annualRevenue: parseInt(annualRevenue, 10),
+      industry,
+      state: usState,
     };
     compare(request);
   };
@@ -107,6 +113,27 @@ export default function Home() {
           value={purpose}
           onChange={(e) => setPurpose(e.target.value)}
           placeholder="Loan Purpose"
+          required
+        />
+        <input
+          type="number"
+          value={annualRevenue}
+          onChange={(e) => setAnnualRevenue(e.target.value)}
+          placeholder="Annual Revenue"
+          required
+        />
+        <input
+          type="text"
+          value={industry}
+          onChange={(e) => setIndustry(e.target.value)}
+          placeholder="Industry"
+          required
+        />
+        <input
+          type="text"
+          value={usState}
+          onChange={(e) => setUsState(e.target.value)}
+          placeholder="State (e.g. CA)"
           required
         />
         <button type="submit" disabled={isLoading}>

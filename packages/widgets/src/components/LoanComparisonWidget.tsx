@@ -45,7 +45,7 @@ export function LoanComparisonWidget({
               <td className="sl-widget-lender">{offer.lender.name}</td>
               <td>{offer.product.name}</td>
               <td className="sl-widget-rate">
-                {offer.terms.interestRate.apr.toFixed(2)}%
+                {(offer.terms.interestRate.apr * 100).toFixed(2)}%
               </td>
               <td>{offer.terms.termMonths} months</td>
               <td>${offer.terms.payment.amount.amount.toFixed(2)}</td>
