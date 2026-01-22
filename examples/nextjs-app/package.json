@@ -1,6 +1,6 @@
 {
   "name": "nextjs-example",
-  "version": "1.0.0",
+  "version": "0.1.0-beta.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,12 +10,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "@securelend/react": "file:../../packages/react",
+    "@securelend/sdk": "file:../../packages/sdk",
+    "@securelend/widgets": "file:../../packages/widgets",
     "next": "latest",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "@securelend/sdk": "file:../../packages/sdk",
-    "@securelend/react": "file:../../packages/react",
-    "@securelend/widgets": "file:../../packages/widgets"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",

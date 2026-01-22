@@ -1,6 +1,6 @@
 {
   "name": "@securelend/widgets",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.2",
   "description": "Pre-built React UI components for the SecureLend SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -15,7 +15,6 @@
     "lint": "eslint . --ext .ts,.tsx",
     "clean": "rm -rf dist"
   },
-  "dependencies": {},
   "peerDependencies": {
     "@securelend/react": ">=0.1.0-beta.1",
     "@securelend/sdk": ">=0.1.0-beta.1",
