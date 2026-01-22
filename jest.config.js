@@ -31,4 +31,5 @@ module.exports = {
     // Transform ESM modules from these packages
     '/node_modules/(?!(@modelcontextprotocol|pkce-challenge)/)',
   ],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };
