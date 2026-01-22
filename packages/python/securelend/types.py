@@ -1,32 +1,13 @@
 from __future__ import annotations
-from typing import List, Literal, Optional, TypedDict
+from typing import List, Literal, Optional, TypedDict, Union, Dict, Any
 
 # ============================================================================
-# Common Types
+# Common & Base Types
 # ============================================================================
 
 class Money(TypedDict, total=False):
     amount: float
-    currency: str  # ISO 4217 (default: 'USD')
-
-Percentage = float  # 0-100
-BasisPoints = int
-DateString = str  # ISO 8601
-
-class CreditScore(TypedDict, total=False):
-    score: int  # 300-850
-    bureau: Literal["Experian", "Equifax", "TransUnion", "VantageScore"]
-    date: DateString
-
-class Geography(TypedDict, total=False):
-    country: str  # ISO 3166-1 alpha-2
-    state: str
-    city: str
-    postalCode: str
-
-# ============================================================================
-# Tool Result Types (Internal)
-# ============================================================================
+    currency: str
 
 class Resource(TypedDict, total=False):
     mimeType: str
@@ -39,145 +20,256 @@ class ContentItem(TypedDict, total=False):
 
 class ToolResult(TypedDict, total=False):
     content: List[ContentItem]
+    structuredContent: Any
     requestId: str
 
-# ============================================================================
-# Business Profile
-# ============================================================================
-
-class BusinessProfileBasic(TypedDict, total=False):
-    legalName: str
-    dba: str
-    ein: str
-    entityType: Literal["sole_proprietorship", "partnership", "llc", "s_corp", "c_corp", "non_profit"]
-    incorporationDate: DateString
-    industry: dict
-
-class BusinessProfileLocation(TypedDict, total=False):
-    headquarters: Geography
-    operatingStates: List[str]
-    numLocations: int
-
-class BusinessProfileFinancials(TypedDict, total=False):
-    revenue: dict
-    existingDebt: dict
-
-class BusinessProfileCredit(TypedDict, total=False):
-    ownerCreditScore: CreditScore
-    bankruptcyHistory: bool
-
-class BusinessProfile(TypedDict, total=False):
-    basic: BusinessProfileBasic
-    location: BusinessProfileLocation
-    financials: BusinessProfileFinancials
-    credit: BusinessProfileCredit
+class SecureLendConfig(TypedDict, total=False):
+    apiKey: str
+    serverUrl: str
 
 # ============================================================================
-# Loan Types
+# Loan Comparison
 # ============================================================================
 
-LoanPurpose = Literal[
-    "working_capital", "equipment_purchase", "real_estate", "business_acquisition",
-    "inventory", "expansion", "debt_consolidation", "payroll", "other"
-]
-
-class LoanComparisonRequestBusiness(TypedDict, total=False):
-    revenue: float
+class PersonalLoanSearchParams(TypedDict, total=False):
+    loanAmount: float
+    purpose: Literal["debt_consolidation", "home_improvement", "major_purchase", "medical", "vacation", "other"]
     creditScore: int
-    timeInBusiness: int
-    industry: str
-    entityType: str
-    location: dict
+    monthlyIncome: float
+    employmentStatus: Literal["employed", "self_employed", "retired", "unemployed"]
+    state: str
 
-class LoanComparisonRequest(TypedDict, total=False):
-    amount: float
-    purpose: LoanPurpose
-    business: LoanComparisonRequestBusiness
-    termPreferenceMonths: int
-    collateralAvailable: bool
-    maxResults: int
+class BusinessLoanSearchParams(TypedDict, total=False):
+    loanAmount: float
+    purpose: str
+    annualRevenue: float
+    industry: str
+    state: str
+
+class MortgageSearchParams(TypedDict, total=False):
+    loanAmount: float
+    homePrice: float
+    downPayment: float
+    creditScore: int
+    loanType: Literal["conventional", "fha", "va", "jumbo", "refinance"]
+    propertyType: Literal["primary", "secondary", "investment"]
+    state: str
+
+class AutoLoanSearchParams(TypedDict, total=False):
+    loanAmount: float
+    creditScore: int
+    isNew: bool
+    state: str
+
+class StudentLoanSearchParams(TypedDict, total=False):
+    loanAmount: float
+    creditScore: int
+    coSignerCreditScore: int
+    degreeType: Literal["undergraduate", "graduate", "mba", "medical", "law"]
+    state: str
 
 class LoanOffer(TypedDict, total=False):
     offerId: str
-    lender: dict
-    product: dict
-    terms: dict
-    fees: dict
-    matching: dict
-    process: dict
+    lender: Dict[str, Any]
+    product: Dict[str, Any]
+    terms: Dict[str, Any]
+    fees: Optional[Dict[str, Any]]
+    matching: Optional[Dict[str, Any]]
+    process: Optional[Dict[str, Any]]
 
 class LoanComparisonResponse(TypedDict, total=False):
     offers: List[LoanOffer]
-    summary: dict
-    metadata: dict
-    widget: str
+    summary: Dict[str, Any]
+    searchCriteria: Optional[Dict[str, Any]]
+    metadata: Dict[str, Any]
+    widget: Optional[str]
 
 # ============================================================================
-# Banking Types
+# Banking & Credit Cards
 # ============================================================================
 
-class BankingComparisonRequest(TypedDict, total=False):
-    accountType: Literal["checking", "savings", "both"]
-    monthlyRevenue: float
+class BusinessBankingSearchSchema(TypedDict, total=False):
+    industry: str
     monthlyTransactions: int
-    averageBalance: float
-    featuresNeeded: List[str]
-    accountingSoftware: Literal["quickbooks", "xero", "freshbooks", "none"]
-    maxResults: int
 
-class BankingAccount(TypedDict, total=False):
+class BusinessBankingOffer(TypedDict, total=False):
     accountId: str
-    bank: dict
-    account: dict
-    ratesAndFees: dict
-    features: dict
-    matching: dict
-
-class BankingComparisonResponse(TypedDict, total=False):
-    accounts: List[BankingAccount]
-    summary: dict
-    widget: str
-
-# ============================================================================
-# Credit Card Types
-# ============================================================================
-
-class CreditCardComparisonRequest(TypedDict, total=False):
-    creditScore: int
-    monthlySpend: float
-    spendCategories: List[dict]
-    preferences: dict
-    business: BusinessProfile
-    maxResults: int
-
-class CreditCardOffer(TypedDict, total=False):
-    cardId: str
-    cardName: str
+    name: str
     issuer: str
-    rewards: dict
-    fees: dict
-    apr: dict
-    estimatedAnnualRewards: Money
-    approvalProbability: float
-    applyUrl: str
+    # ... and other fields
 
-class CreditCardComparisonResponse(TypedDict, total=False):
-    cards: List[CreditCardOffer]
-    widget: str
+class BusinessBankingComparisonResponse(TypedDict, total=False):
+    offers: List[BusinessBankingOffer]
+    # ... and other fields
+    widget: Optional[str]
+
+class PersonalBankingSearchSchema(TypedDict, total=False):
+    features: List[str]
+
+class PersonalBankingOffer(TypedDict, total=False):
+    accountId: str
+    # ... and other fields
+
+class PersonalBankingComparisonResponse(TypedDict, total=False):
+    offers: List[PersonalBankingOffer]
+    # ... and other fields
+    widget: Optional[str]
+
+class SavingsSearchSchema(TypedDict, total=False):
+    initialDeposit: float
+
+class SavingsOffer(TypedDict, total=False):
+    accountId: str
+    # ... and other fields
+
+class SavingsAccountComparisonResponse(TypedDict, total=False):
+    offers: List[SavingsOffer]
+    # ... and other fields
+    widget: Optional[str]
+
+class BusinessCreditCardSearchParams(TypedDict, total=False):
+    creditScore: int
+    annualRevenue: float
+    businessAgeInYears: float
+
+class BusinessCreditCardOffer(TypedDict, total=False):
+    cardId: str
+    # ... and other fields
+
+class BusinessCreditCardComparisonResponse(TypedDict, total=False):
+    offers: List[BusinessCreditCardOffer]
+    # ... and other fields
+    widget: Optional[str]
+
+class PersonalCreditCardSearchSchema(TypedDict, total=False):
+    creditScore: int
+    rewardsType: Literal["cash_back", "travel", "points"]
+
+class PersonalCreditCardOffer(TypedDict, total=False):
+    cardId: str
+    # ... and other fields
+    applicationUrl: Optional[str]
+
+class PersonalCreditCardComparisonResponse(TypedDict, total=False):
+    offers: List[PersonalCreditCardOffer]
+    # ... and other fields
+    widget: Optional[str]
+
 
 # ============================================================================
-# Calculation Types
+# Financial Calculators
 # ============================================================================
 
-class LoanCalculation(TypedDict, total=False):
-    amount: float
-    rate: float
-    termMonths: int
-    fees: dict
+class LoanPaymentParams(TypedDict, total=False):
+    loanAmount: float
+    interestRate: float
+    loanTermInMonths: int
 
-class LoanCalculationResult(TypedDict, total=False):
+class LoanCalculationResponse(TypedDict, total=False):
     monthlyPayment: float
+    totalPayment: float
     totalInterest: float
-    totalCost: float
-    apr: float
-    amortizationSchedule: List[dict]
+    widget: Optional[str]
+
+class MortgagePaymentParams(TypedDict, total=False):
+    propertyValue: float
+    downPayment: float
+    interestRate: float
+    loanTermInYears: int
+    propertyTaxRate: float
+    homeInsurance: float
+
+class MortgageCalculationResponse(TypedDict, total=False):
+    loanAmount: float
+    principalAndInterest: float
+    monthlyPropertyTax: float
+    monthlyHomeInsurance: float
+    totalMonthlyPayment: float
+    widget: Optional[str]
+
+class LeaseVsPurchaseParams(TypedDict, total=False):
+    purchasePrice: float
+    downPayment: float
+    loanTermInMonths: int
+    interestRate: float
+    salesTaxRate: float
+    leaseTermInMonths: int
+    monthlyLeasePayment: float
+    moneyFactor: float
+    acquisitionFee: float
+    securityDeposit: float
+    residualValuePercentage: float
+    expectedOwnershipInMonths: int
+
+class LeaseVsPurchaseResponse(TypedDict, total=False):
+    purchaseAnalysis: Dict[str, Any]
+    leaseAnalysis: Dict[str, Any]
+    comparison: Dict[str, Any]
+    widget: Optional[str]
+
+# ============================================================================
+# Application Management
+# ============================================================================
+
+class PersonalApplicant(TypedDict, total=False):
+    firstName: str
+    lastName: str
+    email: str
+    phone: Optional[str]
+
+class GetOfferParams(TypedDict, total=False):
+    productType: str
+    applicant: PersonalApplicant
+    applicationData: Dict[str, Any]
+    provider: Dict[str, Any]
+
+class GetMultipleOffersParams(TypedDict, total=False):
+    productType: str
+    applicant: PersonalApplicant
+    applicationData: Dict[str, Any]
+    providers: List[Dict[str, Any]]
+
+class PersonalApplication(TypedDict, total=False):
+    id: str
+    # ... and other fields
+    widget: Optional[str]
+
+class DisplayOfferFormParams(TypedDict, total=False):
+    sessionId: Optional[str]
+    offerId: Optional[str]
+
+AnyOffer = Union[LoanOffer, BusinessCreditCardOffer, BusinessBankingOffer, PersonalBankingOffer, SavingsOffer, PersonalCreditCardOffer]
+
+class DisplayOfferFormResponse(TypedDict, total=False):
+    offer: AnyOffer
+    allOffers: List[AnyOffer]
+    applicationData: Dict[str, Any]
+    productType: str
+    widget: Optional[str]
+
+class TrackOfferStatusParams(TypedDict, total=False):
+    applicationId: Optional[str]
+    email: Optional[str]
+
+class TrackOfferStatusResponse(TypedDict, total=False):
+    applications: List[PersonalApplication]
+    widget: Optional[str]
+
+class DisplayUploadDocumentsFormParams(TypedDict, total=False):
+    applicationId: Optional[str]
+
+class DisplayUploadDocumentsFormResponse(TypedDict, total=False):
+    widget: Optional[str]
+
+class SubmitDocumentsParams(TypedDict, total=False):
+    applicationId: str
+    fileName: str
+    documentType: str
+
+class SubmitDocumentsResponse(TypedDict, total=False):
+    success: bool
+    message: str
+    uploadUrl: Optional[str]
+    uploadFields: Optional[Dict[str, str]]
+    documentId: Optional[str]
+    widget: Optional[str]

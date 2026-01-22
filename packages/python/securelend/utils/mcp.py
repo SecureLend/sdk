@@ -20,13 +20,14 @@ class MCPClient:
         if self._debug:
             print(f"[SecureLend SDK] Connecting to MCP server at {self._mcp_url}")
 
-        self._client = httpx.AsyncClient(
-            headers={
-                "Authorization": f"Bearer {self._api_key}",
-                "User-Agent": f"securelend-python/{__import__('securelend').__version__}",
-                "Content-Type": "application/json",
-            }
-        )
+        headers = {
+            "User-Agent": f"securelend-python/{__import__('securelend').__version__}",
+            "Content-Type": "application/json",
+        }
+        if self._api_key:
+            headers["Authorization"] = f"Bearer {self._api_key}"
+
+        self._client = httpx.AsyncClient(headers=headers)
         self._is_connected = True
 
     async def _ensure_connected(self) -> None:
@@ -37,9 +38,7 @@ class MCPClient:
         await self._ensure_connected()
         assert self._client is not None
 
-        # This implementation assumes a simple RPC-style endpoint.
-        # The TS SDK uses an SSE connection which may behave differently.
-        tool_call_endpoint = self._mcp_url.replace("/sse", "/call_tool")
+        tool_call_endpoint = f"{self._mcp_url.rstrip('/')}/call_tool"
 
         if self._debug:
             print(f"[SecureLend SDK] Calling tool '{name}' with args: {args}")

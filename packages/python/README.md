@@ -16,19 +16,23 @@ import os
 from securelend import SecureLend
 
 async def main():
+    # The API key is optional but recommended.
+    # It's best to load it from a secure source, like environment variables.
     securelend = SecureLend(api_key=os.environ.get("SECURELEND_API_KEY"))
 
-    loans = await securelend.loans.compare({
-        "amount": 200000,
+    response = await securelend.compare_business_loans({
+        "loanAmount": 200000,
         "purpose": "equipment",
-        "business": {
-            "revenue": 1200000,
-            "creditScore": 720,
-            "timeInBusiness": 36,
-        },
+        "annualRevenue": 1200000,
     })
 
-    print(f"Best rate: {loans['offers'][0]['terms']['interestRate']['rate']}%")
+    print(f"Found {response['summary']['totalOffers']} loan offers.")
+
+    if response["offers"]:
+        top_offer = response["offers"][0]
+        apr = top_offer['terms']['interestRate']['apr'] * 100
+        print(f"Top offer from {top_offer['lender']['name']} with {apr:.2f}% APR")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
