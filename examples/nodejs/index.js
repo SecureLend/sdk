@@ -1,6 +1,7 @@
 import { SecureLend } from '@securelend/sdk';
+import { fileURLToPath } from 'url';
 
-async function main() {
+export async function main() {
   console.log('Running SecureLend SDK NodeJS example...');
 
   const securelend = new SecureLend();
@@ -29,4 +30,7 @@ async function main() {
   }
 }
 
-main();
+// Run main if this file is executed directly
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main();
+}
