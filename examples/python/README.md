@@ -11,7 +11,7 @@ This directory contains a simple example of how to use the `securelend` Python p
     # From the root of the monorepo
     python3 -m venv venv
     source venv/bin/activate
-    pip install -r examples/python/requirements.txt
+    pip install -e packages/python
     ```
 
 2.  **Set Environment Variables (Optional):**
