@@ -5,7 +5,8 @@ from securelend import SecureLend, SecureLendError
 async def main():
     print("Running SecureLend SDK Python example...")
 
-    # Create a new client. The API key is optional but recommended for production.
+    # The API server is public and does not require an API key.
+    # A key can optionally be provided for usage tracking.
     securelend = SecureLend(api_key=os.environ.get("SECURELEND_API_KEY"))
 
     try:

@@ -5,11 +5,12 @@ from securelend import SecureLend, SecureLendError, types
 
 @pytest.mark.integration
 @pytest.mark.asyncio
-async def test_successful_connection_and_tool_call():
+async def test_successful_connection_with_api_key():
     """
     Tests that the client can connect to the production MCP server
-    and make a simple, valid tool call.
+    with an API key and make a simple, valid tool call.
     """
+    # This test is useful for when API keys are enforced for rate-limiting, etc.
     api_key = os.environ.get("SECURELEND_API_KEY")
     client = SecureLend(api_key=api_key)
 
@@ -25,13 +26,18 @@ async def test_successful_connection_and_tool_call():
 
 @pytest.mark.integration
 @pytest.mark.asyncio
-async def test_authentication_error():
+async def test_successful_connection_without_api_key():
     """
-    Tests that the client receives an authentication error with an invalid API key.
+    Tests that the client can connect to the production MCP server
+    without an API key, since it's public.
     """
-    client = SecureLend(api_key="invalid-key")
-    with pytest.raises(SecureLendError) as excinfo:
-        await client.compare_business_loans(
+    client = SecureLend()  # No API key
+
+    try:
+        response = await client.compare_business_loans(
             {"loanAmount": 10000, "purpose": "working_capital"}
         )
-    assert excinfo.value.type == "authentication_error"
+        assert isinstance(response, types.LoanComparisonResponse)
+        assert response.metadata.query_id is not None
+    except SecureLendError as e:
+        pytest.fail(f"API call failed with SecureLendError: {e}")

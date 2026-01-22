@@ -99,7 +99,7 @@ console.log(
 
 ### API Key & Custom Server URL
 
-You can pass configuration when creating a client. While an API key is not currently required for connection, providing one is recommended for usage tracking and to prepare for future updates.
+You can pass configuration when creating a client. The MCP server is public and does not require an API key. Providing one is recommended for usage tracking and to prepare for future updates that may use it for rate limiting.
 
 ```typescript
 import { SecureLend } from "@securelend/sdk";
@@ -393,7 +393,7 @@ async def main():
         "purpose": "equipment",
         "annualRevenue": 1200000,
     })
-    print(f"Found {response.summary['totalOffers']} loan offers.")
+    print(f"Found {response.summary.total_offers} loan offers.")
 
 asyncio.run(main())
 ```

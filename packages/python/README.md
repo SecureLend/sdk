@@ -16,8 +16,8 @@ import os
 from securelend import SecureLend
 
 async def main():
-    # The API key is optional but recommended.
-    # It's best to load it from a secure source, like environment variables.
+    # The API server is public and does not require an API key.
+    # A key can optionally be provided for usage tracking.
     securelend = SecureLend(api_key=os.environ.get("SECURELEND_API_KEY"))
 
     response = await securelend.compare_business_loans({
