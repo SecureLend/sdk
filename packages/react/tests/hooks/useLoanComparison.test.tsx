@@ -5,8 +5,14 @@ import { SecureLendProvider } from "../../src/contexts/SecureLendProvider";
 import { useLoanComparison } from "../../src/hooks/useLoanComparison";
 import { SecureLend, SecureLendError } from "@securelend/sdk";
 
-// Mock the SecureLend SDK client
-jest.mock("@securelend/sdk");
+// Mock the SecureLend SDK client, but keep the original Error classes
+jest.mock("@securelend/sdk", () => {
+  const originalModule = jest.requireActual("@securelend/sdk");
+  return {
+    ...originalModule,
+    SecureLend: jest.fn(),
+  };
+});
 const SecureLendMock = SecureLend as jest.Mock;
 
 describe("useLoanComparison Hook", () => {
