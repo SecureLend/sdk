@@ -216,9 +216,9 @@ const loanFeesSchema = z
 
 const matchingSchema = z
   .object({
-    approvalProbability: z.number().min(0).max(1),
-    matchScore: z.number().min(0).max(100),
-    matchReasons: z.array(z.string()),
+    approvalProbability: z.number().min(0).max(1).optional(),
+    matchScore: z.number().min(0).max(100).optional(),
+    matchReasons: z.array(z.string()).optional(),
   })
   .optional();
 

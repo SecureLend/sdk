@@ -338,7 +338,6 @@ export class SecureLend {
       return schema.parse(jsonData);
     } catch (e) {
       if (e instanceof z.ZodError) {
-        console.error("Zod validation failed:", JSON.stringify(e.issues, null, 2));
         throw new ValidationError(
           "Invalid response from MCP server: failed to validate JSON content",
           { validationErrors: e.issues, serverResponse: toolResult },
