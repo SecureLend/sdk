@@ -4,15 +4,27 @@ This directory contains a simple example of how to use the `securelend` Python p
 
 ## Setup
 
-1.  **Install dependencies:**
-    Make sure you have Python 3.8+ installed. It's recommended to use a virtual environment.
+Make sure you have Python 3.8+ installed. It's recommended to use a virtual environment to manage dependencies.
 
-    ```bash
-    # From the root of the monorepo
-    python3 -m venv venv
-    source venv/bin/activate
-    pip install -e packages/python
-    ```
+**1. Create and Activate Virtual Environment:**
+
+First, create a virtual environment in the root directory of the monorepo. If you already have a `venv` directory here, you can skip the creation step.
+
+```bash
+# From the root of the monorepo, create the virtual environment
+python3 -m venv venv
+
+# Activate the virtual environment
+source venv/bin/activate
+```
+
+**2. Install Dependencies:**
+
+Once your virtual environment is activated, install the `securelend` package in editable mode. This links the installation to the source code in the `packages/python` directory.
+
+```bash
+pip install -e packages/python
+```
 
 2.  **Set Environment Variables (Optional):**
     The example can use an API key from an environment variable.
