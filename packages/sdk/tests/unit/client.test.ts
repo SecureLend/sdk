@@ -168,16 +168,22 @@ describe("SecureLend Client", () => {
       },
       compareLeaseVsPurchase: {
         purchaseAnalysis: {
-          monthlyPayment: 800,
-          totalCost: 48000,
+          totalLoanPayment: 54000,
+          totalInterestPaid: 6000,
+          totalSalesTax: 3000,
+          equityAfterOwnership: 15000,
+          totalCostOfOwnership: 42000,
+          monthlyPayment: 900,
         },
         leaseAnalysis: {
-          monthlyPayment: 500,
-          totalCost: 18000,
+          totalLeasePayments: 24000,
+          totalUpfrontCosts: 2500,
+          totalCostOfLeasing: 26500,
         },
         comparison: {
+          purchaseCostIsLowerBy: 0,
+          leaseCostIsLowerBy: 15500,
           recommendation: "LEASE",
-          savings: 30000,
         },
       },
       getOffer: minimalPersonalApplication,
