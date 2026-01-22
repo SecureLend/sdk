@@ -374,11 +374,29 @@ Pre-built React UI components for the SecureLend SDK
 
 **Status:** ✅ In Development (Beta)
 
-### Python SDK
+### [Python SDK](./packages/python)
 
-Python client library
+Python client library for the SecureLend SDK
 
-**Status:** 🔄 Planned for Q2 2025
+**Status:** ✅ In Development (Beta)
+
+**Example Usage:**
+
+```python
+import asyncio
+from securelend import SecureLend
+
+async def main():
+    securelend = SecureLend()
+    response = await securelend.compare_business_loans({
+        "loanAmount": 200000,
+        "purpose": "equipment",
+        "annualRevenue": 1200000,
+    })
+    print(f"Found {response.summary['totalOffers']} loan offers.")
+
+asyncio.run(main())
+```
 
 ---
 
