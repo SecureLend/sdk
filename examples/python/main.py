@@ -1,5 +1,12 @@
 import asyncio
 import os
+import sys
+
+# Add the local `securelend` package to the Python path to ensure it can be found.
+package_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../packages/python'))
+if package_path not in sys.path:
+    sys.path.insert(0, package_path)
+
 from securelend import SecureLend, SecureLendError
 
 async def main():
