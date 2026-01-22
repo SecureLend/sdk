@@ -21,3 +21,9 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/SecureLend/sdk/tree/main/packages/python"
 "Bug Tracker" = "https://github.com/SecureLend/sdk/issues"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.20"
+]

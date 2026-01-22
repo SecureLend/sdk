@@ -37,136 +37,216 @@ class SecureLend:
     # --- Loan Comparison ---
 
     async def compare_personal_loans(
-        self, request: types.PersonalLoanSearchParams
+        self, request: Dict[str, Any]
     ) -> types.LoanComparisonResponse:
-        return await self._call_tool("compare_personal_loans", request, types.LoanComparisonResponse)
+        try:
+            validated_request = types.PersonalLoanSearchParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
+        return await self._call_tool("compare_personal_loans", validated_request, types.LoanComparisonResponse)
 
     async def compare_business_loans(
-        self, request: types.BusinessLoanSearchParams
+        self, request: Dict[str, Any]
     ) -> types.LoanComparisonResponse:
-        return await self._call_tool("compare_business_loans", request, types.LoanComparisonResponse)
+        try:
+            validated_request = types.BusinessLoanSearchParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
+        return await self._call_tool("compare_business_loans", validated_request, types.LoanComparisonResponse)
 
     async def compare_personal_mortgages(
-        self, request: types.MortgageSearchParams
+        self, request: Dict[str, Any]
     ) -> types.LoanComparisonResponse:
+        try:
+            validated_request = types.MortgageSearchParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
-            "compare_personal_mortgages", request, types.LoanComparisonResponse
+            "compare_personal_mortgages", validated_request, types.LoanComparisonResponse
         )
 
     async def compare_business_mortgages(
-        self, request: types.MortgageSearchParams
+        self, request: Dict[str, Any]
     ) -> types.LoanComparisonResponse:
+        try:
+            validated_request = types.MortgageSearchParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
-            "compare_business_mortgages", request, types.LoanComparisonResponse
+            "compare_business_mortgages", validated_request, types.LoanComparisonResponse
         )
 
     async def compare_car_loans(
-        self, request: types.AutoLoanSearchParams
+        self, request: Dict[str, Any]
     ) -> types.LoanComparisonResponse:
-        return await self._call_tool("compare_car_loans", request, types.LoanComparisonResponse)
+        try:
+            validated_request = types.AutoLoanSearchParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
+        return await self._call_tool("compare_car_loans", validated_request, types.LoanComparisonResponse)
 
     async def compare_student_loans(
-        self, request: types.StudentLoanSearchParams
+        self, request: Dict[str, Any]
     ) -> types.LoanComparisonResponse:
-        return await self._call_tool("compare_student_loans", request, types.LoanComparisonResponse)
+        try:
+            validated_request = types.StudentLoanSearchParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
+        return await self._call_tool("compare_student_loans", validated_request, types.LoanComparisonResponse)
 
     # --- Banking & Credit Cards ---
 
     async def compare_business_banking(
-        self, request: types.BusinessBankingSearchSchema
+        self, request: Dict[str, Any]
     ) -> types.BusinessBankingComparisonResponse:
+        try:
+            validated_request = types.BusinessBankingSearchSchema.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
-            "compare_business_banking", request, types.BusinessBankingComparisonResponse
+            "compare_business_banking", validated_request, types.BusinessBankingComparisonResponse
         )
 
     async def compare_personal_banking(
-        self, request: types.PersonalBankingSearchSchema
+        self, request: Dict[str, Any]
     ) -> types.PersonalBankingComparisonResponse:
+        try:
+            validated_request = types.PersonalBankingSearchSchema.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
-            "compare_personal_banking", request, types.PersonalBankingComparisonResponse
+            "compare_personal_banking", validated_request, types.PersonalBankingComparisonResponse
         )
 
     async def compare_savings_accounts(
-        self, request: types.SavingsSearchSchema
+        self, request: Dict[str, Any]
     ) -> types.SavingsAccountComparisonResponse:
+        try:
+            validated_request = types.SavingsSearchSchema.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
-            "compare_savings_accounts", request, types.SavingsAccountComparisonResponse
+            "compare_savings_accounts", validated_request, types.SavingsAccountComparisonResponse
         )
 
     async def compare_business_credit_cards(
-        self, request: types.BusinessCreditCardSearchParams
+        self, request: Dict[str, Any]
     ) -> types.BusinessCreditCardComparisonResponse:
+        try:
+            validated_request = types.BusinessCreditCardSearchParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
             "compare_business_credit_cards",
-            request,
+            validated_request,
             types.BusinessCreditCardComparisonResponse,
         )
 
     async def compare_personal_credit_cards(
-        self, request: types.PersonalCreditCardSearchSchema
+        self, request: Dict[str, Any]
     ) -> types.PersonalCreditCardComparisonResponse:
+        try:
+            validated_request = types.PersonalCreditCardSearchSchema.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
             "compare_personal_credit_cards",
-            request,
+            validated_request,
             types.PersonalCreditCardComparisonResponse,
         )
 
     # --- Financial Calculators ---
 
     async def calculate_loan_payment(
-        self, request: types.LoanPaymentParams
+        self, request: Dict[str, Any]
     ) -> types.LoanCalculationResponse:
+        try:
+            validated_request = types.LoanPaymentParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
-            "calculate_loan_payment", request, types.LoanCalculationResponse
+            "calculate_loan_payment", validated_request, types.LoanCalculationResponse
         )
 
     async def calculate_mortgage_payment(
-        self, request: types.MortgagePaymentParams
+        self, request: Dict[str, Any]
     ) -> types.MortgageCalculationResponse:
+        try:
+            validated_request = types.MortgagePaymentParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
-            "calculate_mortgage_payment", request, types.MortgageCalculationResponse
+            "calculate_mortgage_payment", validated_request, types.MortgageCalculationResponse
         )
 
     async def compare_lease_vs_purchase(
-        self, request: types.LeaseVsPurchaseParams
+        self, request: Dict[str, Any]
     ) -> types.LeaseVsPurchaseResponse:
+        try:
+            validated_request = types.LeaseVsPurchaseParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
-            "compare_lease_vs_purchase", request, types.LeaseVsPurchaseResponse
+            "compare_lease_vs_purchase", validated_request, types.LeaseVsPurchaseResponse
         )
 
     # --- Application Management ---
 
-    async def get_offer(self, request: types.GetOfferParams) -> types.PersonalApplication:
-        return await self._call_tool("get_offer", request, types.PersonalApplication)
+    async def get_offer(self, request: Dict[str, Any]) -> types.PersonalApplication:
+        try:
+            validated_request = types.GetOfferParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
+        return await self._call_tool("get_offer", validated_request, types.PersonalApplication)
 
     async def get_multiple_offers(
-        self, request: types.GetMultipleOffersParams
+        self, request: Dict[str, Any]
     ) -> types.PersonalApplication:
-        return await self._call_tool("get_multiple_offers", request, types.PersonalApplication)
+        try:
+            validated_request = types.GetMultipleOffersParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
+        return await self._call_tool("get_multiple_offers", validated_request, types.PersonalApplication)
 
     async def display_offer_form(
-        self, request: types.DisplayOfferFormParams
+        self, request: Dict[str, Any]
     ) -> types.DisplayOfferFormResponse:
-        return await self._call_tool("display_offer_form", request, types.DisplayOfferFormResponse)
+        try:
+            validated_request = types.DisplayOfferFormParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
+        return await self._call_tool("display_offer_form", validated_request, types.DisplayOfferFormResponse)
 
     async def track_offer_status(
-        self, request: types.TrackOfferStatusParams
+        self, request: Dict[str, Any]
     ) -> types.TrackOfferStatusResponse:
-        return await self._call_tool("track_offer_status", request, types.TrackOfferStatusResponse)
+        try:
+            validated_request = types.TrackOfferStatusParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
+        return await self._call_tool("track_offer_status", validated_request, types.TrackOfferStatusResponse)
 
     async def display_upload_documents_form(
-        self, request: types.DisplayUploadDocumentsFormParams
+        self, request: Dict[str, Any]
     ) -> types.DisplayUploadDocumentsFormResponse:
+        try:
+            validated_request = types.DisplayUploadDocumentsFormParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
         return await self._call_tool(
             "display_upload_documents_form",
-            request,
+            validated_request,
             types.DisplayUploadDocumentsFormResponse,
         )
 
     async def submit_documents(
-        self, request: types.SubmitDocumentsParams
+        self, request: Dict[str, Any]
     ) -> types.SubmitDocumentsResponse:
-        return await self._call_tool("submit_documents", request, types.SubmitDocumentsResponse)
+        try:
+            validated_request = types.SubmitDocumentsParams.model_validate(request)
+        except PydanticValidationError as e:
+            raise ValidationError("Invalid request parameters", errors=e.errors()) from e
+        return await self._call_tool("submit_documents", validated_request, types.SubmitDocumentsResponse)
 
     # --- Core Methods ---
 
@@ -189,14 +269,15 @@ class SecureLend:
     # --- Private Helpers ---
 
     async def _call_tool(
-        self, tool_name: str, request: Dict[str, Any], response_cls: Type[T]
+        self, tool_name: str, request: BaseModel, response_cls: Type[T]
     ) -> T:
-        tool_result = await self._mcp_client.call_tool(tool_name, request)
+        # Pydantic models are passed in, dump to dict for MCP call
+        request_data = request.model_dump(by_alias=True, exclude_none=True)
+        tool_result = await self._mcp_client.call_tool(tool_name, request_data)
         data = self._parse_json_response(tool_result)
         data["widget"] = self._get_widget(tool_result)
 
         try:
-            # Pydantic automatically handles camelCase to snake_case if aliases are set
             return response_cls.model_validate(data)
         except PydanticValidationError as e:
             raise ValidationError(
