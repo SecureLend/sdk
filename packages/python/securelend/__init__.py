@@ -4,7 +4,7 @@ SecureLend SDK for Python
 Official SDK for SecureLend - Financial services infrastructure for AI
 """
 
-__version__ = "0.1.0b8"
+__version__ = "0.1.0b9"
 
 from .client import SecureLend
 from .utils.errors import (

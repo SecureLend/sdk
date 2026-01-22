@@ -4,7 +4,6 @@ from typing import Any, Dict, Optional
 import httpx
 from mcp import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
-from mcp.data import ToolResult
 from mcp.exceptions import MCPError
 
 from ..utils.errors import (
@@ -80,7 +79,7 @@ class MCPClient:
             if self._debug:
                 print(f"[SecureLend SDK] Calling tool '{name}' with args: {args}")
 
-            result: ToolResult = await session.call_tool(name, args)
+            result = await session.call_tool(name, args)
 
             content_list = []
             for item in result.content:
