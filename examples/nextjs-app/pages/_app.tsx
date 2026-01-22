@@ -1,4 +1,5 @@
 import { SecureLendProvider } from '@securelend/react';
+import '@securelend/widgets/src/styles.css';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 
