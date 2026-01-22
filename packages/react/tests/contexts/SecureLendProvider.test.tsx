@@ -1,5 +1,5 @@
+/// <reference types="@testing-library/jest-dom" />
 import { render, screen } from "@testing-library/react";
-import React from "react";
 import { SecureLendProvider } from "../../src/contexts/SecureLendProvider";
 import { useSecureLend } from "../../src/hooks/useSecureLend";
 import { SecureLend } from "@securelend/sdk";
