@@ -82,8 +82,8 @@ class MCPClient:
 
             content_list = []
             for item in result.content:
-                content_item = {"type": item.type, "text": item.text}
-                if item.resource:
+                content_item = {"type": item.type, "text": getattr(item, "text", None)}
+                if hasattr(item, "resource") and item.resource:
                     content_item["resource"] = {
                         "mimeType": item.resource.mimeType,
                         "text": item.resource.text,
