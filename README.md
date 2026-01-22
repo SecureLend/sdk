@@ -4,6 +4,7 @@
 
 Connect to SecureLend's MCP server programmatically or integrate with Claude and ChatGPT.
 
+[![Build Status](https://github.com/SecureLend/sdk/actions/workflows/publish.yml/badge.svg)](https://github.com/SecureLend/sdk/actions/workflows/publish.yml)
 [![npm version](https://img.shields.io/npm/v/@securelend/sdk.svg)](https://www.npmjs.com/package/@securelend/sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
@@ -40,8 +41,8 @@ yarn add @securelend/sdk
 ```typescript
 import { SecureLend } from "@securelend/sdk";
 
-// Create client - connects to https://mcp.securelend.ai/mcp by default
-const securelend = new SecureLend();
+// It's recommended to load the API key from a secure source, like environment variables
+const securelend = new SecureLend({ apiKey: process.env.SECURELEND_API_KEY });
 
 // Compare business loans
 const result = await securelend.compareBusinessLoans({
@@ -96,14 +97,20 @@ console.log(
 
 ## Configuration
 
-### Custom Server URL
+### API Key & Custom Server URL
+
+You can pass configuration when creating a client:
 
 ```typescript
 import { SecureLend } from "@securelend/sdk";
 
 const securelend = new SecureLend({
+  // It's recommended to load the API key from a secure source,
+  // like environment variables or a secret manager.
+  apiKey: "sk_test_...",
+
+  // Optional: Override the default MCP server URL
   serverUrl: "https://custom-mcp-server.com/mcp",
-  timeout: 30000, // 30 seconds
 });
 ```
 
@@ -245,9 +252,11 @@ try {
   console.log(`Found ${loans.offers.length} offers`);
 } catch (error) {
   if (error instanceof SecureLendError) {
-    console.error("SecureLend Error:", error.code);
-    console.error("Message:", error.message);
-    console.error("Details:", error.details);
+    console.error(`SecureLend Error: ${error.type}`);
+    console.error(`Message: ${error.message}`);
+    if (error.details) {
+      console.error("Details:", error.details);
+    }
   } else {
     console.error("Unexpected error:", error);
   }
@@ -309,7 +318,6 @@ The SDK is a lightweight wrapper around the SecureLend MCP server:
 
 **Benefits:**
 
-- ✅ No API keys required (public MCP server)
 - ✅ Always up-to-date (connects to live server)
 - ✅ No server-side maintenance
 - ✅ Type-safe development experience
@@ -328,33 +336,43 @@ Core TypeScript SDK - works in Node.js and browsers
 
 ### [@securelend/react](./packages/react)
 
-React hooks and components
+React hooks and components for the SecureLend SDK
 
-**Status:** 🔄 Coming Soon
+**Status:** ✅ In Development (Beta)
 
-**Planned API:**
+**Example Usage:**
 
-```typescript
-import { useLoans, useLoanCalculator } from '@securelend/react';
+```tsx
+import { useLoanComparison } from '@securelend/react';
+import { LoanComparisonWidget } from '@securelend/widgets';
 
 function LoanFinder() {
-  const { data, loading, error } = useLoans({
-    loanAmount: 200000,
-    purpose: 'equipment'
-  });
+  const { compare, data, loading, error } = useLoanComparison();
+
+  const handleSearch = () => {
+    compare({
+      loanAmount: 200000,
+      purpose: 'equipment'
+    });
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div>
-      {data.offers.map(offer => (
-        <LoanCard key={offer.id} offer={offer} />
-      ))}
+      <button onClick={handleSearch}>Find Loans</button>
+      {data && <LoanComparisonWidget response={data} />}
     </div>
   );
 }
 ```
+
+### [@securelend/widgets](./packages/widgets)
+
+Pre-built React UI components for the SecureLend SDK
+
+**Status:** ✅ In Development (Beta)
 
 ### Python SDK
 
