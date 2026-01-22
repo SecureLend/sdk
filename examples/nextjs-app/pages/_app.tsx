@@ -5,7 +5,7 @@ import type { AppProps } from 'next/app';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SecureLendProvider>
+    <SecureLendProvider config={{ serverUrl: '/api/mcp' }}>
       <Component {...pageProps} />
     </SecureLendProvider>
   );
