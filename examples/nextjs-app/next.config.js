@@ -19,8 +19,6 @@ const nextConfig = {
       react: path.resolve(__dirname, '../../node_modules/react'),
       'react-dom': path.resolve(__dirname, '../../node_modules/react-dom'),
       'react/jsx-dev-runtime': path.resolve(__dirname, '../../node_modules/react/jsx-dev-runtime'),
-      // Force all modules to use the same instance of @securelend/react
-      '@securelend/react': path.resolve(__dirname, '../../packages/react/src/index.ts'),
     };
     return config;
   },
