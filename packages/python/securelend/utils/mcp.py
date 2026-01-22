@@ -1,7 +1,7 @@
 from typing import Any, Dict, Optional
 
 from mcp.client import Client, ToolResult
-from mcp.client.transports.http import StreamableHTTPClientTransport
+from mcp.client.transports.http import HTTPClientTransport
 
 from ..utils.errors import ServerError
 
@@ -31,7 +31,7 @@ class MCPClient:
         if self._api_key:
             headers["Authorization"] = f"Bearer {self._api_key}"
 
-        transport = StreamableHTTPClientTransport(
+        transport = HTTPClientTransport(
             url=self._mcp_url,
             headers=headers,
         )
