@@ -41,8 +41,8 @@ yarn add @securelend/sdk
 ```typescript
 import { SecureLend } from "@securelend/sdk";
 
-// It's recommended to load the API key from a secure source, like environment variables
-const securelend = new SecureLend({ apiKey: process.env.SECURELEND_API_KEY });
+// Create client - connects to https://mcp.securelend.ai/mcp by default
+const securelend = new SecureLend();
 
 // Compare business loans
 const result = await securelend.compareBusinessLoans({
@@ -99,15 +99,15 @@ console.log(
 
 ### API Key & Custom Server URL
 
-You can pass configuration when creating a client:
+You can pass configuration when creating a client. While an API key is not currently required for connection, providing one is recommended for usage tracking and to prepare for future updates.
 
 ```typescript
 import { SecureLend } from "@securelend/sdk";
 
 const securelend = new SecureLend({
-  // It's recommended to load the API key from a secure source,
-  // like environment variables or a secret manager.
-  apiKey: "sk_test_...",
+  // The API key is optional but recommended.
+  // It's best to load it from a secure source, like environment variables.
+  apiKey: process.env.SECURELEND_API_KEY,
 
   // Optional: Override the default MCP server URL
   serverUrl: "https://custom-mcp-server.com/mcp",

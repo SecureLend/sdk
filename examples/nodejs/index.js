@@ -4,9 +4,9 @@ import { fileURLToPath } from 'url';
 export async function main() {
   console.log('Running SecureLend SDK NodeJS example...');
 
-  // It's recommended to load the API key from a secure source, like environment variables
+  // Create a new client. The API key is optional but recommended for production.
   const securelend = new SecureLend({
-    apiKey: process.env.SECURELEND_API_KEY || 'sk_test_placeholder',
+    apiKey: process.env.SECURELEND_API_KEY,
   });
 
   try {

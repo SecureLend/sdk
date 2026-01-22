@@ -5,14 +5,14 @@ import type { AppProps } from 'next/app';
 import { Header } from '../components/Header';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  // The API key is optional but recommended for production usage.
+  const config = {
+    apiKey: process.env.NEXT_PUBLIC_SECURELEND_API_KEY,
+    serverUrl: '/api/mcp',
+  };
+
   return (
-    <SecureLendProvider
-      config={{
-        apiKey:
-          process.env.NEXT_PUBLIC_SECURELEND_API_KEY || 'sk_test_placeholder',
-        serverUrl: '/api/mcp',
-      }}
-    >
+    <SecureLendProvider config={config}>
       <Header />
       <Component {...pageProps} />
     </SecureLendProvider>
