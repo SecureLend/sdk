@@ -1,5 +1,5 @@
 /// <reference types="@testing-library/jest-dom" />
-import { renderHook, act } from "@testing-library/react";
+import { renderHook, act, waitFor } from "@testing-library/react";
 import React from "react";
 import { SecureLendProvider } from "../../src/contexts/SecureLendProvider";
 import { useDisplayOfferForm } from "../../src/hooks/useDisplayOfferForm";
@@ -82,14 +82,15 @@ describe("useDisplayOfferForm Hook", () => {
     const { result } = renderHook(() => useDisplayOfferForm(), { wrapper });
 
     await expect(
-      act(async () => {
-        await result.current.displayForm({ offerId: "123" });
-      }),
+      act(() => result.current.displayForm({ offerId: "123" })),
     ).rejects.toThrow(mockError);
+
+    await waitFor(() => {
+      expect(result.current.error).toBe(mockError);
+    });
 
     expect(result.current.loading).toBe(false);
     expect(result.current.data).toBeNull();
-    expect(result.current.error).toBe(mockError);
   });
 
   it("should handle a generic Error and re-throw", async () => {
@@ -99,14 +100,15 @@ describe("useDisplayOfferForm Hook", () => {
     const { result } = renderHook(() => useDisplayOfferForm(), { wrapper });
 
     await expect(
-      act(async () => {
-        await result.current.displayForm({ offerId: "123" });
-      }),
+      act(() => result.current.displayForm({ offerId: "123" })),
     ).rejects.toThrow(mockError);
+
+    await waitFor(() => {
+      expect(result.current.error).toBeInstanceOf(SecureLendError);
+    });
 
     expect(result.current.loading).toBe(false);
     expect(result.current.data).toBeNull();
-    expect(result.current.error).toBeInstanceOf(SecureLendError);
     expect(result.current.error?.message).toBe("Generic network error");
     expect(result.current.error?.type).toBe("unknown_error");
   });
