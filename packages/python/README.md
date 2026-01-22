@@ -26,12 +26,12 @@ async def main():
         "annualRevenue": 1200000,
     })
 
-    print(f"Found {response['summary']['totalOffers']} loan offers.")
+    print(f"Found {response.summary['totalOffers']} loan offers.")
 
-    if response["offers"]:
-        top_offer = response["offers"][0]
-        apr = top_offer['terms']['interestRate']['apr'] * 100
-        print(f"Top offer from {top_offer['lender']['name']} with {apr:.2f}% APR")
+    if response.offers:
+        top_offer = response.offers[0]
+        apr = top_offer.terms['interestRate']['apr'] * 100
+        print(f"Top offer from {top_offer.lender['name']} with {apr:.2f}% APR")
 
 
 if __name__ == "__main__":

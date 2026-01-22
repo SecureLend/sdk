@@ -4,7 +4,12 @@ from typing import Any, Dict
 import httpx
 from httpx_sse import aconnect_sse
 
-from ..utils.errors import AuthenticationError, NetworkError, ServerError
+from ..utils.errors import (
+    AuthenticationError,
+    NetworkError,
+    RateLimitError,
+    ServerError,
+)
 
 
 class MCPClient:
@@ -55,6 +60,12 @@ class MCPClient:
         except httpx.HTTPStatusError as e:
             if e.response.status_code in (401, 403):
                 raise AuthenticationError("Authentication failed.") from e
+            if e.response.status_code == 429:
+                retry_after_header = e.response.headers.get("Retry-After")
+                retry_after = None
+                if retry_after_header and retry_after_header.isdigit():
+                    retry_after = int(retry_after_header)
+                raise RateLimitError("Rate limit exceeded.", retry_after=retry_after) from e
             if e.response.status_code >= 500:
                 raise ServerError(f"Server error: {e.response.text}") from e
             raise NetworkError(f"HTTP error: {e}") from e
