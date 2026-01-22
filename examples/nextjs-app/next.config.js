@@ -3,7 +3,7 @@ const path = require('path');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@securelend/sdk', '@securelend/react', '@securelend/widgets'],
+  transpilePackages: ['@securelend/sdk', '@securelend/react', '@securelend/widgets', '@modelcontextprotocol/sdk', 'pkce-challenge'],
   async rewrites() {
     return [
       {
