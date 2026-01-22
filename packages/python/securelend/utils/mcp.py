@@ -2,8 +2,9 @@ from contextlib import AsyncExitStack
 from typing import Any, Dict, Optional
 
 import httpx
-from mcp import ClientSession, ToolResult
+from mcp import ClientSession
 from mcp.client.streamable_http import streamablehttp_client_transport
+from mcp.data import ToolResult
 from mcp.exceptions import MCPError
 
 from ..utils.errors import (
