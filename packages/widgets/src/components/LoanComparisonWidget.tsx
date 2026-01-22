@@ -1,8 +1,9 @@
-import type { LoanComparisonResponse } from "@securelend/sdk";
+import type { LoanComparisonResponse, LoanOffer } from "@securelend/sdk";
 
 interface LoanComparisonWidgetProps {
   response: LoanComparisonResponse;
   className?: string;
+  onApplyClick?: (offer: LoanOffer) => void;
 }
 
 export function LoanComparisonWidget({
@@ -48,7 +49,14 @@ export function LoanComparisonWidget({
               <td>{offer.terms.termMonths} months</td>
               <td>${offer.terms.payment.amount.amount.toFixed(2)}</td>
               <td>
-                {offer.process?.applicationUrl && (
+                {onApplyClick ? (
+                  <button
+                    onClick={() => onApplyClick(offer)}
+                    className="sl-widget-button"
+                  >
+                    Apply
+                  </button>
+                ) : offer.process?.applicationUrl ? (
                   <a
                     href={offer.process.applicationUrl}
                     target="_blank"
@@ -57,7 +65,7 @@ export function LoanComparisonWidget({
                   >
                     Apply
                   </a>
-                )}
+                ) : null}
               </td>
             </tr>
           ))}
