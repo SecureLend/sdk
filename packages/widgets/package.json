@@ -1,6 +1,6 @@
 {
   "name": "@securelend/widgets",
-  "version": "0.1.0-beta.3",
+  "version": "0.1.0-beta.4",
   "description": "Pre-built React UI components for the SecureLend SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

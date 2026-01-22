@@ -1,6 +1,6 @@
 {
   "name": "@securelend/sdk",
-  "version": "0.1.0-beta.3",
+  "version": "0.1.0-beta.4",
   "description": "Official SecureLend SDK for TypeScript and JavaScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
