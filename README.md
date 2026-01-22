@@ -343,8 +343,8 @@ React hooks and components for the SecureLend SDK
 **Example Usage:**
 
 ```tsx
-import { useLoanComparison } from '@securelend/react';
-import { LoanComparisonWidget } from '@securelend/widgets';
+import { useLoanComparison } from "@securelend/react";
+import { LoanComparisonWidget } from "@securelend/widgets";
 
 function LoanFinder() {
   const { compare, data, loading, error } = useLoanComparison();
@@ -352,7 +352,7 @@ function LoanFinder() {
   const handleSearch = () => {
     compare({
       loanAmount: 200000,
-      purpose: 'equipment'
+      purpose: "equipment",
     });
   };
 
@@ -503,7 +503,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ## License
 
-MIT © 2025 SecureLend, Inc.
+MIT © 2026 SecureLend, Inc.
 
 ---
 
