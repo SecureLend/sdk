@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 from contextlib import AsyncExitStack
 
 from mcp import ClientSession
-from mcp.client.transports.http import streamable_http_client
+from mcp.transports.http import streamable_http_client
 from mcp.types import CallToolResult
 
 from ..utils.errors import ServerError
