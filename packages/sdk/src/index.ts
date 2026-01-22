@@ -22,5 +22,4 @@ export {
   ServerError,
 } from "./utils/errors";
 
-// Version
-export const VERSION = "0.1.0-beta.1";
+// Version is managed in package.json

@@ -13,7 +13,7 @@
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
-    "@securelend/sdk": "^0.1.0-beta.4",
+    "@securelend/sdk": "^0.1.0-beta.5",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
