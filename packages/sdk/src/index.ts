@@ -7,7 +7,6 @@
  */
 
 export { SecureLend } from "./client";
-export { SecureLend as default } from "./client";
 
 // Type exports
 export * from "./types";
