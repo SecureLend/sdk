@@ -1,4 +1,4 @@
-# SecureLend SDK for Python
+# SecureLend SDK for Python [![PyPI version](https://img.shields.io/pypi/v/securelend.svg)](https://pypi.org/project/securelend/)
 
 The official Python SDK for SecureLend - Financial services infrastructure for AI assistants.
 

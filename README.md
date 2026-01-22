@@ -376,9 +376,11 @@ Pre-built React UI components for the SecureLend SDK
 
 ### [Python SDK](./packages/python)
 
+[![PyPI version](https://img.shields.io/pypi/v/securelend.svg)](https://pypi.org/project/securelend/)
+
 Python client library for the SecureLend SDK
 
-**Status:** ✅ In Development (Beta)
+**Status:** ✅ Published
 
 **Example Usage:**
 
