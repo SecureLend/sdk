@@ -273,7 +273,8 @@ class SecureLend:
     ) -> T:
         # Pydantic models are passed in, dump to dict for MCP call
         request_data = request.model_dump(by_alias=True, exclude_none=True)
-        tool_result = await self._mcp_client.call_tool(tool_name, request_data)
+        tool_result_dict = await self._mcp_client.call_tool(tool_name, request_data)
+        tool_result = types.ToolResult.model_validate(tool_result_dict)
         data = self._parse_json_response(tool_result)
         data["widget"] = self._get_widget(tool_result)
 
