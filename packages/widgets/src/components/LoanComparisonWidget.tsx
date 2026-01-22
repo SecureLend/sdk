@@ -9,6 +9,7 @@ interface LoanComparisonWidgetProps {
 export function LoanComparisonWidget({
   response,
   className,
+  onApplyClick,
 }: LoanComparisonWidgetProps) {
   const { offers, summary } = response;
 
