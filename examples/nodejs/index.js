@@ -22,7 +22,7 @@ async function main() {
       const topOffer = response.offers[0];
       console.log(`  - Lender: ${topOffer.lender.name}`);
       console.log(`  - Product: ${topOffer.product.name}`);
-      console.log(`  - APR: ${topOffer.terms.interestRate.apr.toFixed(2)}%`);
+      console.log(`  - APR: ${(topOffer.terms.interestRate.apr * 100).toFixed(2)}%`);
       console.log(`  - Term: ${topOffer.terms.termMonths} months`);
     }
   } catch (error) {
