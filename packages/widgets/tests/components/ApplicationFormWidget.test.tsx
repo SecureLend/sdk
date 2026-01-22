@@ -232,6 +232,18 @@ describe("ApplicationFormWidget", () => {
         onSubmitted={onSubmittedMock}
       />,
     );
+    fireEvent.change(screen.getByLabelText("First Name"), {
+      target: { value: "John" },
+    });
+    fireEvent.change(screen.getByLabelText("Last Name"), {
+      target: { value: "Doe" },
+    });
+    fireEvent.change(screen.getByLabelText("Email Address"), {
+      target: { value: "john@doe.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Phone Number"), {
+      target: { value: "1234567890" },
+    });
     fireEvent.click(screen.getByText("Submit to Test Lender"));
     expect(screen.getByText("Important Disclosures")).toBeInTheDocument();
 
@@ -258,21 +270,29 @@ describe("ApplicationFormWidget", () => {
       loading: true,
     });
 
-    const { rerender } = render(
+    render(
       <ApplicationFormWidget
         offerData={mockOfferDataMultiple}
         onSubmitted={onSubmittedMock}
       />,
     );
 
+    fireEvent.change(screen.getByLabelText("First Name"), {
+      target: { value: "John" },
+    });
+    fireEvent.change(screen.getByLabelText("Last Name"), {
+      target: { value: "Doe" },
+    });
+    fireEvent.change(screen.getByLabelText("Email Address"), {
+      target: { value: "john@doe.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Phone Number"), {
+      target: { value: "1234567890" },
+    });
+
     // Simulate starting a single submission to set internal state
     fireEvent.click(screen.getByText("Submit to Test Lender"));
-    rerender(
-      <ApplicationFormWidget
-        offerData={mockOfferDataMultiple}
-        onSubmitted={onSubmittedMock}
-      />,
-    );
+    // The component re-renders due to state change, and loading is true from the hook
     expect(screen.getByText("Submitting...")).toBeDisabled();
   });
 
@@ -290,6 +310,19 @@ describe("ApplicationFormWidget", () => {
         onSubmitted={onSubmittedMock}
       />,
     );
+
+    fireEvent.change(screen.getByLabelText("First Name"), {
+      target: { value: "John" },
+    });
+    fireEvent.change(screen.getByLabelText("Last Name"), {
+      target: { value: "Doe" },
+    });
+    fireEvent.change(screen.getByLabelText("Email Address"), {
+      target: { value: "john@doe.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Phone Number"), {
+      target: { value: "1234567890" },
+    });
 
     fireEvent.click(screen.getByText(/Submit to/));
     fireEvent.click(screen.getByLabelText(/I agree to the/));
@@ -345,6 +378,19 @@ describe("ApplicationFormWidget", () => {
         onSubmitted={onSubmittedMock}
       />,
     );
+
+    fireEvent.change(screen.getByLabelText("First Name"), {
+      target: { value: "John" },
+    });
+    fireEvent.change(screen.getByLabelText("Last Name"), {
+      target: { value: "Doe" },
+    });
+    fireEvent.change(screen.getByLabelText("Email Address"), {
+      target: { value: "john@doe.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Phone Number"), {
+      target: { value: "1234567890" },
+    });
 
     fireEvent.click(screen.getByText("Submit to Test Lender"));
     fireEvent.click(screen.getByLabelText(/I agree to the/));
