@@ -64,6 +64,14 @@ describe("MCPClient", () => {
       const client = new MCPClient({ apiKey: "", mcpURL: "http://localhost" });
       await expect(client.connect()).rejects.toThrow(NetworkError);
     });
+
+    it("should handle non-Error connection failures", async () => {
+      mockMcpInstance.connect.mockRejectedValue("a string error");
+      const client = new MCPClient({ apiKey: "", mcpURL: "http://localhost" });
+      await expect(client.connect()).rejects.toThrow(
+        "MCP connection failed: a string error",
+      );
+    });
   });
 
   describe("callTool", () => {
@@ -100,6 +108,14 @@ describe("MCPClient", () => {
       mockMcpInstance.callTool.mockRejectedValue(originalError);
       const client = new MCPClient({ apiKey: "test-key", mcpURL: "http://localhost" });
       await expect(client.callTool("test", {})).rejects.toThrow(originalError);
+    });
+
+    it("should handle non-Error tool call failures", async () => {
+      mockMcpInstance.callTool.mockRejectedValue("a string error");
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "http://localhost" });
+      await expect(client.callTool("test", {})).rejects.toThrow(
+        "Tool call failed: a string error",
+      );
     });
   });
 
