@@ -1,11 +1,13 @@
 import json
 from typing import Any, Dict, Optional, Type, TypeVar
 
+from pydantic import BaseModel, ValidationError as PydanticValidationError
+
 from . import types
-from .utils.errors import SecureLendError
+from .utils.errors import SecureLendError, ValidationError
 from .utils.mcp import MCPClient
 
-T = TypeVar("T")
+T = TypeVar("T", bound=BaseModel)
 
 
 class SecureLend:
@@ -192,9 +194,15 @@ class SecureLend:
         tool_result = await self._mcp_client.call_tool(tool_name, request)
         data = self._parse_json_response(tool_result)
         data["widget"] = self._get_widget(tool_result)
-        # Note: This does not perform runtime validation like Zod.
-        # It's assumed the server returns data matching the TypedDict.
-        return data  # type: ignore
+
+        try:
+            # Pydantic automatically handles camelCase to snake_case if aliases are set
+            return response_cls.model_validate(data)
+        except PydanticValidationError as e:
+            raise ValidationError(
+                f"Invalid response from MCP server: failed to validate JSON content for tool '{tool_name}'",
+                errors=e.errors(),
+            ) from e
 
     def _parse_json_response(self, tool_result: types.ToolResult) -> Dict[str, Any]:
         content_list = tool_result.get("content", [])
