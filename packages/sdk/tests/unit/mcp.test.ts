@@ -31,7 +31,7 @@ describe("MCPClient", () => {
   });
 
   it("should construct with correct config", () => {
-    new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+    new MCPClient({ apiKey: "test-key", mcpURL: "http://localhost" });
     expect(MockMCP).toHaveBeenCalledWith({
       name: "@securelend/sdk",
       version: "1.0.0",
@@ -40,14 +40,14 @@ describe("MCPClient", () => {
 
   describe("connect", () => {
     it("should connect successfully", async () => {
-      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "http://localhost" });
       await client.connect();
-      expect(MockTransport).toHaveBeenCalledWith(new URL("test-url"));
+      expect(MockTransport).toHaveBeenCalledWith(new URL("http://localhost"));
       expect(mockMcpInstance.connect).toHaveBeenCalled();
     });
 
     it("should not reconnect if already connected", async () => {
-      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "http://localhost" });
       await client.connect();
       await client.connect(); // Second call
       expect(mockMcpInstance.connect).toHaveBeenCalledTimes(1);
@@ -55,27 +55,27 @@ describe("MCPClient", () => {
 
     it("should handle authentication errors (401)", async () => {
       mockMcpInstance.connect.mockRejectedValue(new Error("401 Unauthorized"));
-      const client = new MCPClient({ apiKey: "invalid", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "invalid", mcpURL: "http://localhost" });
       await expect(client.connect()).rejects.toThrow(AuthenticationError);
     });
 
     it("should handle other network errors", async () => {
       mockMcpInstance.connect.mockRejectedValue(new Error("Connection refused"));
-      const client = new MCPClient({ apiKey: "", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "", mcpURL: "http://localhost" });
       await expect(client.connect()).rejects.toThrow(NetworkError);
     });
   });
 
   describe("callTool", () => {
     it("should connect before calling a tool", async () => {
-      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "http://localhost" });
       mockMcpInstance.callTool.mockResolvedValue({});
       await client.callTool("test", {});
       expect(mockMcpInstance.connect).toHaveBeenCalledTimes(1);
     });
 
     it("should call the underlying tool method", async () => {
-      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "http://localhost" });
       await client.callTool("test", { arg1: "val1" });
       expect(mockMcpInstance.callTool).toHaveBeenCalledWith({
         name: "test",
@@ -85,27 +85,27 @@ describe("MCPClient", () => {
 
     it("should handle validation errors (400)", async () => {
       mockMcpInstance.callTool.mockRejectedValue(new Error("400 Bad Request"));
-      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "http://localhost" });
       await expect(client.callTool("test", {})).rejects.toThrow(ValidationError);
     });
 
     it("should handle other tool call errors", async () => {
       mockMcpInstance.callTool.mockRejectedValue(new Error("Internal error"));
-      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "http://localhost" });
       await expect(client.callTool("test", {})).rejects.toThrow(SecureLendError);
     });
 
     it("should not wrap existing SecureLendError", async () => {
       const originalError = new SecureLendError("Original", "custom");
       mockMcpInstance.callTool.mockRejectedValue(originalError);
-      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "http://localhost" });
       await expect(client.callTool("test", {})).rejects.toThrow(originalError);
     });
   });
 
   describe("setApiKey", () => {
     it("should update config and force reconnect", async () => {
-      const client = new MCPClient({ apiKey: "key1", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "key1", mcpURL: "http://localhost" });
       await client.connect();
       expect(mockMcpInstance.connect).toHaveBeenCalledTimes(1);
 
@@ -118,7 +118,7 @@ describe("MCPClient", () => {
 
   describe("debug mode", () => {
     it("should enable and disable debug logs", async () => {
-      const client = new MCPClient({ apiKey: "key1", mcpURL: "test-url" });
+      const client = new MCPClient({ apiKey: "key1", mcpURL: "http://localhost" });
       const consoleLogSpy = jest
         .spyOn(console, "log")
         .mockImplementation(() => {});
@@ -130,7 +130,7 @@ describe("MCPClient", () => {
       // Trigger a log
       await client.connect();
       expect(consoleLogSpy).toHaveBeenCalledWith(
-        "[SecureLend SDK] Connecting to MCP server at test-url",
+        "[SecureLend SDK] Connecting to MCP server at http://localhost",
       );
 
       client.disableDebug();

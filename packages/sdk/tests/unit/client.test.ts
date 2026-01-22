@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { SecureLend } from "../../src/client";
 import { MCPClient } from "../../src/utils/mcp";
-import * as types from "../../src/types";
 
 // Mock the MCPClient to avoid actual network calls
 jest.mock("../../src/utils/mcp");
