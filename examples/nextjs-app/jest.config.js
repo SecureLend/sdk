@@ -16,7 +16,7 @@ const customJestConfig = {
   },
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   transformIgnorePatterns: [
-    '/node_modules/(?!pkce-challenge)/',
+    '/node_modules/(?!(@modelcontextprotocol/sdk|pkce-challenge))/',
   ],
 };
 
