@@ -152,9 +152,8 @@ describe("SecureLend Client", () => {
       async (methodName, toolName) => {
         // This test is simplified to just check the correct tool name is called.
         // It relies on mock API response being a generic object.
-        const method = client[methodName];
         // @ts-expect-error - Calling method dynamically
-        await method(mockRequest);
+        await client[methodName](mockRequest);
 
         expect(mcpClientInstance.callTool).toHaveBeenCalledWith(
           toolName,
@@ -207,7 +206,7 @@ describe("SecureLend Client", () => {
     it("parseJsonResponse should throw if JSON content is missing", () => {
       const toolResult = { content: [] };
       expect(() => client.parseJsonResponse(toolResult, anyObjectSchema)).toThrow(
-        "Invalid response from MCP server: missing JSON content",
+        "Invalid response from MCP server: failed to parse JSON content",
       );
     });
 
@@ -216,7 +215,7 @@ describe("SecureLend Client", () => {
         content: [{ type: "text" }],
       };
       expect(() => client.parseJsonResponse(toolResult, anyObjectSchema)).toThrow(
-        "Invalid content structure",
+        "Invalid response from MCP server: failed to parse JSON content",
       );
     });
 
