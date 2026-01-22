@@ -9,10 +9,8 @@ describe("useSecureLend Hook", () => {
     const originalError = console.error;
     console.error = jest.fn();
 
-    const { result } = renderHook(() => useSecureLend());
-
-    expect(result.error).toEqual(
-      new Error("useSecureLend must be used within a SecureLendProvider"),
+    expect(() => renderHook(() => useSecureLend())).toThrow(
+      "useSecureLend must be used within a SecureLendProvider",
     );
 
     console.error = originalError;
@@ -30,6 +28,5 @@ describe("useSecureLend Hook", () => {
     const { result } = renderHook(() => useSecureLend(), { wrapper });
 
     expect(result.current).toBe(mockClient);
-    expect(result.error).toBeUndefined();
   });
 });
