@@ -16,8 +16,7 @@
     "build": "tsup",
     "test": "jest",
     "lint": "eslint src --ext .ts",
-    "type-check": "tsc --noEmit",
-    "prepublishOnly": "npm run build && npm test"
+    "type-check": "tsc --noEmit"
   },
   "jest": {
     "preset": "ts-jest",
@@ -60,6 +59,5 @@
   },
   "engines": {
     "node": ">=16.0.0"
-  },
-  "gitHead": "4c58249dc7519f13c48cc2e949dac82157c80cd4"
+  }
 }
