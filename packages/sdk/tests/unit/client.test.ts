@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { SecureLend } from "../../src/client";
 import { MCPClient } from "../../src/utils/mcp";
 import * as types from "../../src/types";
@@ -5,7 +6,8 @@ import * as types from "../../src/types";
 // Mock the MCPClient to avoid actual network calls
 jest.mock("../../src/utils/mcp");
 
-const MCPClientMock = MCPClient as any;
+const MCPClientMock = MCPClient as jest.Mock;
+const anyObjectSchema = z.object({}).passthrough();
 
 describe("SecureLend Client", () => {
   let mcpClientInstance: {
@@ -37,6 +39,26 @@ describe("SecureLend Client", () => {
       expect(client.mcp).toBeDefined();
       expect(MCPClientMock).toHaveBeenCalledTimes(1);
     });
+
+    it("should handle relative serverUrl in browser environment", () => {
+      // Mock window object
+      Object.defineProperty(global, "window", {
+        value: { location: { origin: "https://example.com" } },
+        writable: true,
+      });
+
+      new SecureLend({ serverUrl: "/api/mcp" });
+      expect(MCPClientMock).toHaveBeenCalledWith({
+        apiKey: "",
+        mcpURL: "https://example.com/api/mcp",
+      });
+
+      // Cleanup
+      Object.defineProperty(global, "window", {
+        value: undefined,
+        writable: true,
+      });
+    });
   });
 
   describe("configuration", () => {
@@ -67,46 +89,6 @@ describe("SecureLend Client", () => {
       client = new SecureLend();
     });
 
-    it("should call mcpClient.callTool with correct params for compareBusinessLoans", async () => {
-      const request: types.BusinessLoanSearchParams = {
-        loanAmount: 10000,
-        purpose: "working_capital",
-        annualRevenue: 50000,
-      };
-
-      const mockApiResponse = {
-        offers: [],
-        summary: {
-          totalOffers: 0,
-          bestRate: 0,
-        },
-        metadata: {
-          queryId: "d1a2f6e3-4c5b-4a9b-8f3c-1d3e2f5a6b7c",
-          timestamp: new Date().toISOString(),
-        },
-      };
-
-      const mockToolResult = {
-        toolName: "compare_business_loans",
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(mockApiResponse),
-          },
-        ],
-      };
-
-      mcpClientInstance.callTool.mockResolvedValue(mockToolResult);
-
-      const response = await client.compareBusinessLoans(request);
-
-      expect(mcpClientInstance.callTool).toHaveBeenCalledWith(
-        "compare_business_loans",
-        request,
-      );
-      expect(response.summary.totalOffers).toBe(0);
-    });
-
     it("should call mcpClient.connect when connect is called", async () => {
       await client.connect();
       expect(mcpClientInstance.connect).toHaveBeenCalledTimes(1);
@@ -125,6 +107,157 @@ describe("SecureLend Client", () => {
     it("should call mcpClient.setApiKey when setApiKey is called", () => {
       client.setApiKey("new-key");
       expect(mcpClientInstance.setApiKey).toHaveBeenCalledWith("new-key");
+    });
+  });
+
+  describe("tool methods", () => {
+    let client: SecureLend;
+    const mockRequest = { mock: "request" };
+    // A minimal, valid response for any schema that expects an object
+    const mockApiResponse = {};
+    const mockToolResult = {
+      structuredContent: mockApiResponse,
+      content: [],
+    };
+
+    beforeEach(() => {
+      client = new SecureLend();
+      mcpClientInstance.callTool.mockResolvedValue(mockToolResult);
+    });
+
+    const toolMethods: Array<[keyof SecureLend, string]> = [
+      ["comparePersonalLoans", "compare_personal_loans"],
+      ["compareBusinessLoans", "compare_business_loans"],
+      ["comparePersonalMortgages", "compare_personal_mortgages"],
+      ["compareBusinessMortgages", "compare_business_mortgages"],
+      ["compareCarLoans", "compare_car_loans"],
+      ["compareStudentLoans", "compare_student_loans"],
+      ["compareBusinessBanking", "compare_business_banking"],
+      ["comparePersonalBanking", "compare_personal_banking"],
+      ["compareSavingsAccounts", "compare_savings_accounts"],
+      ["compareBusinessCreditCards", "compare_business_credit_cards"],
+      ["comparePersonalCreditCards", "compare_personal_credit_cards"],
+      ["calculateLoanPayment", "calculate_loan_payment"],
+      ["calculateMortgagePayment", "calculate_mortgage_payment"],
+      ["compareLeaseVsPurchase", "compare_lease_vs_purchase"],
+      ["getOffer", "get_offer"],
+      ["getMultipleOffers", "get_multiple_offers"],
+      ["displayOfferForm", "display_offer_form"],
+      ["trackOfferStatus", "track_offer_status"],
+      ["displayUploadDocumentsForm", "display_upload_documents_form"],
+      ["submitDocuments", "submit_documents"],
+    ];
+
+    test.each(toolMethods)(
+      "should call %s correctly",
+      async (methodName, toolName) => {
+        // This test is simplified to just check the correct tool name is called.
+        // It relies on mock API response being a generic object.
+        const method = client[methodName];
+        // @ts-expect-error - Calling method dynamically
+        await method(mockRequest);
+
+        expect(mcpClientInstance.callTool).toHaveBeenCalledWith(
+          toolName,
+          mockRequest,
+        );
+      },
+    );
+  });
+
+  describe("private helpers", () => {
+    let client: any; // Use `any` to access private methods
+
+    beforeEach(() => {
+      client = new SecureLend();
+    });
+
+    it("parseJsonResponse should use structuredContent when available", () => {
+      const mockData = { a: 1 };
+      const toolResult = { structuredContent: mockData, content: [] };
+      const result = client.parseJsonResponse(toolResult, anyObjectSchema);
+      expect(result).toEqual(mockData);
+    });
+
+    it("parseJsonResponse should fall back to text content", () => {
+      const mockData = { b: 2 };
+      const toolResult = {
+        content: [{ type: "text", text: JSON.stringify(mockData) }],
+      };
+      const result = client.parseJsonResponse(toolResult, anyObjectSchema);
+      expect(result).toEqual(mockData);
+    });
+
+    it("parseJsonResponse should fall back to resource content", () => {
+      const mockData = { c: 3 };
+      const toolResult = {
+        content: [
+          {
+            type: "resource",
+            resource: {
+              mimeType: "application/json",
+              text: JSON.stringify(mockData),
+            },
+          },
+        ],
+      };
+      const result = client.parseJsonResponse(toolResult, anyObjectSchema);
+      expect(result).toEqual(mockData);
+    });
+
+    it("parseJsonResponse should throw if JSON content is missing", () => {
+      const toolResult = { content: [] };
+      expect(() => client.parseJsonResponse(toolResult, anyObjectSchema)).toThrow(
+        "Invalid response from MCP server: missing JSON content",
+      );
+    });
+
+    it("parseJsonResponse should throw on invalid content structure", () => {
+      const toolResult = {
+        content: [{ type: "text" }],
+      };
+      expect(() => client.parseJsonResponse(toolResult, anyObjectSchema)).toThrow(
+        "Invalid content structure",
+      );
+    });
+
+    it("parseJsonResponse should throw on JSON parsing error", () => {
+      const toolResult = {
+        content: [{ type: "text", text: "not json" }],
+      };
+      expect(() => client.parseJsonResponse(toolResult, anyObjectSchema)).toThrow(
+        "Invalid response from MCP server: failed to parse JSON content",
+      );
+    });
+
+    it("parseJsonResponse should throw on Zod validation error", () => {
+      const toolResult = {
+        structuredContent: { unexpected: "field" },
+      };
+      // Use a schema that will definitely fail
+      const schema = z.object({ requiredField: z.string() });
+      expect(() => client.parseJsonResponse(toolResult, schema)).toThrow(
+        "Invalid response from MCP server: failed to validate JSON content",
+      );
+    });
+
+    it("getWidget should return HTML content when available", () => {
+      const html = "<h1>Widget</h1>";
+      const toolResult = {
+        content: [
+          { type: "resource", resource: { mimeType: "text/html", text: html } },
+        ],
+      };
+      const result = client.getWidget(toolResult);
+      expect(result).toBe(html);
+    });
+
+    it("getWidget should return undefined when no HTML content is available", () => {
+      const toolResult = {
+        content: [{ type: "text", text: "hello" }],
+      };
+      const result = client.getWidget(toolResult);
+      expect(result).toBeUndefined();
     });
   });
 });

@@ -1,0 +1,143 @@
+import { MCPClient } from "../../src/utils/mcp";
+import {
+  AuthenticationError,
+  NetworkError,
+  SecureLendError,
+  ValidationError,
+} from "../../src/utils/errors";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+
+// Mock the underlying MCP SDK
+jest.mock("@modelcontextprotocol/sdk/client/index.js");
+jest.mock("@modelcontextprotocol/sdk/client/streamableHttp.js");
+
+const MockMCP = Client as jest.Mock;
+const MockTransport = StreamableHTTPClientTransport as jest.Mock;
+
+describe("MCPClient", () => {
+  let mockMcpInstance: {
+    connect: jest.Mock;
+    callTool: jest.Mock;
+  };
+
+  beforeEach(() => {
+    mockMcpInstance = {
+      connect: jest.fn(),
+      callTool: jest.fn(),
+    };
+    MockMCP.mockImplementation(() => mockMcpInstance);
+    MockTransport.mockClear();
+  });
+
+  it("should construct with correct config", () => {
+    new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+    expect(MockMCP).toHaveBeenCalledWith({
+      name: "@securelend/sdk",
+      version: "1.0.0",
+    });
+  });
+
+  describe("connect", () => {
+    it("should connect successfully", async () => {
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      await client.connect();
+      expect(MockTransport).toHaveBeenCalledWith(new URL("test-url"));
+      expect(mockMcpInstance.connect).toHaveBeenCalled();
+    });
+
+    it("should not reconnect if already connected", async () => {
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      await client.connect();
+      await client.connect(); // Second call
+      expect(mockMcpInstance.connect).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle authentication errors (401)", async () => {
+      mockMcpInstance.connect.mockRejectedValue(new Error("401 Unauthorized"));
+      const client = new MCPClient({ apiKey: "invalid", mcpURL: "test-url" });
+      await expect(client.connect()).rejects.toThrow(AuthenticationError);
+    });
+
+    it("should handle other network errors", async () => {
+      mockMcpInstance.connect.mockRejectedValue(new Error("Connection refused"));
+      const client = new MCPClient({ apiKey: "", mcpURL: "test-url" });
+      await expect(client.connect()).rejects.toThrow(NetworkError);
+    });
+  });
+
+  describe("callTool", () => {
+    it("should connect before calling a tool", async () => {
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      mockMcpInstance.callTool.mockResolvedValue({});
+      await client.callTool("test", {});
+      expect(mockMcpInstance.connect).toHaveBeenCalledTimes(1);
+    });
+
+    it("should call the underlying tool method", async () => {
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      await client.callTool("test", { arg1: "val1" });
+      expect(mockMcpInstance.callTool).toHaveBeenCalledWith({
+        name: "test",
+        arguments: { arg1: "val1" },
+      });
+    });
+
+    it("should handle validation errors (400)", async () => {
+      mockMcpInstance.callTool.mockRejectedValue(new Error("400 Bad Request"));
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      await expect(client.callTool("test", {})).rejects.toThrow(ValidationError);
+    });
+
+    it("should handle other tool call errors", async () => {
+      mockMcpInstance.callTool.mockRejectedValue(new Error("Internal error"));
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      await expect(client.callTool("test", {})).rejects.toThrow(SecureLendError);
+    });
+
+    it("should not wrap existing SecureLendError", async () => {
+      const originalError = new SecureLendError("Original", "custom");
+      mockMcpInstance.callTool.mockRejectedValue(originalError);
+      const client = new MCPClient({ apiKey: "test-key", mcpURL: "test-url" });
+      await expect(client.callTool("test", {})).rejects.toThrow(originalError);
+    });
+  });
+
+  describe("setApiKey", () => {
+    it("should update config and force reconnect", async () => {
+      const client = new MCPClient({ apiKey: "key1", mcpURL: "test-url" });
+      await client.connect();
+      expect(mockMcpInstance.connect).toHaveBeenCalledTimes(1);
+
+      client.setApiKey("key2");
+      // Calling a tool should trigger a reconnect
+      await client.callTool("test", {});
+      expect(mockMcpInstance.connect).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("debug mode", () => {
+    it("should enable and disable debug logs", async () => {
+      const client = new MCPClient({ apiKey: "key1", mcpURL: "test-url" });
+      const consoleLogSpy = jest
+        .spyOn(console, "log")
+        .mockImplementation(() => {});
+
+      client.enableDebug();
+      // @ts-expect-error - accessing private property
+      expect(client.debug).toBe(true);
+
+      // Trigger a log
+      await client.connect();
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        "[SecureLend SDK] Connecting to MCP server at test-url",
+      );
+
+      client.disableDebug();
+      // @ts-expect-error - accessing private property
+      expect(client.debug).toBe(false);
+
+      consoleLogSpy.mockRestore();
+    });
+  });
+});
