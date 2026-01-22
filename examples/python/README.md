@@ -23,10 +23,17 @@ This directory contains a simple example of how to use the `securelend` Python p
 
 ## Running the Example
 
-To run the example script, execute the following command from the root of the monorepo:
+To run the example script, execute the following command from the root of the monorepo, ensuring you are using the Python interpreter from the virtual environment you created:
 
 ```bash
+# Make sure your virtual environment is activated before running
+source venv/bin/activate
+
+# Run the script
 python examples/python/main.py
+
+# Alternatively, you can run it without activating the venv by specifying the python executable directly
+./venv/bin/python examples/python/main.py
 ```
 
 You should see output showing the loan offers found by the SDK.
