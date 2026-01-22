@@ -99,7 +99,10 @@ export default function Home() {
 
   return (
     <main>
-      <h1>SecureLend Next.js Example</h1>
+      <h1 className="page-title">Business Loan Comparison</h1>
+      <p className="page-subtitle">
+        Enter your loan requirements to compare offers from top lenders.
+      </p>
       <form onSubmit={handleSubmit}>
         <input
           type="number"

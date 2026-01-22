@@ -35,11 +35,9 @@ type ApplicantInfo = {
 function ConsentModal({
   onConfirm,
   onCancel,
-  isDark,
 }: {
   onConfirm: () => void;
   onCancel: () => void;
-  isDark: boolean;
 }) {
   const [agreed, setAgreed] = useState(false);
 
@@ -56,17 +54,16 @@ function ConsentModal({
       alignItems: "flex-start",
       paddingTop: "5vh",
       zIndex: 1000,
-      fontFamily:
-        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+      fontFamily: "inherit",
     },
     modal: {
-      backgroundColor: isDark ? "#1F2937" : "#FFFFFF",
+      backgroundColor: "var(--bg-card)",
       padding: "2rem",
-      borderRadius: "12px",
+      borderRadius: "var(--radius)",
       maxWidth: "500px",
       width: "90%",
-      boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-      color: isDark ? "#D1D5DB" : "#111827",
+      boxShadow: "var(--shadow)",
+      color: "var(--text-main)",
       maxHeight: "90vh",
       overflowY: "auto",
       boxSizing: "border-box",
@@ -79,7 +76,7 @@ function ConsentModal({
     text: {
       margin: "0 0 1.5rem 0",
       lineHeight: 1.5,
-      color: isDark ? "#9CA3AF" : "#6B7280",
+      color: "var(--text-muted)",
     },
     disclosureItem: {
       marginBottom: "1rem",
@@ -87,12 +84,12 @@ function ConsentModal({
     disclosureTitle: {
       fontSize: "0.875rem",
       fontWeight: 600,
-      color: isDark ? "#F3F4F6" : "#111827",
+      color: "var(--text-main)",
       margin: "0 0 0.25rem 0",
     },
     disclosureText: {
       fontSize: "0.875rem",
-      color: isDark ? "#9CA3AF" : "#6B7280",
+      color: "var(--text-muted)",
       margin: 0,
       lineHeight: 1.5,
     },
@@ -111,11 +108,11 @@ function ConsentModal({
     },
     agreementLabel: {
       fontSize: "0.875rem",
-      color: isDark ? "#9CA3AF" : "#6B7280",
+      color: "var(--text-muted)",
       cursor: "pointer",
     },
     link: {
-      color: isDark ? "#60A5FA" : "#3B82F6",
+      color: "#3B82F6",
       textDecoration: "underline",
     },
     buttonContainer: {
@@ -132,11 +129,11 @@ function ConsentModal({
       cursor: "pointer",
     },
     cancelButton: {
-      backgroundColor: isDark ? "#374151" : "#E5E7EB",
-      color: isDark ? "#F3F4F6" : "#1F2937",
+      backgroundColor: "var(--highlight)",
+      color: "var(--text-main)",
     },
     confirmButton: {
-      backgroundColor: isDark ? "#4B5563" : "#111827",
+      backgroundColor: "var(--primary)",
       color: "#FFFFFF",
     },
   };
@@ -272,21 +269,18 @@ export const ApplicationFormWidget = ({
   onSubmitted,
   onCancel,
 }: ApplicationFormWidgetProps) => {
-  const isDark = false; // Hardcoding theme for simplicity
-
   const styles: { [key: string]: React.CSSProperties } = useMemo(
     () => ({
       pageWrapper: {
         width: "100%",
-        fontFamily:
-          "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+        fontFamily: "inherit",
       },
       container: {
         maxWidth: "480px",
         margin: "0 auto",
-        backgroundColor: isDark ? "#1F2937" : "#FFFFFF",
-        borderRadius: "12px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+        backgroundColor: "var(--bg-card)",
+        borderRadius: "var(--radius)",
+        boxShadow: "var(--shadow)",
         overflow: "hidden",
       },
       content: {
@@ -298,7 +292,7 @@ export const ApplicationFormWidget = ({
       title: {
         fontSize: "1.5rem",
         fontWeight: 600,
-        color: isDark ? "#F9FAFB" : "#111827",
+        color: "var(--primary)",
         textAlign: "center",
         margin: 0,
       },
@@ -307,38 +301,38 @@ export const ApplicationFormWidget = ({
       label: {
         fontSize: "0.875rem",
         fontWeight: 500,
-        color: isDark ? "#D1D5DB" : "#374151",
+        color: "var(--text-main)",
       },
       input: {
-        padding: "0.75rem",
+        padding: "14px",
         borderRadius: "8px",
-        border: `1px solid ${isDark ? "#4B5563" : "#D1D5DB"}`,
+        border: "1px solid var(--border)",
         fontSize: "1rem",
-        color: isDark ? "#F9FAFB" : "#111827",
-        backgroundColor: isDark ? "#374151" : "#FFFFFF",
+        color: "var(--text-main)",
+        backgroundColor: "var(--bg-body)",
       },
       button: {
-        padding: "0.75rem 1rem",
+        padding: "14px 28px",
         borderRadius: "8px",
         border: "none",
-        backgroundColor: isDark ? "#4B5563" : "#111827",
+        backgroundColor: "var(--primary)",
         color: "#FFFFFF",
         fontSize: "1rem",
-        fontWeight: 500,
+        fontWeight: 600,
         cursor: "pointer",
       },
       buttonDisabled: { opacity: 0.6, cursor: "not-allowed" },
       centered: {
         textAlign: "center",
         padding: "2rem",
-        color: isDark ? "#F9FAFB" : "#111827",
+        color: "var(--primary)",
       },
       paragraph: {
         textAlign: "center",
-        color: isDark ? "#D1D5DB" : "#374151",
+        color: "var(--text-muted)",
       },
     }),
-    [isDark],
+    [],
   );
 
   const { submitOffer, submitMultipleOffers, loading } = useSubmitApplication();
@@ -437,7 +431,6 @@ export const ApplicationFormWidget = ({
     <div style={styles.pageWrapper}>
       {showConsent && (
         <ConsentModal
-          isDark={isDark}
           onConfirm={onConfirmConsent}
           onCancel={() => setShowConsent(false)}
         />
