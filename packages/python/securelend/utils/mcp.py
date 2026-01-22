@@ -2,9 +2,8 @@ from contextlib import AsyncExitStack
 from typing import Any, Dict, Optional
 
 import httpx
-from mcp import ClientSession
+from mcp import ClientSession, MCPError
 from mcp.client.streamable_http import streamablehttp_client
-from mcp.exceptions import MCPError
 
 from ..utils.errors import (
     AuthenticationError,
