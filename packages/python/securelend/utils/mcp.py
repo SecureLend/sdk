@@ -47,7 +47,7 @@ class MCPClient:
             transport_context = streamablehttp_client(
                 url=self._mcp_url, headers=headers
             )
-            read_stream, write_stream = await self._exit_stack.enter_async_context(
+            read_stream, write_stream, _ = await self._exit_stack.enter_async_context(
                 transport_context
             )
             session_context = ClientSession(read_stream, write_stream)
