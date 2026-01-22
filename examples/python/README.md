@@ -4,47 +4,48 @@ This directory contains a simple example of how to use the `securelend` Python p
 
 ## Setup
 
-Make sure you have Python 3.8+ installed. It's recommended to use a virtual environment to manage dependencies.
+This guide assumes you are in the root directory of the monorepo.
 
-**1. Create and Activate Virtual Environment:**
+**1. Create and Activate a Virtual Environment:**
 
-First, create a virtual environment in the root directory of the monorepo. If you already have a `venv` directory here, you can skip the creation step.
+First, create a virtual environment. This ensures that dependencies are isolated from your system Python.
 
 ```bash
-# From the root of the monorepo, create the virtual environment
 python3 -m venv venv
+```
 
-# Activate the virtual environment
+Next, activate it. Your shell prompt should change to indicate that the virtual environment is active.
+
+```bash
 source venv/bin/activate
 ```
 
-**2. Install Dependencies:**
+**2. Install the Python SDK:**
 
-Once your virtual environment is activated, install the `securelend` package in editable mode. This links the installation to the source code in the `packages/python` directory.
+With the virtual environment active, install the `securelend` package in editable mode.
 
 ```bash
 pip install -e packages/python
 ```
 
-2.  **Set Environment Variables (Optional):**
-    The example can use an API key from an environment variable.
+**3. Set Environment Variables (Optional):**
 
-    ```bash
-    export SECURELEND_API_KEY="sk_test_..."
-    ```
+The example can use an API key from an environment variable.
+
+```bash
+export SECURELEND_API_KEY="sk_test_..."
+```
 
 ## Running the Example
 
-To run the example script, execute the following command from the root of the monorepo, ensuring you are using the Python interpreter from the virtual environment you created:
+After following the setup steps above, your virtual environment should be active. You can now run the example script:
 
 ```bash
-# Make sure your virtual environment is activated before running
-source venv/bin/activate
-
-# Run the script
 python examples/python/main.py
+```
 
-# Alternatively, you can run it without activating the venv by specifying the python executable directly
+If you encounter a `ModuleNotFoundError`, it means your virtual environment is not active. You can either activate it with `source venv/bin/activate` or run the script using the Python executable from the virtual environment directly:
+```bash
 ./venv/bin/python examples/python/main.py
 ```
 

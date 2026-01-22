@@ -41,5 +41,8 @@ lerna-debug.log*
 *.tmp
 .cache/
 
+# Python virtual environment
+venv/
+
 # Aider files
 .aider*
