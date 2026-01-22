@@ -1,4 +1,16 @@
 module.exports = {
   preset: "ts-jest",
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
+  clearMocks: true,
+  collectCoverageFrom: [
+    "packages/*/src/**/*.{ts,tsx}",
+    // Exclude type definition files
+    "!**/*.d.ts",
+    // Exclude the index files which just export from other files
+    "!packages/*/src/index.ts",
+  ],
+  coverageDirectory: "coverage",
+  coverageReporters: ["json-summary", "text", "lcov"],
+  roots: ["<rootDir>/packages"],
+  testPathIgnorePatterns: ["/node_modules/", "/dist/", "<rootDir>/packages/python"],
 };
