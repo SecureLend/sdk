@@ -5,7 +5,7 @@ import * as types from "../../src/types";
 // Mock the MCPClient to avoid actual network calls
 jest.mock("../../src/utils/mcp");
 
-const MCPClientMock = MCPClient as jest.Mock;
+const MCPClientMock = MCPClient as any;
 
 describe("SecureLend Client", () => {
   let mcpClientInstance: {
