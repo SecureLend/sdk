@@ -2,7 +2,7 @@ from contextlib import AsyncExitStack
 from typing import Any, Dict, Optional
 
 import httpx
-from mcp import ClientSession, MCPError
+from mcp import ClientSession, McpError
 from mcp.client.streamable_http import streamablehttp_client
 
 from ..utils.errors import (
@@ -95,7 +95,7 @@ class MCPClient:
                 "structuredContent": result.structuredContent,
                 "requestId": result.requestId,
             }
-        except MCPError as e:
+        except McpError as e:
             raise ServerError(f"MCP tool call failed: {e.message}") from e
 
     async def close(self):
