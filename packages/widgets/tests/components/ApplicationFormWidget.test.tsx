@@ -5,8 +5,6 @@ import { useSubmitApplication } from "@securelend/react";
 import {
   DisplayOfferFormResponse,
   ProductType,
-  ApplicationType,
-  ApplicationStatus,
 } from "@securelend/sdk";
 
 // Mock the useSubmitApplication hook
@@ -23,7 +21,7 @@ const mockOffer = {
   product: { name: "Test Loan", type: "INSTALLMENT_LOAN" },
   terms: {
     amount: { amount: 10000, currency: "USD" },
-    interestRate: { type: "fixed", apr: 0.05 },
+    interestRate: { type: "fixed" as const, apr: 0.05 },
     termMonths: 12,
     payment: { amount: { amount: 856.07, currency: "USD" } },
   },
@@ -284,7 +282,7 @@ describe("ApplicationFormWidget", () => {
       .mockImplementation(() => {});
     const offerDataWithNoProvider = {
       ...mockOfferDataSingle,
-      offer: { offerId: "test" }, // An object that doesn't match getProviderInfo logic
+      offer: { offerId: "test" } as any, // An object that doesn't match getProviderInfo logic
     };
     render(
       <ApplicationFormWidget
@@ -312,7 +310,7 @@ describe("ApplicationFormWidget", () => {
       .mockImplementation(() => {});
     const offerDataWithNoProvider = {
       ...mockOfferDataMultiple,
-      allOffers: [{ offerId: "test1" }, { offerId: "test2" }],
+      allOffers: [{ offerId: "test1" }, { offerId: "test2" }] as any,
     };
     render(
       <ApplicationFormWidget
