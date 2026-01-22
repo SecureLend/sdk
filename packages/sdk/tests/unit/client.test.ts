@@ -176,7 +176,7 @@ describe("SecureLend Client", () => {
           totalCost: 18000,
         },
         comparison: {
-          recommendation: "lease",
+          recommendation: "LEASE",
           savings: 30000,
         },
       },
