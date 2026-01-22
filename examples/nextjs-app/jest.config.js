@@ -13,6 +13,7 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/$1',
     // This is to match the webpack alias in next.config.js
     '^@securelend/react$': '<rootDir>/../../packages/react/src',
+    '^@securelend/sdk$': '<rootDir>/../../packages/sdk/src',
   },
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   transformIgnorePatterns: [
