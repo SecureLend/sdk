@@ -167,9 +167,9 @@ describe("SecureLend Client", () => {
         totalMonthlyPayment: 1300,
       },
       compareLeaseVsPurchase: {
-        purchaseAnalysis: {},
-        leaseAnalysis: {},
-        comparison: {},
+        purchaseAnalysis: { totalCost: 50000 },
+        leaseAnalysis: { totalCost: 20000 },
+        comparison: { recommendation: "lease" },
       },
       getOffer: minimalPersonalApplication,
       getMultipleOffers: minimalPersonalApplication,
@@ -235,8 +235,20 @@ describe("SecureLend Client", () => {
         const mockApiResponse = mockResponses[methodName as string];
         const mockToolResult = {
           structuredContent: mockApiResponse,
-          content: [],
+          content: [] as any[],
         };
+
+        // For widget-based responses, the widget HTML comes from the `content` part
+        // of the tool result, which is what `getWidget()` parses.
+        if (methodName === "displayUploadDocumentsForm") {
+          mockToolResult.content.push({
+            type: "resource",
+            resource: {
+              mimeType: "text/html",
+              text: mockApiResponse.widget,
+            },
+          });
+        }
         mcpClientInstance.callTool.mockResolvedValue(mockToolResult);
 
         // @ts-expect-error - Calling method dynamically
