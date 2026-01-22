@@ -9,6 +9,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@securelend/sdk": "workspace:*"
+    "@securelend/sdk": "file:../../packages/sdk"
   }
 }
