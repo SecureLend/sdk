@@ -38,7 +38,7 @@ class MCPClient:
         await self._ensure_connected()
         assert self._client is not None
 
-        tool_call_endpoint = f"{self._mcp_url.rstrip('/')}/call_tool"
+        tool_call_endpoint = self._mcp_url
 
         if self._debug:
             print(f"[SecureLend SDK] Calling tool '{name}' with args: {args}")
