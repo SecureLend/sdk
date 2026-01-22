@@ -17,11 +17,12 @@ module.exports = {
   roots: ["<rootDir>/packages"],
   testPathIgnorePatterns: ["/node_modules/", "/dist/", "<rootDir>/packages/python"],
   transform: {
-    '^.+\\.(ts|tsx)?$': [
+    '^.+\\.(ts|tsx|js|jsx)$': [
       'ts-jest',
       {
         tsconfig: {
           jsx: 'react-jsx',
+          allowJs: true,
         },
       },
     ],
