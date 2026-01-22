@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import List, Literal, Optional, Union, Dict, Any
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from enum import Enum
 
 # ============================================================================
@@ -444,6 +444,12 @@ class DisplayOfferFormResponse(BaseModel):
 class TrackOfferStatusParams(BaseModel):
     application_id: Optional[str] = Field(None, alias="applicationId")
     email: Optional[str] = None
+
+    @model_validator(mode="after")
+    def check_application_id_or_email(self) -> "TrackOfferStatusParams":
+        if not self.application_id and not self.email:
+            raise ValueError("Either applicationId or email must be provided.")
+        return self
 
 class TrackOfferStatusResponse(BaseModel):
     applications: List[PersonalApplication]

@@ -1,3 +1,4 @@
+import json
 import pytest
 from unittest.mock import patch, AsyncMock
 
@@ -34,13 +35,22 @@ async def test_compare_business_loans(mock_mcp_client):
     """Test a tool-calling method to ensure it calls MCPClient correctly."""
     client = SecureLend()
 
+    mock_response_data = {
+        "offers": [],
+        "summary": {"totalOffers": 0, "bestRate": 0.0},
+        "metadata": {"queryId": "qid-123", "timestamp": "2023-01-01T12:00:00Z"},
+    }
+
+    # Simulate a successful tool call result from MCPClient
     mock_mcp_client.call_tool.return_value = {
+        "structuredContent": mock_response_data,
         "content": [
+            {"type": "text", "text": json.dumps(mock_response_data)},
             {
-                "type": "text",
-                "text": '{"offers": [], "summary": {"totalOffers": 0}, "metadata": {}}',
-            }
-        ]
+                "type": "resource",
+                "resource": {"mimeType": "text/html", "text": "<div>Widget</div>"},
+            },
+        ],
     }
 
     request_data = {
@@ -54,7 +64,34 @@ async def test_compare_business_loans(mock_mcp_client):
         "compare_business_loans", request_data
     )
     assert isinstance(response, types.LoanComparisonResponse)
-    assert response.summary["totalOffers"] == 0
+    assert response.summary.total_offers == 0
+    assert response.widget == "<div>Widget</div>"
+
+
+@pytest.mark.asyncio
+async def test_response_parsing_fallback(mock_mcp_client):
+    """Test that response parsing falls back to text content when structuredContent is missing."""
+    client = SecureLend()
+
+    mock_response_data = {
+        "offers": [],
+        "summary": {"totalOffers": 1, "bestRate": 0.05},
+        "metadata": {"queryId": "qid-456", "timestamp": "2023-01-02T12:00:00Z"},
+    }
+
+    # Simulate a result without structuredContent
+    mock_mcp_client.call_tool.return_value = {
+        "content": [{"type": "text", "text": json.dumps(mock_response_data)}],
+    }
+
+    response = await client.compare_business_loans(
+        {
+            "loanAmount": 50000,
+            "purpose": "working_capital",
+        }
+    )
+
+    assert response.summary.total_offers == 1
 
 
 @pytest.mark.asyncio
