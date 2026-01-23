@@ -11,7 +11,7 @@
     "build": "npm run build -w @securelend/sdk && npm run build --workspaces --if-present",
     "test": "npm test --workspaces --if-present",
     "test:coverage": "jest --coverage",
-    "coverage:badge": "coverage-shield -b coverage-badge.svg",
+    "coverage:badge": "mkdir -p shields && coverage-shield -b shields/coverage-badge.svg",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "clean": "rm -rf packages/*/dist packages/*/node_modules",
