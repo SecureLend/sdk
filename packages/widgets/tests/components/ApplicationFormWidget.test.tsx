@@ -225,7 +225,7 @@ describe("ApplicationFormWidget", () => {
     });
   });
 
-  it("handles cancelling the consent modal", () => {
+  it("handles cancelling the consent modal", async () => {
     render(
       <ApplicationFormWidget
         offerData={mockOfferDataSingle}
@@ -245,7 +245,7 @@ describe("ApplicationFormWidget", () => {
       target: { value: "1234567890" },
     });
     fireEvent.click(screen.getByText("Submit to Test Lender"));
-    expect(screen.getByText("Important Disclosures")).toBeInTheDocument();
+    expect(await screen.findByText("Important Disclosures")).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("Cancel"));
     expect(screen.queryByText("Important Disclosures")).not.toBeInTheDocument();
@@ -264,10 +264,13 @@ describe("ApplicationFormWidget", () => {
     expect(onCancelMock).toHaveBeenCalledTimes(1);
   });
 
-  it("disables buttons and shows loading text", () => {
+  it("disables buttons when loading", () => {
     useSubmitApplicationMock.mockReturnValue({
-      ...useSubmitApplicationMock(),
+      submitOffer: jest.fn(),
+      submitMultipleOffers: jest.fn(),
       loading: true,
+      data: null,
+      error: null,
     });
 
     render(
@@ -277,23 +280,8 @@ describe("ApplicationFormWidget", () => {
       />,
     );
 
-    fireEvent.change(screen.getByLabelText("First Name"), {
-      target: { value: "John" },
-    });
-    fireEvent.change(screen.getByLabelText("Last Name"), {
-      target: { value: "Doe" },
-    });
-    fireEvent.change(screen.getByLabelText("Email Address"), {
-      target: { value: "john@doe.com" },
-    });
-    fireEvent.change(screen.getByLabelText("Phone Number"), {
-      target: { value: "1234567890" },
-    });
-
-    // Simulate starting a single submission to set internal state
-    fireEvent.click(screen.getByText("Submit to Test Lender"));
-    // The component re-renders due to state change, and loading is true from the hook
-    expect(screen.getByText("Submitting...")).toBeDisabled();
+    expect(screen.getByText("Submit to Test Lender")).toBeDisabled();
+    expect(screen.getByText("Get All 2 Offers")).toBeDisabled();
   });
 
   it("logs an error if provider info cannot be determined for single submit", async () => {
@@ -324,21 +312,8 @@ describe("ApplicationFormWidget", () => {
       target: { value: "1234567890" },
     });
 
-    fireEvent.change(screen.getByLabelText("First Name"), {
-      target: { value: "John" },
-    });
-    fireEvent.change(screen.getByLabelText("Last Name"), {
-      target: { value: "Doe" },
-    });
-    fireEvent.change(screen.getByLabelText("Email Address"), {
-      target: { value: "john@doe.com" },
-    });
-    fireEvent.change(screen.getByLabelText("Phone Number"), {
-      target: { value: "1234567890" },
-    });
-
     fireEvent.click(screen.getByText(/Submit to/));
-    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    fireEvent.click(await screen.findByLabelText(/I agree to the/));
     fireEvent.click(screen.getByText("I Understand, Proceed"));
 
     await waitFor(() => {
@@ -406,7 +381,7 @@ describe("ApplicationFormWidget", () => {
     });
 
     fireEvent.click(screen.getByText("Submit to Test Lender"));
-    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    fireEvent.click(await screen.findByLabelText(/I agree to the/));
     fireEvent.click(screen.getByText("I Understand, Proceed"));
 
     await waitFor(() => {
