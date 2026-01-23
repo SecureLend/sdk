@@ -5,7 +5,7 @@
 Connect to SecureLend's MCP server programmatically or integrate with Claude and ChatGPT.
 
 [![npm version](https://img.shields.io/npm/v/@securelend/sdk.svg)](https://www.npmjs.com/package/@securelend/sdk)
-![Test Coverage](shields/coverage-badge.svg.svg)
+![Test Coverage](shields/coverage-badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 
