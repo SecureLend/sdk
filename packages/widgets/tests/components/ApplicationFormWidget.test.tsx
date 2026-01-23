@@ -324,6 +324,19 @@ describe("ApplicationFormWidget", () => {
       target: { value: "1234567890" },
     });
 
+    fireEvent.change(screen.getByLabelText("First Name"), {
+      target: { value: "John" },
+    });
+    fireEvent.change(screen.getByLabelText("Last Name"), {
+      target: { value: "Doe" },
+    });
+    fireEvent.change(screen.getByLabelText("Email Address"), {
+      target: { value: "john@doe.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Phone Number"), {
+      target: { value: "1234567890" },
+    });
+
     fireEvent.click(screen.getByText(/Submit to/));
     fireEvent.click(screen.getByLabelText(/I agree to the/));
     fireEvent.click(screen.getByText("I Understand, Proceed"));
