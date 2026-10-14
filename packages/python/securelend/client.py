@@ -3,9 +3,11 @@ from typing import Any, Dict, Optional, Type, TypeVar
 
 from pydantic import BaseModel, ValidationError as PydanticValidationError
 
+from . import rest as rest_mod
 from . import types
 from .utils.errors import SecureLendError, ValidationError
 from .utils.mcp import MCPClient
+from .webhooks import parse_event, sign_outcome_payload, verify_webhook
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -29,10 +31,16 @@ class SecureLend:
     """
 
     def __init__(
-        self, *, api_key: Optional[str] = None, server_url: Optional[str] = None
+        self,
+        *,
+        api_key: Optional[str] = None,
+        server_url: Optional[str] = None,
+        api_base_url: Optional[str] = None,
     ):
         mcp_url = server_url or "https://mcp.securelend.ai/mcp"
         self._mcp_client = MCPClient(api_key=api_key or "", mcp_url=mcp_url)
+        self._api_key = api_key
+        self._api_base_url = (api_base_url or "https://securelend.ai").rstrip("/")
 
     # --- Loan Comparison ---
 
@@ -246,6 +254,124 @@ class SecureLend:
     def set_api_key(self, api_key: str) -> None:
         """Update API key for multi-tenant applications."""
         self._mcp_client.set_api_key(api_key)
+
+    # --- Lender loop. REST base, not the comparison MCP host. ---
+
+    _OUTCOME_STATES = {
+        "viewed",
+        "info_requested",
+        "declined",
+        "term_sheet",
+        "approved",
+        "funded",
+        "withdrawn",
+    }
+    _REASON_CODES = {
+        "outside_credit_box",
+        "industry",
+        "time_in_business",
+        "dscr",
+        "collateral",
+        "amount",
+        "state",
+        "credit_score",
+        "docs_incomplete",
+        "capacity",
+        "other",
+    }
+
+    def _url(self, path: str) -> str:
+        return f"{self._api_base_url}{path}"
+
+    async def record_outcome(self, lead_id: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+        state = str((payload or {}).get("state") or "").strip()
+        if state not in self._OUTCOME_STATES:
+            raise ValidationError("That outcome state is not recognized.")
+        reason = str(payload.get("reasonCode") or "").strip()
+        if state == "declined":
+            if reason not in self._REASON_CODES:
+                raise ValidationError("A decline needs a reason code.")
+            if reason == "other" and not str(payload.get("reasonText") or "").strip():
+                raise ValidationError("A decline needs a reason code.")
+        if state == "funded":
+            amount = payload.get("fundedAmount")
+            funded_on = str(payload.get("fundedOn") or "").strip()
+            if not isinstance(amount, (int, float)) or isinstance(amount, bool) or amount <= 0:
+                raise ValidationError("Funded needs an amount.")
+            if len(funded_on) != 10 or funded_on[4] != "-" or funded_on[7] != "-":
+                raise ValidationError("Funded needs a date as YYYY-MM-DD.")
+        return await rest_mod.request_json(
+            "POST",
+            self._url(f"/v1/leads/{lead_id}/outcomes"),
+            api_key=self._api_key,
+            body=payload,
+            feature_gated=True,
+        )
+
+    async def list_outcomes(self, lead_id: str) -> Any:
+        page = await rest_mod.request_json(
+            "GET",
+            self._url(f"/v1/leads/{lead_id}/outcomes"),
+            api_key=self._api_key,
+            feature_gated=True,
+        )
+        return page.get("items", []) if isinstance(page, dict) else page
+
+    def sign_outcome_payload(self, raw: str, secret: str) -> str:
+        return sign_outcome_payload(raw, secret)
+
+    async def get_credit_box(self) -> Any:
+        return await rest_mod.request_json(
+            "GET",
+            self._url("/v1/credit-box"),
+            api_key=self._api_key,
+            feature_gated=True,
+        )
+
+    async def put_credit_box(self, criteria: Dict[str, Any]) -> Any:
+        body = criteria if isinstance(criteria, dict) and "criteria" in criteria else {"criteria": criteria}
+        return await rest_mod.request_json(
+            "PUT",
+            self._url("/v1/credit-box"),
+            api_key=self._api_key,
+            body=body,
+            feature_gated=True,
+        )
+
+    async def pause_credit_box(self, until: Optional[str] = None) -> Any:
+        return await rest_mod.request_json(
+            "POST",
+            self._url("/v1/credit-box/pause"),
+            api_key=self._api_key,
+            body={"until": until} if until else {},
+            feature_gated=True,
+        )
+
+    async def resume_credit_box(self) -> Any:
+        return await rest_mod.request_json(
+            "POST",
+            self._url("/v1/credit-box/resume"),
+            api_key=self._api_key,
+            body={},
+            feature_gated=True,
+        )
+
+    async def submit_feedback(self, event: Dict[str, Any]) -> Any:
+        if not event or not event.get("type") or not (event.get("target") or {}).get("kind"):
+            raise ValidationError("Feedback needs a target.")
+        return await rest_mod.request_json(
+            "POST",
+            self._url("/v1/feedback"),
+            api_key=self._api_key,
+            body=event,
+            feature_gated=True,
+        )
+
+    def verify_webhook(self, raw: str, signature_header: str, secret: str, tolerance_sec: int = 300) -> bool:
+        return verify_webhook(raw, signature_header, secret, tolerance_sec=tolerance_sec)
+
+    def parse_event(self, payload: Dict[str, Any]) -> dict:
+        return parse_event(payload)
 
     def enable_debug(self) -> None:
         """Enable debug logging."""

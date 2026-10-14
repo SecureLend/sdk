@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0-beta.0] - 2026-10-14
+
+### Added
+- REST methods for the place-to-underwrite loop: leads, matches, packages, consents, outcomes, credit box, feedback, and liquidity. `matches.list` calls compare only for a catalog loan product that has an amount. Factoring and other products return the lead's own lenders.
+- `FeatureDisabledError` when a flag-gated route returns 404.
+- Webhook verify and parse. `outcomes.signPayload()` signs the lender-outcome header the platform already checks.
+- Python parity for outcomes, credit box, feedback, and webhooks.
+- Optional React hooks: `useLead`, `useLeadOutcomes`, `useShareConsent`.
+
+### Changed
+- Comparison methods still call `https://mcp.securelend.ai/mcp`. The REST base defaults to `https://securelend.ai`. Comparison calls are not sent to `/v1/lender/mcp`.
+
 ## [Unreleased]
 
 ### Changed

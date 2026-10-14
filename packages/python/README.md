@@ -2,6 +2,21 @@
 
 The official Python SDK for SecureLend - Financial services infrastructure for AI assistants.
 
+## Lender outcomes
+
+Comparison stays on `https://mcp.securelend.ai/mcp`. Outcomes, credit box, feedback, and webhooks use `https://securelend.ai`.
+
+```python
+client = SecureLend(api_key=os.environ.get("SECURELEND_API_KEY"))
+await client.record_outcome(lead_id, {
+    "state": "declined",
+    "reasonCode": "dscr",
+})
+header = client.sign_outcome_payload(raw_body, secret)
+```
+
+A decline without `reasonCode`, and a funded outcome without an amount and date, raise `ValidationError` before the request. A flag that is off raises `FeatureDisabledError`.
+
 ## Installation
 
 ```bash

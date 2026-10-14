@@ -82,3 +82,49 @@ export class ServerError extends SecureLendError {
     this.name = "ServerError";
   }
 }
+
+/**
+ * A flag-gated route returned 404. The feature is off for this workspace.
+ */
+export class FeatureDisabledError extends SecureLendError {
+  constructor(
+    message = "This feature is off for this workspace.",
+    details?: unknown,
+  ) {
+    super(message, "feature_disabled", details);
+    this.name = "FeatureDisabledError";
+  }
+}
+
+/**
+ * A lender read needs a live consent for that package version.
+ */
+export class ConsentRequiredError extends SecureLendError {
+  constructor(
+    message = "A live consent is required before this package can be read.",
+    details?: unknown,
+  ) {
+    super(message, "consent_required", details);
+    this.name = "ConsentRequiredError";
+  }
+}
+
+/**
+ * The outcome cannot move from the current state to the requested state.
+ */
+export class InvalidTransitionError extends SecureLendError {
+  constructor(message = "That outcome is not available.", details?: unknown) {
+    super(message, "invalid_transition", details);
+    this.name = "InvalidTransitionError";
+  }
+}
+
+/**
+ * A webhook signature was missing, expired, or did not match the body.
+ */
+export class WebhookSignatureError extends SecureLendError {
+  constructor(message = "Webhook signature did not match.", details?: unknown) {
+    super(message, "webhook_signature", details);
+    this.name = "WebhookSignatureError";
+  }
+}

@@ -43,6 +43,24 @@ const cards = await securelend.creditCards.compare({
 });
 ```
 
+## Place to underwrite
+
+```typescript
+import { SecureLend } from "@securelend/sdk";
+
+const securelend = new SecureLend({ apiKey: process.env.SECURELEND_API_KEY });
+
+const lead = await securelend.leads.create({
+  confirmed: true,
+  legalName: "Northwind LLC",
+  amount: 25000,
+});
+const ranked = await securelend.matches.list(lead.id);
+const box = await securelend.creditBox.get();
+```
+
+The default comparison host stays `https://mcp.securelend.ai/mcp`. These methods call `https://securelend.ai`. Pass `apiBaseUrl` for a local API. A 404 from a flag-gated route throws `FeatureDisabledError`.
+
 ## Documentation
 
 - [Full Documentation](https://docs.securelend.ai)
