@@ -20,6 +20,17 @@ export {
   NotFoundError,
   NetworkError,
   ServerError,
+  FeatureDisabledError,
+  ConsentRequiredError,
+  InvalidTransitionError,
+  WebhookSignatureError,
 } from "./utils/errors";
+
+export {
+  verifyWebhook,
+  parseEvent,
+  signWebhook,
+  signOutcomePayload,
+} from "./webhooks";
 
 // Version is managed in package.json

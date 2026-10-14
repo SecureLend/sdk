@@ -95,6 +95,40 @@ console.log(
 
 ---
 
+## Place a lead and read the package
+
+Comparison stays on `https://mcp.securelend.ai/mcp`. Leads, packages, outcomes, consent, and feedback use `https://securelend.ai`.
+
+```typescript
+import { SecureLend } from "@securelend/sdk";
+
+const securelend = new SecureLend({ apiKey: process.env.SECURELEND_API_KEY });
+
+const lead = await securelend.leads.create({
+  confirmed: true,
+  legalName: "Northwind LLC",
+  productType: "business_loan",
+  amount: 25000,
+});
+
+const started = await securelend.packages.start({
+  borrower: "Northwind LLC",
+  amount: 25000,
+  currency: "USD",
+  security: "unsecured",
+});
+
+await securelend.outcomes.record(lead.id, {
+  state: "funded",
+  fundedAmount: 25000,
+  fundedOn: "2026-10-14",
+});
+```
+
+A flag that is off returns `FeatureDisabledError`. A lender read without a live consent returns `ConsentRequiredError`. A decline without a reason code, and a funded outcome without an amount and date, fail before the request is sent.
+
+`outcomes.signPayload(rawBody, secret)` returns the `x-securelend-signature` value for `POST /v1/webhooks/lender-outcomes`. `webhooks.verify` also accepts a timestamped HMAC header, `t=<unix>,v1=<hex>`, and rejects a timestamp outside five minutes.
+
 ## Configuration
 
 ### API Key & Custom Server URL

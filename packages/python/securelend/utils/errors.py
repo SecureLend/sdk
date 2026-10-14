@@ -36,3 +36,27 @@ class NetworkError(SecureLendError):
 class ServerError(SecureLendError):
     def __init__(self, message: str):
         super().__init__(message, "server_error")
+
+
+class FeatureDisabledError(SecureLendError):
+    def __init__(self, message: str = "This feature is off for this workspace.", details: any = None):
+        super().__init__(message, "feature_disabled", details)
+
+
+class ConsentRequiredError(SecureLendError):
+    def __init__(
+        self,
+        message: str = "A live consent is required before this package can be read.",
+        details: any = None,
+    ):
+        super().__init__(message, "consent_required", details)
+
+
+class InvalidTransitionError(SecureLendError):
+    def __init__(self, message: str = "That outcome is not available.", details: any = None):
+        super().__init__(message, "invalid_transition", details)
+
+
+class WebhookSignatureError(SecureLendError):
+    def __init__(self, message: str = "Webhook signature did not match.", details: any = None):
+        super().__init__(message, "webhook_signature", details)

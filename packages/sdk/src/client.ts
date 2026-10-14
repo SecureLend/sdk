@@ -2,6 +2,16 @@ import { z } from "zod";
 import { MCPClient } from "./utils/mcp";
 import * as types from "./types";
 import { SecureLendError, ValidationError } from "./utils/errors";
+import { RestClient } from "./rest";
+import { Leads } from "./resources/leads";
+import { Matches } from "./resources/matches";
+import { Packages } from "./resources/packages";
+import { Consents } from "./resources/consents";
+import { Outcomes } from "./resources/outcomes";
+import { CreditBoxClient } from "./resources/creditBox";
+import { Feedback } from "./resources/feedback";
+import { Liquidity } from "./resources/liquidity";
+import { parseEvent, signWebhook, verifyWebhook } from "./webhooks";
 
 // Minimal interface definitions to satisfy the compiler.
 // This is necessary because `@modelcontextprotocol/sdk` may not export `ToolResult` as expected.
@@ -40,9 +50,27 @@ interface ToolResult {
  */
 export class SecureLend {
   private mcpClient: MCPClient;
+  private rest: RestClient;
 
   /** Raw access to the underlying MCP client */
   public readonly mcp: MCPClient["mcp"];
+
+  /** Place a borrower lead. REST base, not the comparison MCP host. */
+  public readonly leads: Leads;
+  /** Ranked lenders for one lead, plus generationId when outcome matching is on. */
+  public readonly matches: Matches;
+  /** Underwriting packages via POST /v1/lender/mcp. */
+  public readonly packages: Packages;
+  public readonly consents: Consents;
+  public readonly outcomes: Outcomes;
+  public readonly creditBox: CreditBoxClient;
+  public readonly feedback: Feedback;
+  public readonly liquidity: Liquidity;
+  public readonly webhooks: {
+    verify: typeof verifyWebhook;
+    parseEvent: typeof parseEvent;
+    sign: typeof signWebhook;
+  };
 
   /**
    * Create a new SecureLend client
@@ -59,9 +87,30 @@ export class SecureLend {
 
     this.mcpClient = new MCPClient({ apiKey: config?.apiKey || "", mcpURL });
     this.mcp = this.mcpClient.mcp;
+
+    let apiBaseUrl = config?.apiBaseUrl || "https://securelend.ai";
+    if (typeof window !== "undefined" && apiBaseUrl.startsWith("/")) {
+      apiBaseUrl = window.location.origin + apiBaseUrl;
+    }
+    this.rest = new RestClient({
+      baseUrl: apiBaseUrl,
+      apiKey: config?.apiKey,
+      fetchImpl: config?.fetch,
+    });
+    this.leads = new Leads(this.rest);
+    this.matches = new Matches(this.rest);
+    this.packages = new Packages(this.rest);
+    this.consents = new Consents(this.rest);
+    this.outcomes = new Outcomes(this.rest);
+    this.creditBox = new CreditBoxClient(this.rest);
+    this.feedback = new Feedback(this.rest);
+    this.liquidity = new Liquidity(this.rest);
+    this.webhooks = { verify: verifyWebhook, parseEvent, sign: signWebhook };
   }
 
   // --- Loan Comparison ---
+  // These methods call the comparison MCP (default https://mcp.securelend.ai/mcp).
+  // They are not sent to /v1/lender/mcp.
 
   async comparePersonalLoans(
     request: types.PersonalLoanSearchParams,
@@ -295,6 +344,7 @@ export class SecureLend {
    */
   setApiKey(apiKey: string): void {
     this.mcpClient.setApiKey(apiKey);
+    this.rest.setApiKey(apiKey);
   }
 
   // --- Private Helpers ---
