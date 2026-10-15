@@ -20,8 +20,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build SDK package
-        run: npm run build -w @securelend/sdk
+      - name: Build SDK and React packages
+        run: npm run build -w @securelend/sdk && npm run build -w @securelend/react
 
       - name: Check SDK route contract
         run: node packages/sdk/scripts/check-contract.mjs
