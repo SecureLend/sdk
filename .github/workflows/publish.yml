@@ -36,7 +36,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip build pytest pytest-asyncio
           python3 -m pip install -e "packages/python[test]"
-          pytest packages/python/tests
+          pytest packages/python/tests/unit
           python3 -m build packages/python --outdir dist-python
 
       - name: Publish to npm

@@ -2,7 +2,11 @@ from contextlib import AsyncExitStack
 from typing import Any, Dict, Optional
 
 import httpx
-from mcp import ClientSession, McpError
+from mcp import ClientSession
+try:
+    from mcp import McpError
+except ImportError:  # mcp >= 1.24 renamed McpError -> MCPError
+    from mcp import MCPError as McpError
 from mcp.client.streamable_http import streamablehttp_client
 
 from ..utils.errors import (
