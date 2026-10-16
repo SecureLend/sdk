@@ -8,25 +8,56 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
+      - name: Build packages
+        run: npm run build -w @securelend/sdk && npm run build -w @securelend/react && npm run build -w @securelend/widgets
+
+      - name: Check SDK route contract
+        run: node packages/sdk/scripts/check-contract.mjs
+
       - name: Run tests
         run: npm test
-      
-      - name: Build packages
-        run: npm run build
-      
+
+      - name: Build Python distribution
+        run: |
+          python3 -m pip install --upgrade pip build pytest pytest-asyncio
+          python3 -m pip install -e "packages/python[test]"
+          pytest packages/python/tests
+          python3 -m build packages/python --outdir dist-python
+
       - name: Publish to npm
-        run: npm publish --access public --workspaces
         env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -n "$NPM_TOKEN" ]; then
+            npm publish --access public --workspaces --tag beta
+          else
+            echo "::notice::NPM_TOKEN secret not configured; skipping npm registry push (release tarballs attached to GitHub Release)."
+          fi
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          if [ -n "$TWINE_PASSWORD" ]; then
+            python3 -m pip install twine
+            python3 -m twine upload dist-python/*
+          else
+            echo "::notice::PYPI_API_TOKEN secret not configured; skipping PyPI upload (wheel and sdist attached to GitHub Release)."
+          fi
