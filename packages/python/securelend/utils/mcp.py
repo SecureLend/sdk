@@ -7,7 +7,10 @@ try:
     from mcp import McpError
 except ImportError:  # mcp >= 1.24 renamed McpError -> MCPError
     from mcp import MCPError as McpError
-from mcp.client.streamable_http import streamablehttp_client
+try:
+    from mcp.client.streamable_http import streamablehttp_client
+except ImportError:
+    from mcp.client.streamable_http import streamable_http_client as streamablehttp_client
 
 from ..utils.errors import (
     AuthenticationError,
