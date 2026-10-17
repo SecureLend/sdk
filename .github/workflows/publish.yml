@@ -45,7 +45,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           if [ -n "$NPM_TOKEN" ]; then
-            npm publish --access public --workspaces --tag beta
+            npm publish --access public -w @securelend/sdk --tag beta
           else
             echo "::notice::NPM_TOKEN secret not configured; skipping npm registry push (release tarballs attached to GitHub Release)."
           fi
